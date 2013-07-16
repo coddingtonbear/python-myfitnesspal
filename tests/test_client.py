@@ -6,7 +6,8 @@ from myfitnesspal import Client
 
 from .base import MFPTestCase
 
-class TestGetContent(MFPTestCase):
+
+class TestClient(MFPTestCase):
     def setUp(self):
         self.arbitrary_username = 'alpha'
         self.arbitrary_password = 'beta'
@@ -15,12 +16,12 @@ class TestGetContent(MFPTestCase):
             self.arbitrary_username,
             self.arbitrary_password,
         )
-        super(TestGetContent, self).setUp()
+        super(TestClient, self).setUp()
 
     def _stub_response_document(self, filename):
         self.mimic.stub_out_with_mock(
             self.client,
-            '_get_content_for_url'
+            '_get_document_for_url'
         )
         self.client._get_content_for_url(
             mimic.IgnoreArg()
@@ -28,6 +29,15 @@ class TestGetContent(MFPTestCase):
             self.get_html_document(
                 filename
             )
+        )
+
+    def test_get_meals(self):
+        document = self.get_html_document('2013-07-13.html')
+        meals = self.client._get_meals(document)
+
+        self.assertEquals(
+            len(meals),
+            4,
         )
 
     def test_get_day(self):

@@ -1,5 +1,6 @@
 import os
 
+import lxml.html
 from mimic import MimicTestBase
 
 
@@ -13,4 +14,4 @@ class MFPTestCase(MimicTestBase):
         content = None
         with open(file_path, 'r') as in_:
             content = in_.read()
-        return content
+        return lxml.html.document_fromstring(content)
