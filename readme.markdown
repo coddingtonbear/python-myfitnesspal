@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/latestrevision/python-myfitnesspal.png?branch=master)](https://travis-ci.org/latestrevision/python-myfitnesspal)
+
 MyFitnessPal
 ============
 
