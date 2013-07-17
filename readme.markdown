@@ -1,0 +1,104 @@
+MyFitnessPal
+============
+
+Do you track your eating habits on [MyFitnessPal](https://www.myfitnesspal.com/)?  Have you ever wanted to analyze the information you're entering into MyFitnessPal programatically?  
+
+Although MyFitnessPal [does have an API](https://www.myfitnesspal.com/api), it is private-access only; this creates an unnecessary barrier between you and your data that can be overcome using this library.
+
+Installation
+------------
+
+You can either install from pip:
+
+    pip install myfitnesspal
+
+*or* checkout and install the source from the [bitbucket repository](https://bitbucket.org/latestrevision/python-myfitnesspal):
+
+    hg clone https://bitbucket.org/latestrevision/python-myfitnesspal
+    cd python-myfitnesspal
+    python setup.py install
+
+*or* checkout and install the source from the [github repository](https://github.com/latestrevision/python-myfitnesspal):
+
+    git clone https://github.com/latestrevision/python-myfitnesspal.git
+    cd python-myfitnesspal
+    python setup.py install
+
+
+Example Use
+-----------
+
+```python
+import myfitnesspal
+import datetime
+
+client = myfitnesspal.Client('my_username', 'my_password')
+
+my_birthday = datetime.date(2013, 3, 2)
+day = client.get_date(my_birthday)
+print day
+# >> <03/02/13 {'sodium': 3326, 'carbohydrates': 369, 'calories': 2001, 'fat': 22, 'sugar': 103, 'protein': 110}>
+
+# To see all meals either
+print day.meals
+# >> [<Breakfast {}>,
+#    <Lunch {'sodium': 712, 'carbohydrates': 106, 'calories': 485, 'fat': 3, 'sugar': 0, 'protein': 17}>,
+#    <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>,
+#    <Snacks {'sodium': 424, 'carbohydrates': 93, 'calories': 571, 'fat': 8, 'sugar': 86, 'protein': 40}>]
+
+# Or, to just see what meals exist:
+print day.keys()
+# >> ['Breakfast', 'Lunch', 'Dinner', 'Snacks']
+
+# To access dinner, you can either access its index in `day.meals`:
+day.meals[2]
+# >> <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>
+
+# Or use a day as a dictionary having meal names as keys:
+day['Dinner']
+# >> <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>
+
+dinner = day['Dinner']
+
+# To get a list of things I ate for dinner, I can use the dinner Meal object's `entries` property:
+dinner.entries
+# >> [<Montebello - Spaghetti noodles, 6 oz. {'sodium': 0, 'carbohydrates': 132, 'calories': 630, 'fat': 3, 'sugar': 3, 'protein': 21}>,
+#     <Fresh Market - Arrabiatta Organic Pasta Sauce, 0.5 container (3 cups ea.) {'sodium': 1410, 'carbohydrates': 24, 'calories': 135, 'fat': 5, 'sugar': 12, 'protein': 6}>,
+#     <Quorn - Meatless and Soy-Free Meatballs, 6 -4 pieces (68g) {'sodium': 780, 'carbohydrates': 14, 'calories': 180, 'fat': 3, 'sugar': 2, 'protein': 26}>]
+
+# To access one of the items, use the entries property as a list (note: you can also use the meal object itself as a list):
+spaghetti = dinner.entries[0]
+spaghetti.name
+# >> Montebello - Spaghetti noodles, 6 oz.
+
+
+## Nutrition information
+
+# For a daily summary of your nutrition information, you can use a Day object's `totals` property:
+day.totals
+# >> {'calories': 2001,
+#     'carbohydrates': 369,
+#     'fat': 22,
+#     'protein': 110,
+#     'sodium': 3326,
+#     'sugar': 103}
+
+# For just one meal:
+dinner.totals
+# >> {'calories': 945,
+#     'carbohydrates': 170,
+#     'fat': 11,
+#     'protein': 53,
+#     'sodium': 2190,
+#     'sugar': 17}
+
+# For just one entry:
+spaghetti.totals
+# >> {'calories': 630,
+#     'carbohydrates': 132,
+#     'fat': 3,
+#     'protein': 21,
+#     'sodium': 0,
+#     'sugar': 3}
+
+```

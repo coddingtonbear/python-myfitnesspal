@@ -6,6 +6,11 @@ class Meal(MFPBase):
         self._name = name
         self._entries = entries
 
+    def __getitem__(self, value):
+        if not isinstance(value, int):
+            raise ValueError('Index must be an integer')
+        return self.entries[value]
+
     @property
     def entries(self):
         return self._entries
@@ -14,7 +19,22 @@ class Meal(MFPBase):
     def name(self):
         return self._name
 
+    @property
+    def totals(self):
+        nutrition = {}
+        for entry in self.entries:
+            for k, v in entry.nutrition_information.items():
+                if k not in nutrition:
+                    nutrition[k] = 0
+                nutrition[k] += v
+
+        return nutrition
+
+    def get_as_list(self):
+        return [e.get_as_dict() for e in self.entries]
+
     def __unicode__(self):
-        return u'%s' % (
-            self.name,
+        return u'%s %s' % (
+            self.name.title(),
+            self.totals
         )

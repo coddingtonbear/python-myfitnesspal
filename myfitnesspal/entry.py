@@ -14,6 +14,16 @@ class Entry(MFPBase):
     def nutrition_information(self):
         return self._nutrition
 
+    @property
+    def totals(self):
+        return self.nutrition_information
+
+    def get_as_dict(self):
+        return {
+            'name': self.name,
+            'nutrition_information': self.nutrition_information,
+        }
+
     def __unicode__(self):
         return u'%s %s' % (
             self.name,

@@ -2,11 +2,22 @@ from myfitnesspal.base import MFPBase
 
 
 class Day(MFPBase):
-    def __init__(self, date, meals=None, totals=None, goals=None):
+    def __init__(self, date, meals=None, goals=None):
         self._date = date
         self._meals = meals
-        self._totals = totals
         self._goals = goals
+
+    def __getitem__(self, value):
+        for meal in self._meals:
+            if meal.name.lower() == value.lower():
+                return meal
+        raise KeyError("No meal named '%s' exists for this date" % value)
+
+    def keys(self):
+        keys = ''
+        for meal in self.meals:
+            keys.append(meal.name)
+        return keys
 
     @property
     def meals(self):
@@ -15,12 +26,19 @@ class Day(MFPBase):
     @property
     def entries(self):
         for meal in self._meals:
-            for entry in meal:
+            for entry in meal.entries:
                 yield entry
 
     @property
     def totals(self):
-        return self._totals
+        nutrition = {}
+        for entry in self.entries:
+            for k, v in entry.nutrition_information.items():
+                if k not in nutrition:
+                    nutrition[k] = 0
+                nutrition[k] += v
+
+        return nutrition
 
     @property
     def goals(self):
@@ -30,8 +48,13 @@ class Day(MFPBase):
     def date(self):
         return self._date
 
+    def get_as_dict(self):
+        return dict(
+            (m.name, m.get_as_list(), ) for m in self.meals
+        )
+
     def __unicode__(self):
         return u'%s %s' % (
-            self.date.strftime('%Y-%m-%d'),
+            self.date.strftime('%x'),
             self.totals,
         )
