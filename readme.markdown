@@ -5,6 +5,8 @@ Do you track your eating habits on [MyFitnessPal](https://www.myfitnesspal.com/)
 
 Although MyFitnessPal [does have an API](https://www.myfitnesspal.com/api), it is private-access only; this creates an unnecessary barrier between you and your data that can be overcome using this library.
 
+Having problems? [Issues live on bitbucket](https://bitbucket.org/latestrevision/python-myfitnesspal/issues?status=new&status=open).
+
 Installation
 ------------
 
