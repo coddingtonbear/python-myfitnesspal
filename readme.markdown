@@ -39,26 +39,17 @@ day = client.get_date(my_birthday)
 print day
 # >> <03/02/13 {'sodium': 3326, 'carbohydrates': 369, 'calories': 2001, 'fat': 22, 'sugar': 103, 'protein': 110}>
 
-# To see all meals either
+# To see all meals you can use the Day object's `meals` property
 print day.meals
 # >> [<Breakfast {}>,
 #    <Lunch {'sodium': 712, 'carbohydrates': 106, 'calories': 485, 'fat': 3, 'sugar': 0, 'protein': 17}>,
 #    <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>,
 #    <Snacks {'sodium': 424, 'carbohydrates': 93, 'calories': 571, 'fat': 8, 'sugar': 86, 'protein': 40}>]
 
-# Or, to just see what meals exist:
-print day.keys()
-# >> ['Breakfast', 'Lunch', 'Dinner', 'Snacks']
-
-# To access dinner, you can either access its index in `day.meals`:
-day.meals[2]
+# To access dinner, you can access it by its index in `day.meals`:
+dnner = day.meals[2]
+dinner
 # >> <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>
-
-# Or use a day as a dictionary having meal names as keys:
-day['Dinner']
-# >> <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>
-
-dinner = day['Dinner']
 
 # To get a list of things I ate for dinner, I can use the dinner Meal object's `entries` property:
 dinner.entries
@@ -101,4 +92,25 @@ spaghetti.totals
 #     'sodium': 0,
 #     'sugar': 3}
 
+
+## Hints
+
+# Day objects act as dictionaries:
+day.keys()
+# >> ['Breakfast', 'Lunch', 'Dinner', 'Snack']
+lunch = day['Lunch']
+
+# Meal objects act as lists:
+print lunch
+# >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>,
+#     <Injera - Ethiopian Flatbread, 18 " diameter {'sodium': 204, 'carbohydrates': 30, 'calories': 139, 'fat': 1, 'sugar': 0, 'protein': 5}>]
+len(lunch)
+# >> 2
+miser_wat = lunch[0]
+print miser_wat
+# >> <Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>
+
+# and Entry objects act as dictionaries:
+print miser_wat['calories']
+# >> 346
 ```

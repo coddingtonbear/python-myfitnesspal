@@ -11,6 +11,9 @@ class Meal(MFPBase):
             raise ValueError('Index must be an integer')
         return self.entries[value]
 
+    def __len__(self):
+        return len(self.entries)
+
     @property
     def entries(self):
         return self._entries

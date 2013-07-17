@@ -6,6 +6,12 @@ class Entry(MFPBase):
         self._name = name
         self._nutrition = nutrition
 
+    def __getitem__(self, value):
+        return self.totals[value]
+
+    def keys(self):
+        return self.totals.keys()
+
     @property
     def name(self):
         return self._name
