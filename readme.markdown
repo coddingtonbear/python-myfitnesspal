@@ -38,14 +38,14 @@ client = myfitnesspal.Client('my_username', 'my_password')
 
 my_birthday = datetime.date(2013, 3, 2)
 day = client.get_date(my_birthday)
-print day
+day
 # >> <03/02/13 {'sodium': 3326, 'carbohydrates': 369, 'calories': 2001, 'fat': 22, 'sugar': 103, 'protein': 110}>
 ```
 
 To see all meals you can use the Day object's `meals` property:
 
 ```python
-print day.meals
+day.meals
 # >> [<Breakfast {}>,
 #    <Lunch {'sodium': 712, 'carbohydrates': 106, 'calories': 485, 'fat': 3, 'sugar': 0, 'protein': 17}>,
 #    <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>,
@@ -122,14 +122,14 @@ Day objects act as dictionaries:
 day.keys()
 # >> ['Breakfast', 'Lunch', 'Dinner', 'Snack']
 lunch = day['Lunch']
+print lunch
+# >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>,
+#     <Injera - Ethiopian Flatbread, 18 " diameter {'sodium': 204, 'carbohydrates': 30, 'calories': 139, 'fat': 1, 'sugar': 0, 'protein': 5}>]
 ```
 
 Meal objects act as lists:
 
 ```python
-print lunch
-# >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>,
-#     <Injera - Ethiopian Flatbread, 18 " diameter {'sodium': 204, 'carbohydrates': 30, 'calories': 139, 'fat': 1, 'sugar': 0, 'protein': 5}>]
 len(lunch)
 # >> 2
 miser_wat = lunch[0]
