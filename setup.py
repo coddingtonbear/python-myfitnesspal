@@ -20,7 +20,7 @@ setup(
         'Programming Language :: Python',
         'Topic :: Utilities',
     ],
-    packages=find_packages,
+    packages=find_packages(),
     install_requires=requirements,
     test_suite='nose.collector',
     tests_require=[
