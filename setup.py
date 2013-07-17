@@ -3,7 +3,7 @@ import multiprocessing
 from setuptools import setup, find_packages
 
 requirements = []
-with open('requirements.txt', 'w') as in_:
+with open('requirements.txt', 'r') as in_:
     requirements = in_.readlines()
 
 setup(
