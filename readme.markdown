@@ -57,7 +57,7 @@ day.meals
 To access dinner, you can access it by its index in `day.meals`:
 
 ```python
-dnner = day.meals[2]
+dinner = day.meals[2]
 dinner
 # >> <Dinner {'sodium': 2190, 'carbohydrates': 170, 'calories': 945, 'fat': 11, 'sugar': 17, 'protein': 53}>
 ```
