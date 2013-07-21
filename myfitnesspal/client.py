@@ -2,6 +2,7 @@ import os.path
 import re
 
 import lxml.html
+from measurement.measures import Energy, Weight
 import requests
 
 from myfitnesspal.base import MFPBase
@@ -15,6 +16,14 @@ class Client(MFPBase):
     LOGIN_PATH = 'account/login'
     ABBREVIATIONS = {
         'carbs': 'carbohydrates',
+    }
+    DEFAULT_MEASURE_AND_UNIT = {
+        'calories': (Energy, 'Calorie'),
+        'carbohydrates': (Weight, 'g'),
+        'fat': (Weight, 'g'),
+        'protein': (Weight, 'g'),
+        'sodium': (Weight, 'mg'),
+        'sugar': (Weight, 'g'),
     }
 
     def __init__(self, username, password, login=True):
@@ -68,6 +77,10 @@ class Client(MFPBase):
 
         return lxml.html.document_fromstring(content)
 
+    def _get_measurement(self, name, value):
+        measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
+        return measure(**{kwarg: value})
+
     def _get_numeric(self, string):
         return int(re.sub(r'[^\d.]+', '', string))
 
@@ -98,7 +111,8 @@ class Client(MFPBase):
             except IndexError:
                 # This is the 'delete' button
                 continue
-            nutrition[nutr_name] = self._get_numeric(column.text)
+            value = self._get_numeric(column.text)
+            nutrition[nutr_name] = self._get_measurement(nutr_name, value)
 
         return nutrition
 
@@ -130,7 +144,11 @@ class Client(MFPBase):
                     except IndexError:
                         # This is the 'delete' button
                         continue
-                    nutrition[nutr_name] = self._get_numeric(column.text)
+                    value = self._get_numeric(column.text)
+                    nutrition[nutr_name] = self._get_measurement(
+                        nutr_name,
+                        value
+                    )
 
                 entries.append(
                     Entry(

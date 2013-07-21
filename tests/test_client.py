@@ -1,5 +1,6 @@
 import datetime
 
+from measurement.measures import Energy, Weight
 import mimic
 
 from myfitnesspal import Client
@@ -15,6 +16,7 @@ class TestClient(MFPTestCase):
         self.client = Client(
             self.arbitrary_username,
             self.arbitrary_password,
+            login=False
         )
         super(TestClient, self).setUp()
 
@@ -52,23 +54,23 @@ class TestClient(MFPTestCase):
             "breakfast": [
                 {
                     "nutrition_information": {
-                        "sodium": 380,
-                        "carbohydrates": 44,
-                        "calories": 240,
-                        "fat": 6,
-                        "sugar": 8,
-                        "protein": 10
+                        "sodium": Weight(mg=380),
+                        "carbohydrates": Weight(g=44),
+                        "calories": Energy(Calorie=240),
+                        "fat": Weight(g=6),
+                        "sugar": Weight(g=8),
+                        "protein": Weight(g=10)
                     },
                     "name": "Dave's Killer Bread - Blues Bread, 2 slice"
                 },
                 {
                     "nutrition_information": {
-                        "sodium": 100,
-                        "carbohydrates": 0,
-                        "calories": 100,
-                        "fat": 11,
-                        "sugar": 0,
-                        "protein": 0
+                        "sodium": Weight(mg=100),
+                        "carbohydrates": Weight(g=0),
+                        "calories": Energy(Calorie=100),
+                        "fat": Weight(g=11),
+                        "sugar": Weight(g=0),
+                        "protein": Weight(g=0)
                     },
                     "name": (
                         "Earth Balance - "
@@ -79,23 +81,23 @@ class TestClient(MFPTestCase):
             "dinner": [
                 {
                     "nutrition_information": {
-                        "sodium": 5,
-                        "carbohydrates": 8,
-                        "calories": 288,
-                        "fat": 0,
-                        "sugar": 0,
-                        "protein": 0
+                        "sodium": Weight(mg=5),
+                        "carbohydrates": Weight(g=8),
+                        "calories": Energy(Calorie=288),
+                        "fat": Weight(g=0),
+                        "sugar": Weight(g=0),
+                        "protein": Weight(g=0)
                     },
                     "name": "Wine - Pinot Noir Wine, 12 oz"
                 },
                 {
                     "nutrition_information": {
-                        "sodium": 1166,
-                        "carbohydrates": 64,
-                        "calories": 690,
-                        "fat": 48,
-                        "sugar": 14,
-                        "protein": 30
+                        "sodium": Weight(mg=1166),
+                        "carbohydrates": Weight(g=64),
+                        "calories": Energy(Calorie=690),
+                        "fat": Weight(g=48),
+                        "sugar": Weight(g=14),
+                        "protein": Weight(g=30)
                     },
                     "name": "Generic - Baked Macaroni and Cheese, 14 grams"
                 }
@@ -103,34 +105,34 @@ class TestClient(MFPTestCase):
             "snacks": [
                 {
                     "nutrition_information": {
-                        "sodium": 80,
-                        "carbohydrates": 3,
-                        "calories": 170,
-                        "fat": 2,
-                        "sugar": 2,
-                        "protein": 36
+                        "sodium": Weight(mg=80),
+                        "carbohydrates": Weight(g=3),
+                        "calories": Energy(Calorie=170),
+                        "fat": Weight(g=2),
+                        "sugar": Weight(g=2),
+                        "protein": Weight(g=36)
                     },
                     "name": "Mrm - Dutch Chocolate Whey Protein, 2 scoop"
                 },
                 {
                     "nutrition_information": {
-                        "sodium": 338,
-                        "carbohydrates": 36,
-                        "calories": 203,
-                        "fat": 6,
-                        "sugar": 34,
-                        "protein": 2
+                        "sodium": Weight(mg=338),
+                        "carbohydrates": Weight(g=36),
+                        "calories": Energy(Calorie=203),
+                        "fat": Weight(g=6),
+                        "sugar": Weight(g=34),
+                        "protein": Weight(g=2)
                     },
                     "name": "Drinks - Almond Milk (Vanilla), 18 oz"
                 },
                 {
                     "nutrition_information": {
-                        "sodium": 0,
-                        "carbohydrates": 48,
-                        "calories": 588,
-                        "fat": 0,
-                        "sugar": 0,
-                        "protein": 0
+                        "sodium": Weight(mg=0),
+                        "carbohydrates": Weight(g=48),
+                        "calories": Energy(Calorie=588),
+                        "fat": Weight(g=0),
+                        "sugar": Weight(g=0),
+                        "protein": Weight(g=0)
                     },
                     "name": (
                         "Dogfish Head 90 Minute Ipa - "
@@ -152,22 +154,22 @@ class TestClient(MFPTestCase):
         self.assertEquals(
             day.goals,
             {
-                'calories': 2500,
-                'carbohydrates': 343,
-                'fat': 84,
-                'protein': 93,
-                'sodium': 2500,
-                'sugar': 50,
+                'calories': Energy(Calorie=2500),
+                'carbohydrates': Weight(g=343),
+                'fat': Weight(g=84),
+                'protein': Weight(g=93),
+                'sodium': Weight(mg=2500),
+                'sugar': Weight(g=50),
             }
         )
         self.assertEquals(
             day.totals,
             {
-                'calories': 2279,
-                'carbohydrates': 203,
-                'fat': 73,
-                'protein': 78,
-                'sodium': 2069,
-                'sugar': 58,
+                'calories': Energy(Calorie=2279),
+                'carbohydrates': Weight(g=203),
+                'fat': Weight(g=73),
+                'protein': Weight(g=78),
+                'sodium': Weight(mg=2069),
+                'sugar': Weight(g=58),
             }
         )
