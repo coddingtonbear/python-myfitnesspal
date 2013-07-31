@@ -147,3 +147,19 @@ and Entry objects act as dictionaries:
 print miser_wat['calories']
 # >> 346
 ```
+
+and, since the measurement units returned are not necessarily very intuitive,
+you can enable or disable unit awareness using the `unit_aware` keyword
+argument.
+
+```python
+client = myfitnesspal.Client('my_username', 'my_password', unit_aware=True)
+my_birthday = datetime.date(2013, 3, 2)
+day = client.get_date(my_birthday)
+lunch = day['lunch']
+print lunch
+# >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': Weight(mg=508), 'carbohydrates': Weight(g=76), 'calories': Energy(Calorie=346), 'fat': Weight(g=2), 'sugar': Weight(g=0), 'protein': Weight(g=12)}>,
+miser_wat = lunch[0]
+print miser_wat['calories']
+# >> Energy(Calorie=346)
+```
