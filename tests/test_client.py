@@ -42,8 +42,142 @@ class TestClient(MFPTestCase):
             4,
         )
 
+    def test_get_day_unit_unaware(self):
+        self._stub_response_document('2013-07-13.html')
+        self.client.unit_aware = False
+
+        self.mimic.replay_all()
+
+        day = self.client.get_date(self.arbitrary_date)
+
+        expected_dict = {
+            "lunch": [],
+            "breakfast": [
+                {
+                    "nutrition_information": {
+                        "sodium": 380,
+                        "carbohydrates": 44,
+                        "calories": 240,
+                        "fat": 6,
+                        "sugar": 8,
+                        "protein": 10,
+                    },
+                    "name": "Dave's Killer Bread - Blues Bread, 2 slice"
+                },
+                {
+                    "nutrition_information": {
+                        "sodium": 100,
+                        "carbohydrates": 0,
+                        "calories": 100,
+                        "fat": 11,
+                        "sugar": 0,
+                        "protein": 0,
+                    },
+                    "name": (
+                        "Earth Balance - "
+                        "Natural Buttery Spread - Original, 1 tbsp (14g)"
+                    )
+                }
+            ],
+            "dinner": [
+                {
+                    "nutrition_information": {
+                        "sodium": 5,
+                        "carbohydrates": 8,
+                        "calories": 288,
+                        "fat": 0,
+                        "sugar": 0,
+                        "protein": 0,
+                    },
+                    "name": "Wine - Pinot Noir Wine, 12 oz"
+                },
+                {
+                    "nutrition_information": {
+                        "sodium": 1166,
+                        "carbohydrates": 64,
+                        "calories": 690,
+                        "fat": 48,
+                        "sugar": 14,
+                        "protein": 30,
+                    },
+                    "name": "Generic - Baked Macaroni and Cheese, 14 grams"
+                }
+            ],
+            "snacks": [
+                {
+                    "nutrition_information": {
+                        "sodium": 80,
+                        "carbohydrates": 3,
+                        "calories": 170,
+                        "fat": 2,
+                        "sugar": 2,
+                        "protein": 36,
+                    },
+                    "name": "Mrm - Dutch Chocolate Whey Protein, 2 scoop"
+                },
+                {
+                    "nutrition_information": {
+                        "sodium": 338,
+                        "carbohydrates": 36,
+                        "calories": 203,
+                        "fat": 6,
+                        "sugar": 34,
+                        "protein": 2,
+                    },
+                    "name": "Drinks - Almond Milk (Vanilla), 18 oz"
+                },
+                {
+                    "nutrition_information": {
+                        "sodium": 0,
+                        "carbohydrates": 48,
+                        "calories": 588,
+                        "fat": 0,
+                        "sugar": 0,
+                        "protein": 0,
+                    },
+                    "name": (
+                        "Dogfish Head 90 Minute Ipa - "
+                        "Beer, India Pale Ale, 24 oz"
+                    )
+                }
+            ]
+        }
+        actual_dict = day.get_as_dict()
+
+        self.assertEquals(
+            expected_dict,
+            actual_dict,
+        )
+        self.assertEquals(
+            day.date,
+            self.arbitrary_date,
+        )
+        self.assertEquals(
+            day.goals,
+            {
+                'calories': 2500,
+                'carbohydrates': 343,
+                'fat': 84,
+                'protein': 93,
+                'sodium': 2500,
+                'sugar': 50,
+            }
+        )
+        self.assertEquals(
+            day.totals,
+            {
+                'calories': 2279,
+                'carbohydrates': 203,
+                'fat': 73,
+                'protein': 78,
+                'sodium': 2069,
+                'sugar': 58,
+            }
+        )
+
     def test_get_day(self):
         self._stub_response_document('2013-07-13.html')
+        self.client.unit_aware = True
 
         self.mimic.replay_all()
 

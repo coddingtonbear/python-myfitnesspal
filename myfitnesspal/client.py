@@ -26,9 +26,10 @@ class Client(MFPBase):
         'sugar': (Weight, 'g'),
     }
 
-    def __init__(self, username, password, login=True):
+    def __init__(self, username, password, login=True, unit_aware=False):
         self.username = username
         self.password = password
+        self.unit_aware = unit_aware
 
         self.session = requests.Session()
         if login:
@@ -78,6 +79,8 @@ class Client(MFPBase):
         return lxml.html.document_fromstring(content)
 
     def _get_measurement(self, name, value):
+        if not self.unit_aware:
+            return value
         measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
         return measure(**{kwarg: value})
 
