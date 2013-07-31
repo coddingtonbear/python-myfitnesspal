@@ -12,7 +12,7 @@ class TestClient(MFPTestCase):
     def setUp(self):
         self.arbitrary_username = 'alpha'
         self.arbitrary_password = 'beta'
-        self.arbitrary_date = datetime.date(2013,3,2)
+        self.arbitrary_date = datetime.date(2013, 3, 2)
         self.client = Client(
             self.arbitrary_username,
             self.arbitrary_password,
