@@ -28,8 +28,9 @@ class Meal(MFPBase):
         for entry in self.entries:
             for k, v in entry.nutrition_information.items():
                 if k not in nutrition:
-                    nutrition[k] = 0
-                nutrition[k] += v
+                    nutrition[k] = v
+                else:
+                    nutrition[k] += v
 
         return nutrition
 
