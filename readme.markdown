@@ -36,12 +36,10 @@ To access a single day's information:
 
 ```python
 import myfitnesspal
-import datetime
 
 client = myfitnesspal.Client('my_username', 'my_password')
 
-my_birthday = datetime.date(2013, 3, 2)
-day = client.get_date(my_birthday)
+day = client.get_date(2013, 3, 2)
 day
 # >> <03/02/13 {'sodium': 3326, 'carbohydrates': 369, 'calories': 2001, 'fat': 22, 'sugar': 103, 'protein': 110}>
 ```
@@ -154,8 +152,7 @@ argument.
 
 ```python
 client = myfitnesspal.Client('my_username', 'my_password', unit_aware=True)
-my_birthday = datetime.date(2013, 3, 2)
-day = client.get_date(my_birthday)
+day = client.get_date(2013, 3, 2)
 lunch = day['lunch']
 print lunch
 # >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': Weight(mg=508), 'carbohydrates': Weight(g=76), 'calories': Energy(Calorie=346), 'fat': Weight(g=2), 'sugar': Weight(g=0), 'protein': Weight(g=12)}>,

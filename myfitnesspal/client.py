@@ -1,3 +1,4 @@
+import datetime
 import os.path
 import re
 
@@ -169,7 +170,21 @@ class Client(MFPBase):
 
         return meals
 
-    def get_date(self, date):
+    def get_date(self, *args):
+        if len(args) == 3:
+            date = datetime.date(
+                int(args[0]),
+                int(args[1]),
+                int(args[2]),
+            )
+        elif len(args) == 1 and isinstance(args[0], datetime.date):
+            date = args[0]
+        else:
+            raise ValueError(
+                'get_date accepts either a single datetime or date instance, '
+                'or three integers representing year, month, and day '
+                'respectively.'
+            )
         document = self._get_document_for_url(
             self._get_url_for_date(
                 date
