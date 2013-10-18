@@ -13,7 +13,7 @@ from myfitnesspal.meal import Meal
 
 
 class Client(MFPBase):
-    BASE_URL = 'http://www.myfitnesspal.com/'
+    BASE_URL = 'https://www.myfitnesspal.com/'
     LOGIN_PATH = 'account/login'
     ABBREVIATIONS = {
         'carbs': 'carbohydrates',
@@ -46,7 +46,7 @@ class Client(MFPBase):
             "(//input[@name='utf8']/@value)[1]"
         )[0]
 
-        self.session.post(
+        result = self.session.post(
             login_url,
             data={
                 'utf8': utf8_field,
@@ -55,6 +55,10 @@ class Client(MFPBase):
                 'password': self.password,
             }
         )
+        if 'Incorrect username or password' in result.content:
+            raise ValueError(
+                "Incorrect username or password."
+            )
 
     def _get_full_name(self, raw_name):
         name = raw_name.lower()
