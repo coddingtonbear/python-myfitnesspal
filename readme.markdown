@@ -160,3 +160,5 @@ miser_wat = lunch[0]
 print miser_wat['calories']
 # >> Energy(Calorie=346)
 ```
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/latestrevision/python-myfitnesspal/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
