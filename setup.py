@@ -9,7 +9,7 @@ with open('requirements.txt', 'r') as in_:
 setup(
     name='myfitnesspal',
     version='1.2.1',
-    url='http://bitbucket.org/latestrevision/python-myfitnesspal/',
+    url='http://github.com/latestrevision/python-myfitnesspal/',
     description='Access health and fitness data stored in Myfitnesspal',
     author='Adam Coddington',
     author_email='me@adamcoddington.net',

@@ -16,12 +16,6 @@ You can either install from pip:
 
     pip install myfitnesspal
 
-*or* checkout and install the source from the [bitbucket repository](https://bitbucket.org/latestrevision/python-myfitnesspal):
-
-    hg clone https://bitbucket.org/latestrevision/python-myfitnesspal
-    cd python-myfitnesspal
-    python setup.py install
-
 *or* checkout and install the source from the [github repository](https://github.com/latestrevision/python-myfitnesspal):
 
     git clone https://github.com/latestrevision/python-myfitnesspal.git
