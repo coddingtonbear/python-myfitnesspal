@@ -13,7 +13,8 @@ from myfitnesspal.meal import Meal
 
 
 class Client(MFPBase):
-    BASE_URL = 'https://www.myfitnesspal.com/'
+    BASE_URL = 'http://www.myfitnesspal.com/'
+    BASE_URL_SECURE = 'https://www.myfitnesspal.com/'
     LOGIN_PATH = 'account/login'
     ABBREVIATIONS = {
         'carbs': 'carbohydrates',
@@ -37,7 +38,7 @@ class Client(MFPBase):
             self._login()
 
     def _login(self):
-        login_url = os.path.join(self.BASE_URL, self.LOGIN_PATH)
+        login_url = os.path.join(self.BASE_URL_SECURE, self.LOGIN_PATH)
         document = self._get_document_for_url(login_url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
