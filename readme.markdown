@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/latestrevision/python-myfitnesspal.png?branch=master)](https://travis-ci.org/latestrevision/python-myfitnesspal)
+[![Build Status](https://travis-ci.org/coddingtonbear/python-myfitnesspal.png?branch=master)](https://travis-ci.org/coddingtonbear/python-myfitnesspal)
 
 MyFitnessPal
 ============
@@ -7,7 +7,7 @@ Do you track your eating habits on [MyFitnessPal](https://www.myfitnesspal.com/)
 
 Although MyFitnessPal [does have an API](https://www.myfitnesspal.com/api), it is private-access only; this creates an unnecessary barrier between you and your data that can be overcome using this library.
 
-Having problems? [Issues live on github](https://github.com/latestrevision/python-myfitnesspal/issues).
+Having problems? [Issues live on github](https://github.com/coddingtonbear/python-myfitnesspal/issues).
 
 Installation
 ------------
@@ -16,9 +16,9 @@ You can either install from pip:
 
     pip install myfitnesspal
 
-*or* checkout and install the source from the [github repository](https://github.com/latestrevision/python-myfitnesspal):
+*or* checkout and install the source from the [github repository](https://github.com/coddingtonbear/python-myfitnesspal):
 
-    git clone https://github.com/latestrevision/python-myfitnesspal.git
+    git clone https://github.com/coddingtonbear/python-myfitnesspal.git
     cd python-myfitnesspal
     python setup.py install
 
@@ -155,4 +155,4 @@ print miser_wat['calories']
 # >> Energy(Calorie=346)
 ```
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/latestrevision/python-myfitnesspal/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/coddingtonbear/python-myfitnesspal/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
