@@ -24,7 +24,7 @@ setup(
     install_requires=requirements,
     test_suite='nose.collector',
     tests_require=[
-        'mimic',
+        'gmcquillan-mimic',
         'nose',
     ]
 )
