@@ -67,11 +67,11 @@ class Client(MFPBase):
             return name
         return self.ABBREVIATIONS[name]
 
-    def _get_url_for_date(self, date):
+    def _get_url_for_date(self, date, username):
         return os.path.join(
             self.BASE_URL,
             'food/diary',
-            self.username,
+            username,
         ) + '?date=%s' % (
             date.strftime('%Y-%m-%d')
         )
@@ -175,7 +175,7 @@ class Client(MFPBase):
 
         return meals
 
-    def get_date(self, *args):
+    def get_date(self, *args, **kwargs):
         if len(args) == 3:
             date = datetime.date(
                 int(args[0]),
@@ -192,7 +192,8 @@ class Client(MFPBase):
             )
         document = self._get_document_for_url(
             self._get_url_for_date(
-                date
+                date,
+                kwargs.get('username', self.username)
             )
         )
 
