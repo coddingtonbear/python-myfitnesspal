@@ -143,7 +143,15 @@ class Client(MFPBase):
                 if not this.attrib.get('class') is None:
                     break
                 columns = this.findall('td')
-                name = columns[0].find('a').text
+
+                # When viewing a friend's diary, the HTML entries containing the
+                # actual food log entries are different: they don't contain an
+                # embedded <a/> element but rather the food name directly.
+                if columns[0].find('a') is None:
+                    name = columns[0].text.strip()
+                else:
+                    name = columns[0].find('a').text
+
                 nutrition = {}
 
                 for n in range(1, len(columns)):
