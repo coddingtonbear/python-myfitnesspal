@@ -2,10 +2,12 @@ from myfitnesspal.base import MFPBase
 
 
 class Day(MFPBase):
-    def __init__(self, date, meals=None, goals=None):
+    def __init__(self, date, meals=None, goals=None, notes=None, cups_water=None):
         self._date = date
         self._meals = meals
         self._goals = goals
+        self._notes = notes
+        self._cups_water = cups_water
 
     def __getitem__(self, value):
         for meal in self._meals:
@@ -48,6 +50,14 @@ class Day(MFPBase):
     @property
     def date(self):
         return self._date
+
+    @property
+    def notes(self):
+        return self._notes
+
+    @property
+    def cups_water(self):
+        return self._cups_water
 
     def get_as_dict(self):
         return dict(

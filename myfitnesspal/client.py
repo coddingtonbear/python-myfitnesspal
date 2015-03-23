@@ -207,14 +207,28 @@ class Client(MFPBase):
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
+        notes = self._get_notes(document)
+        cups_water = self._get_water(document)
 
         day = Day(
             date=date,
             meals=meals,
             goals=goals,
+            notes=notes,
+            cups_water=cups_water
         )
 
         return day
+
+    def _get_notes(self, document):
+        notes_header = document.xpath("//p[@class='note']")[0]
+        lines = [ notes_header.text ] + map(lambda x: x.tail, notes_header)
+        return lines
+
+    def _get_water(self, document):
+        water_header = document.xpath("//div[@class='water-counter']/p/a")[0]
+        cups = water_header.tail.strip()
+        return cups
 
     def __unicode__(self):
         return u'MyFitnessPal Client for %s' % self.username
