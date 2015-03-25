@@ -3,7 +3,7 @@ import os.path
 import re
 
 import lxml.html
-from measurement.measures import Energy, Weight
+from measurement.measures import Energy, Weight, Volume
 import requests
 
 from myfitnesspal.base import MFPBase
@@ -208,27 +208,33 @@ class Client(MFPBase):
         meals = self._get_meals(document)
         goals = self._get_goals(document)
         notes = self._get_notes(document)
-        cups_water = self._get_water(document)
+        water = self._get_water(document)
 
         day = Day(
             date=date,
             meals=meals,
             goals=goals,
             notes=notes,
-            cups_water=cups_water
+            water=water
         )
 
         return day
 
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]
-        lines = [ notes_header.text ] + map(lambda x: x.tail, notes_header)
+        header_text = [notes_header.text] if notes_header.text else []
+        lines = header_text + map(lambda x: x.tail, notes_header)
         return lines
 
     def _get_water(self, document):
         water_header = document.xpath("//div[@class='water-counter']/p/a")[0]
-        cups = water_header.tail.strip()
-        return cups
+        try:
+            cups = int(water_header.tail.strip())
+            if self.unit_aware:
+                return Volume(us_cup=cups)
+            return cups
+        except (ValueError, TypeError):
+            return None
 
     def __unicode__(self):
         return u'MyFitnessPal Client for %s' % self.username
