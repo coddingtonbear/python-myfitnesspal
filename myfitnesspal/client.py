@@ -70,8 +70,8 @@ class Client(MFPBase):
     def _get_url_for_date(self, date, username):
         return os.path.join(
             self.BASE_URL,
-            'food/diary',
-            username,
+            'food/diary/',
+            username
         ) + '?date=%s' % (
             date.strftime('%Y-%m-%d')
         )
