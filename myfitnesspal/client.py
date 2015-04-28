@@ -226,6 +226,11 @@ class Client(MFPBase):
 
         return day
 
+    def get_measurements(self, *args, **kwargs):
+        document = self._get_document_for_url(
+            self._get_url_for_measurements()
+        )
+
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]
         header_text = [notes_header.text] if notes_header.text else []
