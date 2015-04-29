@@ -231,6 +231,17 @@ class Client(MFPBase):
             self._get_url_for_measurements()
         )
 
+        return self._get_measurements(document)
+
+    def _get_measurements(self, document):
+        types = document.xpath("//select[@id='type']/option")
+
+        measurements = {}
+        for element in types:
+            measurements[element.text] = element.attrib["value"]
+
+        return measurements
+
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]
         header_text = [notes_header.text] if notes_header.text else []
