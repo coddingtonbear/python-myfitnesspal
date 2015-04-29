@@ -76,10 +76,13 @@ class Client(MFPBase):
             date.strftime('%Y-%m-%d')
         )
 
-    def _get_url_for_measurements(self):
+    def _get_url_for_measurements(self, **kwargs):
         return os.path.join(
             self.BASE_URL,
-            'measurements/edit?page=1&type=1'
+            'measurements/edit'
+        ) + '?page=%s&type=%s' % (
+            kwargs.get('page', '1'),
+            kwargs.get('type', '1')
         )
 
     def _get_content_for_url(self, url):
