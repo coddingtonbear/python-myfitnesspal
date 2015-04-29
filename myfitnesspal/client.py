@@ -229,21 +229,21 @@ class Client(MFPBase):
 
         return day
 
-    def get_measurements(self, *args, **kwargs):
+    def get_measurements(self, **kwargs):
         document = self._get_document_for_url(
             self._get_url_for_measurements()
         )
 
-        return self._get_measurements(document)
+        ids = self._get_measurement_ids(document)
 
-    def _get_measurements(self, document):
-        types = document.xpath("//select[@id='type']/option")
+    def _get_measurement_ids(self, document):
+        options = document.xpath("//select[@id='type']/option")
 
-        measurements = {}
-        for element in types:
-            measurements[element.text] = element.attrib["value"]
+        ids = {}
+        for element in options:
+            ids[element.text] = element.attrib.get('value')
 
-        return measurements
+        return ids
 
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]
