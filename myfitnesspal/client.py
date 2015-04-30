@@ -235,6 +235,14 @@ class Client(MFPBase):
         )
 
         ids = self._get_measurement_ids(document)
+    def _get_measurements(self, document):
+        trs = document.xpath("//tbody//tr")
+
+        measurements = {}
+        for tr in trs:
+            measurements[tr[1].text] = tr[2].text
+
+        return measurements
 
     def _get_measurement_ids(self, document):
         options = document.xpath("//select[@id='type']/option")
