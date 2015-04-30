@@ -234,7 +234,19 @@ class Client(MFPBase):
             self._get_url_for_measurements()
         )
 
-        ids = self._get_measurement_ids(document)
+        measurement_ids = self._get_measurement_ids(document)
+        measurement_id = measurement_ids[kwargs.get('measurement', 'Weight')]
+
+        document = self._get_document_for_url(
+            self._get_url_for_measurements(
+                page='1',
+                type=measurement_id)
+        )
+
+        measurements = self._get_measurements(document)
+
+        return measurements
+
     def _get_measurements(self, document):
         trs = document.xpath("//tbody//tr")
 
@@ -248,8 +260,8 @@ class Client(MFPBase):
         options = document.xpath("//select[@id='type']/option")
 
         ids = {}
-        for element in options:
-            ids[element.text] = element.attrib.get('value')
+        for option in options:
+            ids[option.text] = option.attrib.get('value')
 
         return ids
 
