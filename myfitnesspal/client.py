@@ -229,13 +229,18 @@ class Client(MFPBase):
 
         return day
 
-    def get_measurements(self, **kwargs):
+    def get_measurements(self, measurement='Weight', start=None, end=None):
+        if start is None:
+            start = datetime.date.today()
+        if end is None:
+            end = start - datetime.timedelta(weeks=3)
+
         document = self._get_document_for_url(
             self._get_url_for_measurements()
         )
 
         measurement_ids = self._get_measurement_ids(document)
-        measurement_id = measurement_ids[kwargs.get('measurement', 'Weight')]
+        measurement_id = measurement_ids[measurement]
 
         document = self._get_document_for_url(
             self._get_url_for_measurements(
