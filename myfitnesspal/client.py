@@ -99,8 +99,11 @@ class Client(MFPBase):
         measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
         return measure(**{kwarg: value})
 
-    def _get_numeric(self, string):
-        return int(re.sub(r'[^\d.]+', '', string))
+    def _get_numeric(self, string, flt=False):
+        if flt:
+            return float(re.sub(r'[^\d.]+', '', string))
+        else:
+            return int(re.sub(r'[^\d.]+', '', string))
 
     def _get_fields(self, document):
         meal_header = document.xpath("//tr[@class='meal_header']")[0]
