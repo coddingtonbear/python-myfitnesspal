@@ -262,6 +262,14 @@ class Client(MFPBase):
         for tr in trs:
             measurements[tr[1].text] = tr[2].text
 
+        temp_measurements = {}
+        for date in measurements:
+            temp_measurements[
+                str(datetime.datetime.strptime(date,'%m/%d/%Y').date())
+            ] = self._get_numeric(measurements[date], flt=True)
+
+        measurements = temp_measurements
+
         return measurements
 
     def _get_measurement_ids(self, document):
