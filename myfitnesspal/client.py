@@ -248,7 +248,7 @@ class Client(MFPBase):
         return measurements
 
     def _get_measurements(self, document):
-        trs = document.xpath("//tbody//tr")
+        trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
 
         measurements = {}
         for tr in trs:
