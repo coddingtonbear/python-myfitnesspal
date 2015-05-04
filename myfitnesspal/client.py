@@ -265,7 +265,7 @@ class Client(MFPBase):
         temp_measurements = {}
         for date in measurements:
             temp_measurements[
-                str(datetime.datetime.strptime(date,'%m/%d/%Y').date())
+                datetime.datetime.strptime(date,'%m/%d/%Y').date()
             ] = self._get_numeric(measurements[date], flt=True)
 
         measurements = temp_measurements
