@@ -263,7 +263,9 @@ class Client(MFPBase):
             else:
                 break
 
-        measurements = self._get_measurements(document)
+        for date in measurements.keys():
+            if not (start >= date >= end):
+                del measurements[date]
 
         return measurements
 
