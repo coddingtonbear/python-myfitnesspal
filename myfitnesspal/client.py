@@ -245,11 +245,23 @@ class Client(MFPBase):
         measurement_ids = self._get_measurement_ids(document)
         measurement_id = measurement_ids[measurement]
 
-        document = self._get_document_for_url(
-            self._get_url_for_measurements(
-                page='1',
-                type=measurement_id)
-        )
+        page = 1
+        measurements = {}
+
+        while True:
+            document = self._get_document_for_url(
+                self._get_url_for_measurements(
+                    page=page,
+                    type=measurement_id)
+            )
+            
+            measurements.update(self._get_measurements(document))
+
+            if sorted(measurements, reverse=True)[-1] > end:
+                page += 1
+                continue
+            else:
+                break
 
         measurements = self._get_measurements(document)
 
