@@ -232,39 +232,71 @@ class Client(MFPBase):
 
         return day
 
-    def get_measurements(self, measurement='Weight', start=None, end=None):
-        if start is None:
-            start = datetime.date.today()
-        if end is None:
-            end = start - datetime.timedelta(weeks=3)
+    def get_measurements(self, measurement='Weight', date1=None, date2=None):
 
+        # no dates were entered
+        if (date1 is None and date2 is None):
+
+            # retrieves entries for the past 30 days
+            upper_bound = datetime.date.today()
+            lower_bound = upper_bound - datetime.timedelta(days=30)
+        
+        # both dates were entered to form a date range
+        elif (date1 is not None and date2 is not None):
+
+            # retrieves entries between the two dates
+            if date1 >= date2:
+                upper_bound = date1
+                lower_bound = date2
+            else:
+                upper_bound = date2
+                lower_bound = date1
+
+        # one date was entered as the start date
+        else:
+            
+            # retrieves entries since the date entered
+            upper_bound = datetime.date.today()
+
+            if date1 is not None:
+                lower_bound = date1
+            else:
+                lower_bound = date2
+
+        # get the URL for the main check in page
         document = self._get_document_for_url(
             self._get_url_for_measurements()
         )
 
+        # select the measurement ID based on the input
         measurement_ids = self._get_measurement_ids(document)
         measurement_id = measurement_ids[measurement]
 
         page = 1
         measurements = {}
 
+        # retrieve entries until the youngest date is reached
         while True:
+            # retrieve the HTML from MyFitnessPal
             document = self._get_document_for_url(
                 self._get_url_for_measurements(
                     page=page,
                     type=measurement_id)
             )
             
+            # parse the HTML for measurement entries
             measurements.update(self._get_measurements(document))
 
-            if sorted(measurements, reverse=True)[-1] > end:
+            # continue if the youngest date has not been retrieved
+            if sorted(measurements, reverse=True)[-1] > lower_bound:
                 page += 1
                 continue
             else:
                 break
 
+        # remove entries that are not within the dates specified
         for date in measurements.keys():
-            if not (start >= date >= end):
+            if not (upper_bound >= date >= lower_bound):
                 del measurements[date]
 
         return measurements
