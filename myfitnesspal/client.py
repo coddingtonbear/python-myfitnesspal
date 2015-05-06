@@ -235,14 +235,14 @@ class Client(MFPBase):
     def get_measurements(self, measurement='Weight', date1=None, date2=None):
 
         # no dates were entered
-        if (date1 is None and date2 is None):
+        if date1 is None and date2 is None:
 
             # retrieves entries for the past 30 days
             upper_bound = datetime.date.today()
             lower_bound = upper_bound - datetime.timedelta(days=30)
-        
+
         # both dates were entered to form a date range
-        elif (date1 is not None and date2 is not None):
+        elif date1 is not None and date2 is not None:
 
             # retrieves entries between the two dates
             if date1 >= date2:
@@ -254,7 +254,7 @@ class Client(MFPBase):
 
         # one date was entered as the start date
         else:
-            
+
             # retrieves entries since the date entered
             upper_bound = datetime.date.today()
 
@@ -283,7 +283,7 @@ class Client(MFPBase):
                     page=page,
                     type=measurement_id)
             )
-            
+
             # parse the HTML for measurement entries
             measurements.update(self._get_measurements(document))
 
@@ -296,7 +296,7 @@ class Client(MFPBase):
 
         # remove entries that are not within the dates specified
         for date in measurements.keys():
-            if not (upper_bound >= date >= lower_bound):
+            if not upper_bound >= date >= lower_bound:
                 del measurements[date]
 
         return measurements
@@ -309,15 +309,15 @@ class Client(MFPBase):
         measurements = {}
 
         # create a dictionary out of the date and value of each entry
-        for tr in trs:
-            measurements[tr[1].text] = tr[2].text
+        for entry in trs:
+            measurements[entry[1].text] = entry[2].text
 
         temp_measurements = {}
 
         # converts the date to a datetime object and the value to a float
         for date in measurements:
             temp_measurements[
-                datetime.datetime.strptime(date,'%m/%d/%Y').date()
+                datetime.datetime.strptime(date, '%m/%d/%Y').date()
             ] = self._get_numeric(measurements[date], flt=True)
 
         measurements = temp_measurements
