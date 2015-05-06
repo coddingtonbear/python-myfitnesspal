@@ -302,13 +302,19 @@ class Client(MFPBase):
         return measurements
 
     def _get_measurements(self, document):
+
+        # find the tr element for each measurement entry on the page
         trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
 
         measurements = {}
+
+        # create a dictionary out of the date and value of each entry
         for tr in trs:
             measurements[tr[1].text] = tr[2].text
 
         temp_measurements = {}
+
+        # converts the date to a datetime object and the value to a float
         for date in measurements:
             temp_measurements[
                 datetime.datetime.strptime(date,'%m/%d/%Y').date()
@@ -319,9 +325,13 @@ class Client(MFPBase):
         return measurements
 
     def _get_measurement_ids(self, document):
+
+        # find the option element for all of the measurement choices
         options = document.xpath("//select[@id='type']/option")
 
         ids = {}
+
+        # create a dictionary out of the text and value of each choice
         for option in options:
             ids[option.text] = option.attrib.get('value')
 
