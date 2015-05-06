@@ -76,14 +76,11 @@ class Client(MFPBase):
             date.strftime('%Y-%m-%d')
         )
 
-    def _get_url_for_measurements(self, **kwargs):
+    def _get_url_for_measurements(self, page=1, measurement_id=1):
         return os.path.join(
             self.BASE_URL,
             'measurements/edit'
-        ) + '?page=%s&type=%s' % (
-            kwargs.get('page', '1'),
-            kwargs.get('type', '1')
-        )
+        ) + '?page=%d&type=%d' % (page, measurement_id)
 
     def _get_content_for_url(self, url):
         return self.session.get(url).content.decode('utf8')
@@ -279,9 +276,7 @@ class Client(MFPBase):
         while True:
             # retrieve the HTML from MyFitnessPal
             document = self._get_document_for_url(
-                self._get_url_for_measurements(
-                    page=page,
-                    type=measurement_id)
+                self._get_url_for_measurements(page, measurement_id)
             )
 
             # parse the HTML for measurement entries
@@ -333,7 +328,7 @@ class Client(MFPBase):
 
         # create a dictionary out of the text and value of each choice
         for option in options:
-            ids[option.text] = option.attrib.get('value')
+            ids[option.text] = int(option.attrib.get('value'))
 
         return ids
 
