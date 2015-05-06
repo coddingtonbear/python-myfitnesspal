@@ -279,7 +279,7 @@ class Client(MFPBase):
         page = 1
         measurements = {}
 
-        # retrieve entries until the youngest date is reached
+        # retrieve entries until finished
         while True:
             # retrieve the HTML from MyFitnessPal
             document = self._get_document_for_url(
@@ -287,12 +287,19 @@ class Client(MFPBase):
             )
 
             # parse the HTML for measurement entries
-            measurements.update(self._get_measurements(document))
+            results = self._get_measurements(document)
 
-            # continue if the youngest date has not been retrieved
-            if sorted(measurements, reverse=True)[-1] > lower_bound:
+            # stop if there are no more entries
+            if len(results) == 0:
+                break
+
+            # continue if the lower bound has not been reached
+            elif sorted(results, reverse=True)[-1] > lower_bound:
+                measurements.update(results)
                 page += 1
                 continue
+
+            # otherwise stop
             else:
                 break
 
@@ -312,7 +319,12 @@ class Client(MFPBase):
 
         # create a dictionary out of the date and value of each entry
         for entry in trs:
-            measurements[entry[1].text] = entry[2].text
+
+            # ensure there are measurement entries on the page
+            if len(entry) == 1:
+                return measurements
+            else:
+                measurements[entry[1].text] = entry[2].text
 
         temp_measurements = {}
 
