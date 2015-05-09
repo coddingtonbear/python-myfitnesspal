@@ -12,7 +12,8 @@ class TestClient(MFPTestCase):
     def setUp(self):
         self.arbitrary_username = 'alpha'
         self.arbitrary_password = 'beta'
-        self.arbitrary_date = datetime.date(2013, 3, 2)
+        self.arbitrary_date1 = datetime.date(2015, 4, 20)
+        self.arbitrary_date2 = datetime.date(2015, 4, 28)
         self.client = Client(
             self.arbitrary_username,
             self.arbitrary_password,
@@ -67,7 +68,7 @@ class TestClient(MFPTestCase):
 
         self.mimic.replay_all()
 
-        day = self.client.get_date(self.arbitrary_date)
+        day = self.client.get_date(self.arbitrary_date1)
 
         expected_dict = {
             "lunch": [],
@@ -169,7 +170,7 @@ class TestClient(MFPTestCase):
         )
         self.assertEquals(
             day.date,
-            self.arbitrary_date,
+            self.arbitrary_date1,
         )
         self.assertEquals(
             day.goals,
@@ -200,7 +201,7 @@ class TestClient(MFPTestCase):
 
         self.mimic.replay_all()
 
-        day = self.client.get_date(self.arbitrary_date)
+        day = self.client.get_date(self.arbitrary_date1)
 
         expected_dict = {
             "lunch": [],
@@ -302,7 +303,7 @@ class TestClient(MFPTestCase):
         )
         self.assertEquals(
             day.date,
-            self.arbitrary_date,
+            self.arbitrary_date1,
         )
         self.assertEquals(
             day.goals,
