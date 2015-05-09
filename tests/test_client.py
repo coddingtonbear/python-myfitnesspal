@@ -33,6 +33,25 @@ class TestClient(MFPTestCase):
             )
         )
 
+    def test_get_measurement_ids(self):
+        document = self.get_html_document('measurements.html')
+        actual_ids = self.client._get_measurement_ids(document)
+
+        expected_ids = {
+            "Weight": 1,
+            "Body Fat": 91955886,
+            "Butt": 92738807,
+            "Bicep": 92738811,
+            "Quad": 92738815,
+            "Mid Section": 92738819,
+            "Shoulders": 92738861,
+        }
+
+        self.assertEquals(
+            expected_ids,
+            actual_ids,
+        )
+
     def test_get_meals(self):
         document = self.get_html_document('2013-07-13.html')
         meals = self.client._get_meals(document)
