@@ -53,7 +53,7 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_meals(self):
-        document = self.get_html_document('2013-07-13.html')
+        document = self.get_html_document('diary.html')
         meals = self.client._get_meals(document)
 
         self.assertEquals(
@@ -62,7 +62,7 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_day_unit_unaware(self):
-        self._stub_response_document('2013-07-13.html')
+        self._stub_response_document('diary.html')
         self.client.unit_aware = False
 
         self.mimic.replay_all()
@@ -195,7 +195,7 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_day(self):
-        self._stub_response_document('2013-07-13.html')
+        self._stub_response_document('diary.html')
         self.client.unit_aware = True
 
         self.mimic.replay_all()
