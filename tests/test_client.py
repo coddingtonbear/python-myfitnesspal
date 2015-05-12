@@ -28,7 +28,7 @@ class TestClient(MFPTestCase):
         )
         self.client._get_document_for_url(
             mimic.IgnoreArg()
-        ).and_return(
+        ).multiple_times().and_return(
             self.get_html_document(
                 filename
             )
