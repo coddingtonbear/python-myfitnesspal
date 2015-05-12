@@ -286,8 +286,9 @@ class Client(MFPBase):
                 self._get_url_for_measurements(page, measurement_id)
             )
 
-            # parse the HTML for measurement entries
+            # parse the HTML for measurement entries and add to dictionary
             results = self._get_measurements(document)
+            measurements.update(results)
 
             # stop if there are no more entries
             if len(results) == 0:
@@ -295,7 +296,6 @@ class Client(MFPBase):
 
             # continue if the lower bound has not been reached
             elif sorted(results, reverse=True)[-1] > lower_bound:
-                measurements.update(results)
                 page += 1
                 continue
 
