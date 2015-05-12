@@ -1,9 +1,7 @@
-[![Build Status](https://travis-ci.org/coddingtonbear/python-myfitnesspal.png?branch=master)](https://travis-ci.org/coddingtonbear/python-myfitnesspal)
+[![Build Status](https://travis-ci.org/coddingtonbear/python-myfitnesspal.png?branch=master)](https://travis-ci.org/coddingtonbear/python-myfitnesspal)  [![Join the chat at https://gitter.im/coddingtonbear/python-myfitnesspal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/coddingtonbear/python-myfitnesspal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 MyFitnessPal
 ============
-
-[![Join the chat at https://gitter.im/coddingtonbear/python-myfitnesspal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/coddingtonbear/python-myfitnesspal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Do you track your eating habits on [MyFitnessPal](https://www.myfitnesspal.com/)?  Have you ever wanted to analyze the information you're entering into MyFitnessPal programatically?  
 
