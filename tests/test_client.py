@@ -62,6 +62,33 @@ class TestClient(MFPTestCase):
             4,
         )
 
+    def test_get_measurements(self):
+        self._stub_response_document('measurements.html')
+
+        self.mimic.replay_all()
+
+        actual_measurements = self.client.get_measurements(
+            'Body Fat',
+            self.arbitrary_date1,
+            self.arbitrary_date2,
+        )
+
+        expected_measurements = {
+            datetime.date(2015, 4, 28): 19.2,
+            datetime.date(2015, 4, 27): 19.2,
+            datetime.date(2015, 4, 26): 19.0,
+            datetime.date(2015, 4, 25): 18.7,
+            datetime.date(2015, 4, 23): 18.7,
+            datetime.date(2015, 4, 22): 18.4,
+            datetime.date(2015, 4, 21): 18.9,
+            datetime.date(2015, 4, 20): 19.1,
+        }
+
+        self.assertEquals(
+            expected_measurements,
+            actual_measurements,
+        )
+
     def test_get_day_unit_unaware(self):
         self._stub_response_document('diary.html')
         self.client.unit_aware = False
