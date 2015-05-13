@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/coddingtonbear/python-myfitnesspal.png?branch=master)](https://travis-ci.org/coddingtonbear/python-myfitnesspal)
+[![Build Status](https://travis-ci.org/coddingtonbear/python-myfitnesspal.png?branch=master)](https://travis-ci.org/coddingtonbear/python-myfitnesspal)  [![Join the chat at https://gitter.im/coddingtonbear/python-myfitnesspal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/coddingtonbear/python-myfitnesspal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 MyFitnessPal
 ============
@@ -163,5 +163,3 @@ miser_wat = lunch[0]
 print miser_wat['calories']
 # >> Energy(Calorie=346)
 ```
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/coddingtonbear/python-myfitnesspal/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
