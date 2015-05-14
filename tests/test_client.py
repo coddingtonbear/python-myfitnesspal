@@ -1,6 +1,7 @@
 import datetime
 
 from measurement.measures import Energy, Weight
+import ordereddict
 import mimic
 
 from myfitnesspal import Client
@@ -73,16 +74,18 @@ class TestClient(MFPTestCase):
             self.arbitrary_date2,
         )
 
-        expected_measurements = {
-            datetime.date(2015, 4, 28): 19.2,
-            datetime.date(2015, 4, 27): 19.2,
-            datetime.date(2015, 4, 26): 19.0,
-            datetime.date(2015, 4, 25): 18.7,
-            datetime.date(2015, 4, 23): 18.7,
-            datetime.date(2015, 4, 22): 18.4,
-            datetime.date(2015, 4, 21): 18.9,
-            datetime.date(2015, 4, 20): 19.1,
-        }
+        expected_measurements = ordereddict.OrderedDict(
+            [
+                (datetime.date(2015, 4, 28), 19.2),
+                (datetime.date(2015, 4, 27), 19.2),
+                (datetime.date(2015, 4, 26), 19.0),
+                (datetime.date(2015, 4, 25), 18.7),
+                (datetime.date(2015, 4, 23), 18.7),
+                (datetime.date(2015, 4, 22), 18.4),
+                (datetime.date(2015, 4, 21), 18.9),
+                (datetime.date(2015, 4, 20), 19.1),
+            ]
+        )
 
         self.assertEquals(
             expected_measurements,
