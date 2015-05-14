@@ -5,6 +5,7 @@ import re
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
 import requests
+import ordereddict
 
 from myfitnesspal.base import MFPBase
 from myfitnesspal.day import Day
@@ -277,7 +278,7 @@ class Client(MFPBase):
             )
 
         page = 1
-        measurements = {}
+        measurements = ordereddict.OrderedDict()
 
         # retrieve entries until finished
         while True:
@@ -295,7 +296,7 @@ class Client(MFPBase):
                 break
 
             # continue if the lower bound has not been reached
-            elif sorted(results, reverse=True)[-1] > lower_bound:
+            elif results.keys()[-1] > lower_bound:
                 page += 1
                 continue
 
@@ -315,7 +316,7 @@ class Client(MFPBase):
         # find the tr element for each measurement entry on the page
         trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
 
-        measurements = {}
+        measurements = ordereddict.OrderedDict()
 
         # create a dictionary out of the date and value of each entry
         for entry in trs:
@@ -326,7 +327,7 @@ class Client(MFPBase):
             else:
                 measurements[entry[1].text] = entry[2].text
 
-        temp_measurements = {}
+        temp_measurements = ordereddict.OrderedDict()
 
         # converts the date to a datetime object and the value to a float
         for date in measurements:
