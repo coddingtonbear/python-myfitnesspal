@@ -130,17 +130,17 @@ client = myfitnesspal.Client('my_username', 'my_password')
 
 weight = client.get_measurements('Weight')
 weight
-# >> {datetime.date(2015, 5, 5): 171.8, datetime.date(2015, 5, 3): 172.2, datetime.date(2015, 4, 12): 171.0,
-#     datetime.date(2015, 4, 29): 172.4, datetime.date(2015, 4, 20): 173.6, datetime.date(2015, 5, 7): 171.2,
-#     datetime.date(2015, 4, 27): 173.2, datetime.date(2015, 5, 12): 171.8, datetime.date(2015, 4, 28): 172.2,
-#     datetime.date(2015, 4, 16): 170.4, datetime.date(2015, 4, 18): 170.4, datetime.date(2015, 4, 17): 169.8,
-#     datetime.date(2015, 5, 9): 170.2, datetime.date(2015, 5, 6): 170.8, datetime.date(2015, 5, 8): 171.0,
-#     datetime.date(2015, 4, 22): 173.2, datetime.date(2015, 5, 11): 171.6, datetime.date(2015, 4, 14): 171.6,
-#     datetime.date(2015, 5, 10): 172.4, datetime.date(2015, 5, 2): 171.0, datetime.date(2015, 4, 15): 170.8,
-#     datetime.date(2015, 4, 26): 171.8, datetime.date(2015, 4, 21): 174.2, datetime.date(2015, 4, 19): 171.8,
-#     datetime.date(2015, 5, 4): 174.2, datetime.date(2015, 4, 13): 170.4, datetime.date(2015, 4, 24): 171.2,
-#     datetime.date(2015, 4, 30): 171.6, datetime.date(2015, 4, 25): 170.8, datetime.date(2015, 4, 23): 171.6,
-#     datetime.date(2015, 5, 1): 171.2}
+# >> OrderedDict([(datetime.date(2015, 5, 14), 171.0), (datetime.date(2015, 5, 13), 173.8), (datetime.date(2015, 5,12), 171.8),
+#                 (datetime.date(2015, 5, 11), 171.6), (datetime.date(2015, 5, 10), 172.4), (datetime.date(2015, 5, 9), 170.2),
+#                 (datetime.date(2015, 5, 8), 171.0),  (datetime.date(2015, 5, 7), 171.2),  (datetime.date(2015, 5, 6), 170.8),
+#                 (datetime.date(2015, 5, 5), 171.8),  (datetime.date(2015, 5, 4), 174.2),  (datetime.date(2015, 5, 3), 172.2),
+#                 (datetime.date(2015, 5, 2), 171.0),  (datetime.date(2015, 5, 1), 171.2),  (datetime.date(2015, 4, 30), 171.6),
+#                 (datetime.date(2015, 4, 29), 172.4), (datetime.date(2015, 4, 28), 172.2), (datetime.date(2015, 4, 27), 173.2),
+#                 (datetime.date(2015, 4, 26), 171.8), (datetime.date(2015, 4, 25), 170.8), (datetime.date(2015, 4, 24), 171.2),
+#                 (datetime.date(2015, 4, 23), 171.6), (datetime.date(2015, 4, 22), 173.2), (datetime.date(2015, 4, 21), 174.2),
+#                 (datetime.date(2015, 4, 20), 173.6), (datetime.date(2015, 4, 19), 171.8), (datetime.date(2015, 4, 18), 170.4),
+#                 (datetime.date(2015, 4, 17), 169.8), (datetime.date(2015, 4, 16), 170.4), (datetime.date(2015, 4, 15), 170.8),
+#                 (datetime.date(2015, 4, 14), 171.6)])
 ```
 
 To access measurements since a given date:
@@ -152,10 +152,11 @@ may = datetime.date(2015, 5, 1)
 
 body_fat = client.get_measurements('Body Fat', may)
 body_fat
-# >> {datetime.date(2015, 5, 1): 12.7, datetime.date(2015, 5, 3): 12.6, datetime.date(2015, 5, 9): 12.4,
-#     datetime.date(2015, 5, 8): 12.6, datetime.date(2015, 5, 11): 12.7, datetime.date(2015, 5, 10): 12.8,
-#     datetime.date(2015, 5, 2): 12.6, datetime.date(2015, 5, 5): 12.9, datetime.date(2015, 5, 4): 13.0,
-#     datetime.date(2015, 5, 7): 12.7, datetime.date(2015, 5, 6): 12.6, datetime.date(2015, 5, 12): 12.7}
+# >> OrderedDict([(datetime.date(2015, 5, 14), 12.8), (datetime.date(2015, 5, 13), 13.1), (datetime.date(2015, 5, 12), 12.7),
+#                 (datetime.date(2015, 5, 11), 12.7), (datetime.date(2015, 5, 10), 12.8), (datetime.date(2015, 5, 9), 12.4),
+#                 (datetime.date(2015, 5, 8), 12.6),  (datetime.date(2015, 5, 7), 12.7),  (datetime.date(2015, 5, 6), 12.6),
+#                 (datetime.date(2015, 5, 5), 12.9),  (datetime.date(2015, 5, 4), 13.0),  (datetime.date(2015, 5, 3), 12.6),
+#                 (datetime.date(2015, 5, 2), 12.6),  (datetime.date(2015, 5, 1), 12.7)])
 ```
 
 To access measurements within a date range:
@@ -166,12 +167,12 @@ lastweek = datetime.date(2015, 5, 4)
 
 weight = client.get_measurements('Weight', thisweek, lastweek)
 weight
-# >> {datetime.date(2015, 5, 9): 170.2, datetime.date(2015, 5, 8): 171.0, datetime.date(2015, 5, 11): 171.6,
-#     datetime.date(2015, 5, 10): 172.4, datetime.date(2015, 5, 5): 171.8, datetime.date(2015, 5, 4): 174.2,
-#     datetime.date(2015, 5, 7): 171.2, datetime.date(2015, 5, 6): 170.8}
+# >> OrderedDict([(datetime.date(2015, 5, 11), 171.6), (datetime.date(2015, 5, 10), 172.4), (datetime.date(2015, 5,9), 170.2),
+#                 (datetime.date(2015, 5, 8), 171.0),  (datetime.date(2015, 5, 7), 171.2),  (datetime.date(2015, 5, 6), 170.8),
+#                 (datetime.date(2015, 5, 5), 171.8),  (datetime.date(2015, 5, 4), 174.2)])
 ```
 
-Measurements are returned as dictionaries, so they will be unordered. The first argument specifies the measurement name, which can be any name listed in the MyFitnessPal [Check-In](http://www.myfitnesspal.com/measurements/check_in/) page. When specifying a date range, the order of the date arguments does not matter.
+Measurements are returned as ordered dictionaries. The first argument specifies the measurement name, which can be any name listed in the MyFitnessPal [Check-In](http://www.myfitnesspal.com/measurements/check_in/) page. When specifying a date range, the order of the date arguments does not matter.
 
 Hints
 -----
