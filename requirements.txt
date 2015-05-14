@@ -1,3 +1,4 @@
 requests==1.2.3
 lxml==3.2.1
 measurement==1.5
+ordereddict==1.1
