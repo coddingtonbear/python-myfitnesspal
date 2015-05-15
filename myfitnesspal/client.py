@@ -5,6 +5,7 @@ import re
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
 import requests
+import ordereddict
 
 from myfitnesspal.base import MFPBase
 from myfitnesspal.day import Day
@@ -76,6 +77,12 @@ class Client(MFPBase):
             date.strftime('%Y-%m-%d')
         )
 
+    def _get_url_for_measurements(self, page=1, measurement_id=1):
+        return os.path.join(
+            self.BASE_URL,
+            'measurements/edit'
+        ) + '?page=%d&type=%d' % (page, measurement_id)
+
     def _get_content_for_url(self, url):
         return self.session.get(url).content.decode('utf8')
 
@@ -90,8 +97,11 @@ class Client(MFPBase):
         measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
         return measure(**{kwarg: value})
 
-    def _get_numeric(self, string):
-        return int(re.sub(r'[^\d.]+', '', string))
+    def _get_numeric(self, string, flt=False):
+        if flt:
+            return float(re.sub(r'[^\d.]+', '', string))
+        else:
+            return int(re.sub(r'[^\d.]+', '', string))
 
     def _get_fields(self, document):
         meal_header = document.xpath("//tr[@class='meal_header']")[0]
@@ -219,6 +229,128 @@ class Client(MFPBase):
         )
 
         return day
+
+    def get_measurements(self, measurement='Weight', date1=None, date2=None):
+
+        # no dates were entered
+        if date1 is None and date2 is None:
+
+            # retrieves entries for the past 30 days
+            upper_bound = datetime.date.today()
+            lower_bound = upper_bound - datetime.timedelta(days=30)
+
+        # both dates were entered to form a date range
+        elif date1 is not None and date2 is not None:
+
+            # retrieves entries between the two dates
+            if date1 >= date2:
+                upper_bound = date1
+                lower_bound = date2
+            else:
+                upper_bound = date2
+                lower_bound = date1
+
+        # one date was entered as the start date
+        else:
+
+            # retrieves entries since the date entered
+            upper_bound = datetime.date.today()
+
+            if date1 is not None:
+                lower_bound = date1
+            else:
+                lower_bound = date2
+
+        # get the URL for the main check in page
+        document = self._get_document_for_url(
+            self._get_url_for_measurements()
+        )
+
+        # gather the IDs for all measurement types
+        measurement_ids = self._get_measurement_ids(document)
+
+        # select the measurement ID based on the input
+        if measurement in measurement_ids.keys():
+            measurement_id = measurement_ids[measurement]
+        else:
+            raise ValueError(
+                "Measurement '%s' does not exist." % measurement
+            )
+
+        page = 1
+        measurements = ordereddict.OrderedDict()
+
+        # retrieve entries until finished
+        while True:
+            # retrieve the HTML from MyFitnessPal
+            document = self._get_document_for_url(
+                self._get_url_for_measurements(page, measurement_id)
+            )
+
+            # parse the HTML for measurement entries and add to dictionary
+            results = self._get_measurements(document)
+            measurements.update(results)
+
+            # stop if there are no more entries
+            if len(results) == 0:
+                break
+
+            # continue if the lower bound has not been reached
+            elif results.keys()[-1] > lower_bound:
+                page += 1
+                continue
+
+            # otherwise stop
+            else:
+                break
+
+        # remove entries that are not within the dates specified
+        for date in measurements.keys():
+            if not upper_bound >= date >= lower_bound:
+                del measurements[date]
+
+        return measurements
+
+    def _get_measurements(self, document):
+
+        # find the tr element for each measurement entry on the page
+        trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
+
+        measurements = ordereddict.OrderedDict()
+
+        # create a dictionary out of the date and value of each entry
+        for entry in trs:
+
+            # ensure there are measurement entries on the page
+            if len(entry) == 1:
+                return measurements
+            else:
+                measurements[entry[1].text] = entry[2].text
+
+        temp_measurements = ordereddict.OrderedDict()
+
+        # converts the date to a datetime object and the value to a float
+        for date in measurements:
+            temp_measurements[
+                datetime.datetime.strptime(date, '%m/%d/%Y').date()
+            ] = self._get_numeric(measurements[date], flt=True)
+
+        measurements = temp_measurements
+
+        return measurements
+
+    def _get_measurement_ids(self, document):
+
+        # find the option element for all of the measurement choices
+        options = document.xpath("//select[@id='type']/option")
+
+        ids = {}
+
+        # create a dictionary out of the text and value of each choice
+        for option in options:
+            ids[option.text] = int(option.attrib.get('value'))
+
+        return ids
 
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]

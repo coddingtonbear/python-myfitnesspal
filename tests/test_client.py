@@ -1,6 +1,7 @@
 import datetime
 
 from measurement.measures import Energy, Weight
+import ordereddict
 import mimic
 
 from myfitnesspal import Client
@@ -12,7 +13,8 @@ class TestClient(MFPTestCase):
     def setUp(self):
         self.arbitrary_username = 'alpha'
         self.arbitrary_password = 'beta'
-        self.arbitrary_date = datetime.date(2013, 3, 2)
+        self.arbitrary_date1 = datetime.date(2015, 4, 20)
+        self.arbitrary_date2 = datetime.date(2015, 4, 28)
         self.client = Client(
             self.arbitrary_username,
             self.arbitrary_password,
@@ -27,14 +29,33 @@ class TestClient(MFPTestCase):
         )
         self.client._get_document_for_url(
             mimic.IgnoreArg()
-        ).and_return(
+        ).multiple_times().and_return(
             self.get_html_document(
                 filename
             )
         )
 
+    def test_get_measurement_ids(self):
+        document = self.get_html_document('measurements.html')
+        actual_ids = self.client._get_measurement_ids(document)
+
+        expected_ids = {
+            "Weight": 1,
+            "Body Fat": 91955886,
+            "Butt": 92738807,
+            "Bicep": 92738811,
+            "Quad": 92738815,
+            "Mid Section": 92738819,
+            "Shoulders": 92738861,
+        }
+
+        self.assertEquals(
+            expected_ids,
+            actual_ids,
+        )
+
     def test_get_meals(self):
-        document = self.get_html_document('2013-07-13.html')
+        document = self.get_html_document('diary.html')
         meals = self.client._get_meals(document)
 
         self.assertEquals(
@@ -42,13 +63,42 @@ class TestClient(MFPTestCase):
             4,
         )
 
+    def test_get_measurements(self):
+        self._stub_response_document('measurements.html')
+
+        self.mimic.replay_all()
+
+        actual_measurements = self.client.get_measurements(
+            'Body Fat',
+            self.arbitrary_date1,
+            self.arbitrary_date2,
+        )
+
+        expected_measurements = ordereddict.OrderedDict(
+            [
+                (datetime.date(2015, 4, 28), 19.2),
+                (datetime.date(2015, 4, 27), 19.2),
+                (datetime.date(2015, 4, 26), 19.0),
+                (datetime.date(2015, 4, 25), 18.7),
+                (datetime.date(2015, 4, 23), 18.7),
+                (datetime.date(2015, 4, 22), 18.4),
+                (datetime.date(2015, 4, 21), 18.9),
+                (datetime.date(2015, 4, 20), 19.1),
+            ]
+        )
+
+        self.assertEquals(
+            expected_measurements,
+            actual_measurements,
+        )
+
     def test_get_day_unit_unaware(self):
-        self._stub_response_document('2013-07-13.html')
+        self._stub_response_document('diary.html')
         self.client.unit_aware = False
 
         self.mimic.replay_all()
 
-        day = self.client.get_date(self.arbitrary_date)
+        day = self.client.get_date(self.arbitrary_date1)
 
         expected_dict = {
             "lunch": [],
@@ -150,7 +200,7 @@ class TestClient(MFPTestCase):
         )
         self.assertEquals(
             day.date,
-            self.arbitrary_date,
+            self.arbitrary_date1,
         )
         self.assertEquals(
             day.goals,
@@ -176,12 +226,12 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_day(self):
-        self._stub_response_document('2013-07-13.html')
+        self._stub_response_document('diary.html')
         self.client.unit_aware = True
 
         self.mimic.replay_all()
 
-        day = self.client.get_date(self.arbitrary_date)
+        day = self.client.get_date(self.arbitrary_date1)
 
         expected_dict = {
             "lunch": [],
@@ -283,7 +333,7 @@ class TestClient(MFPTestCase):
         )
         self.assertEquals(
             day.date,
-            self.arbitrary_date,
+            self.arbitrary_date1,
         )
         self.assertEquals(
             day.goals,

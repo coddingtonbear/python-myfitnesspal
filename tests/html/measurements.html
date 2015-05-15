@@ -1,0 +1,979 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="lang-en">
+<head>
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"24ade29801","applicationID":"4152250","transactionName":"dA5YQkBeD1tcFx0MBFYSQ0RXXAZZTRYdBAVeFQ==","queueTime":0,"applicationTime":162,"ttGuid":"","agentToken":null,"agent":"js-agent.newrelic.com/nr-632.min.js"}</script>
+<script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQACVVNADAIFVlNXBw=="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o?o:e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({QJf3ax:[function(t,e){function n(t){function e(e,n,a){t&&t(e,n,a),a||(a={});for(var c=s(e),f=c.length,u=i(a,o,r),d=0;f>d;d++)c[d].apply(u,n);return u}function a(t,e){f[t]=s(t).concat(e)}function s(t){return f[t]||[]}function c(){return n(e)}var f={};return{on:a,emit:e,create:c,listeners:s,_events:f}}function r(){return{}}var o="nr@context",i=t("gos");e.exports=n()},{gos:"7eSDFh"}],ee:[function(t,e){e.exports=t("QJf3ax")},{}],3:[function(t){function e(t){try{i.console&&console.log(t)}catch(e){}}var n,r=t("ee"),o=t(1),i={};try{n=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(i.console=!0,-1!==n.indexOf("dev")&&(i.dev=!0),-1!==n.indexOf("nr_dev")&&(i.nrDev=!0))}catch(a){}i.nrDev&&r.on("internal-error",function(t){e(t.stack)}),i.dev&&r.on("fn-err",function(t,n,r){e(r.stack)}),i.dev&&(e("NR AGENT IN DEVELOPMENT MODE"),e("flags: "+o(i,function(t){return t}).join(", ")))},{1:23,ee:"QJf3ax"}],4:[function(t){function e(t,e,n,i,s){try{c?c-=1:r("err",[s||new UncaughtException(t,e,n)])}catch(f){try{r("ierr",[f,(new Date).getTime(),!0])}catch(u){}}return"function"==typeof a?a.apply(this,o(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function n(t){r("err",[t,(new Date).getTime()])}var r=t("handle"),o=t(6),i=t("ee"),a=window.onerror,s=!1,c=0;t("loader").features.err=!0,t(5),window.onerror=e;try{throw new Error}catch(f){"stack"in f&&(t(1),t(2),"addEventListener"in window&&t(3),window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)&&t(4),s=!0)}i.on("fn-start",function(){s&&(c+=1)}),i.on("fn-err",function(t,e,r){s&&(this.thrown=!0,n(r))}),i.on("fn-end",function(){s&&!this.thrown&&c>0&&(c-=1)}),i.on("internal-error",function(t){r("ierr",[t,(new Date).getTime(),!0])})},{1:10,2:9,3:7,4:11,5:3,6:24,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],5:[function(t){t("loader").features.ins=!0},{loader:"G9z0Bl"}],6:[function(t){function e(){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var n=t("ee"),r=t("handle"),o=t(1),i=t(2);t("loader").features.stn=!0,t(3),n.on("fn-start",function(t){var e=t[0];e instanceof Event&&(this.bstStart=Date.now())}),n.on("fn-end",function(t,e){var n=t[0];n instanceof Event&&r("bst",[n,e,this.bstStart,Date.now()])}),o.on("fn-start",function(t,e,n){this.bstStart=Date.now(),this.bstType=n}),o.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),this.bstType])}),i.on("fn-start",function(){this.bstStart=Date.now()}),i.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),"requestAnimationFrame"])}),n.on("pushState-start",function(){this.time=Date.now(),this.startPath=location.pathname+location.hash}),n.on("pushState-end",function(){r("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),"addEventListener"in window.performance&&(window.performance.addEventListener("webkitresourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.webkitClearResourceTimings()},!1),window.performance.addEventListener("resourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.clearResourceTimings()},!1)),document.addEventListener("scroll",e,!1),document.addEventListener("keypress",e,!1),document.addEventListener("click",e,!1)}},{1:10,2:9,3:8,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],7:[function(t,e){function n(t){i.inPlace(t,["addEventListener","removeEventListener"],"-",r)}function r(t){return t[1]}var o=(t(1),t("ee").create()),i=t(2)(o),a=t("gos");if(e.exports=o,n(window),"getPrototypeOf"in Object){for(var s=document;s&&!s.hasOwnProperty("addEventListener");)s=Object.getPrototypeOf(s);s&&n(s);for(var c=XMLHttpRequest.prototype;c&&!c.hasOwnProperty("addEventListener");)c=Object.getPrototypeOf(c);c&&n(c)}else XMLHttpRequest.prototype.hasOwnProperty("addEventListener")&&n(XMLHttpRequest.prototype);o.on("addEventListener-start",function(t){if(t[1]){var e=t[1];"function"==typeof e?this.wrapped=t[1]=a(e,"nr@wrapped",function(){return i(e,"fn-",null,e.name||"anonymous")}):"function"==typeof e.handleEvent&&i.inPlace(e,["handleEvent"],"fn-")}}),o.on("removeEventListener-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{1:24,2:25,ee:"QJf3ax",gos:"7eSDFh"}],8:[function(t,e){var n=(t(2),t("ee").create()),r=t(1)(n);e.exports=n,r.inPlace(window.history,["pushState"],"-")},{1:25,2:24,ee:"QJf3ax"}],9:[function(t,e){var n=(t(2),t("ee").create()),r=t(1)(n);e.exports=n,r.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),n.on("raf-start",function(t){t[0]=r(t[0],"fn-")})},{1:25,2:24,ee:"QJf3ax"}],10:[function(t,e){function n(t,e,n){t[0]=o(t[0],"fn-",null,n)}var r=(t(2),t("ee").create()),o=t(1)(r);e.exports=r,o.inPlace(window,["setTimeout","setInterval","setImmediate"],"setTimer-"),r.on("setTimer-start",n)},{1:25,2:24,ee:"QJf3ax"}],11:[function(t,e){function n(){f.inPlace(this,p,"fn-")}function r(t,e){f.inPlace(e,["onreadystatechange"],"fn-")}function o(t,e){return e}function i(t,e){for(var n in t)e[n]=t[n];return e}var a=t("ee").create(),s=t(1),c=t(2),f=c(a),u=c(s),d=window.XMLHttpRequest,p=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"];e.exports=a,window.XMLHttpRequest=function(t){var e=new d(t);try{a.emit("new-xhr",[],e),u.inPlace(e,["addEventListener","removeEventListener"],"-",o),e.addEventListener("readystatechange",n,!1)}catch(r){try{a.emit("internal-error",[r])}catch(i){}}return e},i(d,XMLHttpRequest),XMLHttpRequest.prototype=d.prototype,f.inPlace(XMLHttpRequest.prototype,["open","send"],"-xhr-",o),a.on("send-xhr-start",r),a.on("open-xhr-start",r)},{1:7,2:25,ee:"QJf3ax"}],12:[function(t){function e(t){var e=this.params,r=this.metrics;if(!this.ended){this.ended=!0;for(var i=0;c>i;i++)t.removeEventListener(s[i],this.listener,!1);if(!e.aborted){if(r.duration=(new Date).getTime()-this.startTime,4===t.readyState){e.status=t.status;var a=t.responseType,f="arraybuffer"===a||"blob"===a||"json"===a?t.response:t.responseText,u=n(f);if(u&&(r.rxSize=u),this.sameOrigin){var d=t.getResponseHeader("X-NewRelic-App-Data");d&&(e.cat=d.split(", ").pop())}}else e.status=0;r.cbTime=this.cbTime,o("xhr",[e,r,this.startTime])}}}function n(t){if("string"==typeof t&&t.length)return t.length;if("object"!=typeof t)return void 0;if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if("undefined"!=typeof FormData&&t instanceof FormData)return void 0;try{return JSON.stringify(t).length}catch(e){return void 0}}function r(t,e){var n=i(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}if(window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)){t("loader").features.xhr=!0;var o=t("handle"),i=t(2),a=t("ee"),s=["load","error","abort","timeout"],c=s.length,f=t(1);t(4),t(3),a.on("new-xhr",function(){this.totalCbs=0,this.called=0,this.cbTime=0,this.end=e,this.ended=!1,this.xhrGuids={}}),a.on("open-xhr-start",function(t){this.params={method:t[0]},r(this,t[1]),this.metrics={}}),a.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),a.on("send-xhr-start",function(t,e){var r=this.metrics,o=t[0],i=this;if(r&&o){var f=n(o);f&&(r.txSize=f)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(i.params.aborted=!0),("load"!==t.type||i.called===i.totalCbs&&(i.onloadCalled||"function"!=typeof e.onload))&&i.end(e)}catch(n){try{a.emit("internal-error",[n])}catch(r){}}};for(var u=0;c>u;u++)e.addEventListener(s[u],this.listener,!1)}),a.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),a.on("xhr-load-added",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),a.on("xhr-load-removed",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),a.on("addEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-added",[t[1],t[2]],e)}),a.on("removeEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-removed",[t[1],t[2]],e)}),a.on("fn-start",function(t,e,n){e instanceof XMLHttpRequest&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),a.on("fn-end",function(t,e){this.xhrCbStart&&a.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}},{1:"XL7HBI",2:13,3:11,4:7,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],13:[function(t,e){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");return!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname),r.sameOrigin=!e.hostname||e.hostname===document.domain&&e.port===n.port&&e.protocol===n.protocol,r}},{}],14:[function(t,e){function n(t){return function(){r(t,[(new Date).getTime()].concat(i(arguments)))}}var r=t("handle"),o=t(1),i=t(2);"undefined"==typeof window.newrelic&&(newrelic=window.NREUM);var a=["setPageViewName","addPageAction","setCustomAttribute","finished","addToTrace","inlineHit","noticeError"];o(a,function(t,e){window.NREUM[e]=n("api-"+e)}),e.exports=window.NREUM},{1:23,2:24,handle:"D5DuLP"}],"7eSDFh":[function(t,e){function n(t,e,n){if(r.call(t,e))return t[e];var o=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:o,writable:!0,enumerable:!1}),o}catch(i){}return t[e]=o,o}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],gos:[function(t,e){e.exports=t("7eSDFh")},{}],handle:[function(t,e){e.exports=t("D5DuLP")},{}],D5DuLP:[function(t,e){function n(t,e,n){return r.listeners(t).length?r.emit(t,e,n):(o[t]||(o[t]=[]),void o[t].push(e))}var r=t("ee").create(),o={};e.exports=n,n.ee=r,r.q=o},{ee:"QJf3ax"}],id:[function(t,e){e.exports=t("XL7HBI")},{}],XL7HBI:[function(t,e){function n(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:i(t,o,function(){return r++})}var r=1,o="nr@id",i=t("gos");e.exports=n},{gos:"7eSDFh"}],G9z0Bl:[function(t,e){function n(){var t=p.info=NREUM.info,e=f.getElementsByTagName("script")[0];if(t&&t.licenseKey&&t.applicationID&&e){s(d,function(e,n){e in t||(t[e]=n)});var n="https"===u.split(":")[0]||t.sslForHttp;p.proto=n?"https://":"http://",a("mark",["onload",i()]);var r=f.createElement("script");r.src=p.proto+t.agent,e.parentNode.insertBefore(r,e)}}function r(){"complete"===f.readyState&&o()}function o(){a("mark",["domContent",i()])}function i(){return(new Date).getTime()}var a=t("handle"),s=t(1),c=(t(2),window),f=c.document,u=(""+location).split("?")[0],d={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-632.min.js"},p=e.exports={offset:i(),origin:u,features:{}};f.addEventListener?(f.addEventListener("DOMContentLoaded",o,!1),c.addEventListener("load",n,!1)):(f.attachEvent("onreadystatechange",r),c.attachEvent("onload",n)),a("mark",["firstbyte",i()])},{1:23,2:14,handle:"D5DuLP"}],loader:[function(t,e){e.exports=t("G9z0Bl")},{}],23:[function(t,e){function n(t,e){var n=[],o="",i=0;for(o in t)r.call(t,o)&&(n[i]=e(o,t[o]),i+=1);return n}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],24:[function(t,e){function n(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=n},{}],25:[function(t,e){function n(t){return!(t&&"function"==typeof t&&t.apply&&!t[i])}var r=t("ee"),o=t(1),i="nr@wrapper",a=Object.prototype.hasOwnProperty;e.exports=function(t){function e(t,e,r,a){function nrWrapper(){var n,i,s,f;try{i=this,n=o(arguments),s=r&&r(n,i)||{}}catch(d){u([d,"",[n,i,a],s])}c(e+"start",[n,i,a],s);try{return f=t.apply(i,n)}catch(p){throw c(e+"err",[n,i,p],s),p}finally{c(e+"end",[n,i,f],s)}}return n(t)?t:(e||(e=""),nrWrapper[i]=!0,f(t,nrWrapper),nrWrapper)}function s(t,r,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<r.length;c++)s=r[c],a=t[s],n(a)||(t[s]=e(a,f?s+o:o,i,s))}function c(e,n,r){try{t.emit(e,n,r)}catch(o){u([o,e,n,r])}}function f(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){u([r])}for(var o in t)a.call(t,o)&&(e[o]=t[o]);return e}function u(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=r),e.inPlace=s,e.flag=i,e}},{1:24,ee:"QJf3ax"}]},{},["G9z0Bl",4,12,6,5]);</script>
+  <script type="text/javascript">
+//<![CDATA[
+var AUTH_TOKEN = "IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=";
+//]]>
+</script>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>Free Calorie Counter, Diet &amp; Exercise Journal | MyFitnessPal.com</title>
+
+  <meta name="description" content="Free online calorie counter and diet plan. Lose weight by tracking your caloric intake quickly and easily.  Find nutrition facts for over 2,000,000 foods." />
+  <meta name="keywords" content="calorie counter, free diet journal, weight loss program, nutrition facts, online calorie counter, free diet plan, weight loss online, free calorie counter" />
+  <meta content="authenticity_token" name="csrf-param" />
+<meta content="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" name="csrf-token" />
+  <meta name="verify-v1" content="jKS1fjb9pK13luol4O+VFWO0OwEYaK4au88j0aRpQTM=" />
+
+
+  <script type="text/javascript">
+    document.documentElement.className += " js-enabled";
+  </script>
+
+    <link href="http://d34yn14tavczy0.cloudfront.net/assets/sass/application-ee21d18aff36a7fb86edf7018aeb9003.css" media="screen" rel="stylesheet" type="text/css" />
+
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <!--[if IE 7]>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css">
+  <![endif]-->
+  <link href="http://d34yn14tavczy0.cloudfront.net/stylesheets/font-mfizz/font-mfizz.css" media="all" rel="stylesheet" type="text/css" />
+
+  
+
+
+  <script>
+var MFP = (function (parent) {
+  parent.URL = (function () {
+    var me = {};
+    me.currentLocale = "en";
+    me.baseUrl = "http://www.myfitnesspal.com/";
+    me.httpsBaseUrl = "https://www.myfitnesspal.com/";
+    me.topLevelDomain = "com";
+    me.defaultLocale = "en";
+    me.getUrlPath = function(path) {
+      //if (me.topLevelDomain == me.currentLocale) {
+      if (me.defaultLocale == me.currentLocale) {
+        return (path[0] == '/' ? path.substring(1) : path);
+      } else {
+        return '/' + me.currentLocale + path;
+      }
+    }
+    me.getUrlAbsolute = function(path) {
+      return me.baseUrl + (path[0] == '/' ? path.substring(1) : path);
+    }
+    me.getHttpsUrlAbsolute = function(path) {
+      if (false) {
+        return me.getUrlAbsolute(path);
+      } else {
+        return me.httpsBaseUrl + (path[0] == '/' ? path.substring(1) : path);
+      }
+    }
+    return me;
+  }());
+  return parent;
+})(MFP || {});
+</script>
+
+  <script>
+var MFP = (function (parent) {
+  parent.DEBUG = false;
+  parent.DEVELOPMENT = false;
+
+  return parent;
+})(MFP || {});
+</script>
+
+    <script>
+var MFP = (function (parent) {
+  parent.User = (function () {
+    var me = {};
+
+    return me;
+  }());
+
+  return parent;
+})(MFP || {});
+</script>
+
+
+  <script src="http://d34yn14tavczy0.cloudfront.net/assets/application-306b4b74256402c58c869f9e62c1f6d6.js" type="text/javascript"></script>
+
+
+
+  <script type="text/javascript">
+var MFP = (function (parent) {
+  parent.LOCALYTICS_APP_ID = '3bbc12e7d80cd33573b100c-a988997e-d550-11e3-9a45-005cf8cbabd8';
+  return parent;
+}(MFP || {}));
+</script>
+<script type="text/javascript" src="//web.localytics.com/latest/localytics.min.js"></script>
+<script type="text/javascript" src="/assets/mfp_localytics.js"></script>
+
+    <script type="text/javascript">
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+    (function() {
+     var gads = document.createElement('script');
+     gads.async = true; gads.type = 'text/javascript';
+     gads.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.googletagservices.com/tag/js/gpt.js';
+     var node = document.getElementsByTagName('script')[0];
+       node.parentNode.insertBefore(gads, node);
+    })();
+  </script>
+
+
+    <script type="text/javascript">
+      googletag.cmd.push(function() {
+          googletag.defineUnit('/1033141/ca-pub-8033683427063754/other_728x90', [728,90], 'ad_other_728x90').
+            addService(googletag.pubads());
+            googletag.pubads().setTargeting('dkw','nma');
+            googletag.pubads().setTargeting('oex','wdl');
+
+
+        googletag.enableServices();
+        
+      });
+    </script>
+
+
+<script type="text/javascript">
+  var aax_src='1092';
+  var url = encodeURIComponent(document.location);
+  try { url = encodeURIComponent("" + window.top.location); } catch(e) {}
+  document.write("<scr"+"ipt src='//aax-us-east.amazon-adsystem.com/e/dtb/bid?src=" + aax_src + "&u="+url+"&cb=" + Math.round(Math.random()*10000000) + "'></scr"+"ipt>");
+  document.close();
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-94924-2']);
+  
+  _gaq.push(['_setVar', 'member']);
+  if(typeof(_vis_opt_GA_track) == "function") { _vis_opt_GA_track(); }
+
+  _gaq.push(['_setCustomVar', 1, 'status', 'logged_in', 1]);
+
+  _gaq.push(['_setDomainName’, ‘auto']);
+
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+  <link rel="canonical" href="http://www.myfitnesspal.com/measurements/edit?page=1&amp;type=91955886">
+
+
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.com.br/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="pt" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.com/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="en" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.cn/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="zh-Hans" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.de/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="de" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.es/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="es" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.fr/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="fr" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.com.hk/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="zh-Hant" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.it/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="it" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.jp/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="ja" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.co.kr/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="ko" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.com.mx/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="es" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.nl/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="nl" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.se/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="sv" />
+  <link rel="alternate" 
+  href="http://www.myfitnesspal.com.tw/measurements/edit?page=1&amp;type=91955886" 
+  hreflang="zh-Hant" />
+
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/de/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="de-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/es/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="es-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/fr/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="fr-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/pt/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="pt-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/it/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="it-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/nb/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="nb-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/nl/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="nl-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/ru/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="ru-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/sv/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="sv-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/da/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="da-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/ko/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="ko-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/ja/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="ja-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/zh-CN/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="zh-Hans-US" />
+    <link rel="alternate" 
+          href="http://www.myfitnesspal.com/zh-TW/measurements/edit?page=1&amp;type=91955886" 
+          hreflang="zh-Hant-US" />
+
+
+
+</head>
+
+
+<body class="layout-0" data-lang="en" class=body-header>
+
+
+
+<script type="text/javascript">current_locale = "en"; facebook_error_string ="Your Facebook account was not authorized.";</script>
+
+  
+
+
+  <!--[if lte IE 7]><div id="ie"><![endif]-->
+  <!--[if IE 6]><div id="ie6"><![endif]-->
+
+  <!-- Qualaroo for myfitnesspal.com -->
+  <script type="text/javascript">
+    var _kiq = _kiq || [];
+    (function(){
+      setTimeout(function(){
+      var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript';
+      s.async = true; s.src = '//s3.amazonaws.com/ki.js/49906/ape.js'; f.parentNode.insertBefore(s, f);
+      }, 1);
+    })();
+  </script>
+
+
+  
+
+  <div id="header">
+  <div class="header-wrap">
+    <div id="logo"><a href="http://www.myfitnesspal.com/">Calorie Counter</a></div>
+
+    <ul id="navTop" class="nav">
+
+  <li class="first">
+    Hi, <strong><a href="/profile/username" class="user-2" title="username">username</a></strong>
+  </li>
+
+  <li>
+    <a href="/messages" class="notif mail">
+        <span class="count">1</span>
+    </a>
+
+    <a href="/invitations" class="notif invites empty">
+        <span class="count">0</span>
+    </a>
+  </li>
+
+
+  <li>
+      <a href="http://myfitnesspal.desk.com/customer/authentication/multipass/callback?multipass=3iJ4PH4gw1fIrV9AYtO1fWxUMuCNz7i1ZVHnoaINKMH9SmUabnDa7mOHN7OL%0AmRsQhgtFmBZdIODdvFCZ6f892B0cLWE5HawTNiYVqrAzEezjTtgQnR%2BcgJ0y%0AOS0klwQ6gf%2FufWqeUnrdTFNcW4%2FsVI0cKRy70BOBeWS7UfidBViJLIA0Qoax%0Ai6L3hNQZmkpTda1k9cA8QcH5GEWeUnIGrAptBEzE11c6OTHwjG20fGZ%2Fjzk6%0AVeQKVX9YuTmoyUkDr3XfzzNq23JuwKnGhChU6gtbuWXFNX9YkwmJBugwPO4%3D%0A&amp;signature=jMOSCGYvV6%2B7zEKZpDEzhDr117k%3D%0A">Help</a>
+  </li>
+
+
+  <li>
+    <a href="/account/settings">Settings</a>
+  </li>
+
+  <li>
+    <a href="/account/logout">Log Out</a>
+  </li>
+
+  <li class="last">
+    <span>Follow Us:</span>
+    <a href="http://facebook.com/myfitnesspal" class="follow">
+      <span class="icon-stack" style="font-size: 12px;">
+        <i class="icon-circle icon-stack-base"></i>
+        <i class="icon-facebook icon-light"></i>
+      </span>
+    </a>
+    <a href="http://twitter.com/myfitnesspal" class="follow">
+      <span class="icon-stack" style="font-size: 12px;">
+        <i class="icon-circle icon-stack-base"></i>
+        <i class="icon-twitter icon-light"></i>
+      </span>
+    </a>
+    <a href="https://plus.google.com/115199907743865507458?prsrc=3" class="follow">
+      <span class="icon-stack" style="font-size: 12px;">
+        <i class="icon-circle icon-stack-base"></i>
+        <i class="icon-google-plus icon-light"></i>
+      </span>
+    </a>
+  </li>
+
+</ul>
+
+
+    <div class="clear"></div>
+  </div>
+
+  <div id="nav-bg">
+  <ul id="nav" class="nav">
+
+    <li>
+  <a href="/" class="nav_button active">My Home</a>
+</li>
+
+<li>
+  <a href="/food/diary/username" class="nav_button">Food</a>
+</li>
+
+<li>
+  <a href="/exercise/diary/username" class="nav_button">Exercise</a>
+</li>
+
+<li>
+  <a href="/reports" class="nav_button">Reports</a>
+</li>
+
+
+    <li>
+      <a href="/apps" class="nav_button">Apps</a>
+    </li>
+
+    <li>
+      <a href="/forums" class="nav_button">Community</a>
+    </li>
+
+    <li>
+      <a href="http://blog.myfitnesspal.com" class="nav_button">Blog</a>
+    </li>
+    <div class="clear"></div>
+  </ul>
+</div>
+
+
+  <div id="subNav-bg">
+  <ul id="subNav">
+
+    <li class="first">
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a href="/account/my_goals">Goals</a>
+    </li>
+    <li class="active">
+      <a href="/measurements/check_in">Check-In</a>
+    </li>
+    <li>
+      <a href="/messages">Mail</a>
+    </li>
+    <li>
+      <a href="/username">Profile</a>
+    </li>
+    <li>
+      <a href="/blog/username">My Blog</a>
+    </li>
+        <li>
+      <a href="/friends/list/80840319">Friends</a>
+    </li>
+    <li>
+      <a href="/account/settings">Settings</a>
+    </li>
+    <li>
+      <a href="/premium?f=premium-nav-menu" class="premium-menu">Premium</a>
+    </li>
+    <div class="clear"></div>
+  </ul>
+
+</div>
+
+
+  <div class="clear"></div>
+
+</div><!-- / #header -->
+
+<div class="clear"></div>
+
+  <script type="text/javascript">current_locale = "en";</script>
+
+
+
+  <div id="wrap">
+
+    <div id="content">
+
+      <div class="ads">
+  
+  <p class="ad"><div id="ad_other_728x90" data-network="google" class="ad-wrapper">
+</div>
+
+    <script type="text/javascript">amzn_ads_wrapper('ad_other_728x90', false, "on");</script>
+</p>
+  
+</div>
+
+<div id="main">
+  
+  <h1 class="main-title">Edit Previous Measurement Entries</h1>
+
+
+  <form accept-charset="UTF-8" action="/measurements/edit" class="form editMeasurements" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
+
+    <p class="cont-2">  
+      
+      <label>Measurement to edit:</label>
+  
+      <select class="select" id="type" name="type">
+        <option value="1">Weight</option>
+        <option value="91955886" selected="selected">Body Fat</option>
+        <option value="92738807">Butt</option>
+        <option value="92738811">Bicep</option>
+        <option value="92738815">Quad</option>
+        <option value="92738819">Mid Section</option>
+        <option value="92738861">Shoulders</option>
+      </select>
+      
+      <input type="submit" class="button" value="Change"/>
+            
+    </p>
+  
+</form>
+  <form accept-charset="UTF-8" action="/measurements/new" class="form editMeasurements" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
+
+    <input id="type" name="type" type="hidden" value="91955886" />
+    
+    <p class="cont-2">  
+    
+      <label>
+        Starting  Body Fat:
+      </label>
+
+        <span class="unit-form-field standard">
+
+
+  <span class="">
+    <input class="text short" data-unit-system="" id="first_measurement_display_value" name="first_measurement[display_value]" type="text" value="17.8" />
+</span>
+  <label class="first_measurement_label unit_label" for="first_measurement_display_value"></label>
+
+</span>
+
+
+        <span>on  1/13/2015</span>
+      
+      <input type="submit" class="button" value="Change"/>
+          
+    </p>
+  
+    <table class="table0 check-in" summary="check-in">
+
+      <colgroup>
+        <col class="col-1" />
+        <col class="col-2 col-num" />
+        <col class="col-3 col-num" />
+        <col class="col-4">
+      </colgroup>
+    
+      <thead>
+    
+        <tr>
+    
+          <td>Measurement</td>
+          <td class="col-num">Date</td>
+          <td class="col-num">Amount</td>
+          <td class="col-num">Delete?</td>
+    
+        </tr>
+    
+      </thead>
+
+      <tfoot>
+        
+        <tr>
+          
+          <td colspan="4" class="first"><div class="pagination alt"><span class="prev_page disabled">&laquo; Prev</span> <em class="current">1</em> <a rel="next" href="/measurements/edit?page=2&amp;type=91955886">2</a> <a href="/measurements/edit?page=3&amp;type=91955886">3</a> <a href="/measurements/edit?page=4&amp;type=91955886">4</a> <a href="/measurements/edit?page=5&amp;type=91955886">5</a> <a href="/measurements/edit?page=6&amp;type=91955886">6</a> <a href="/measurements/edit?page=7&amp;type=91955886">7</a> <a href="/measurements/edit?page=8&amp;type=91955886">8</a> <a href="/measurements/edit?page=9&amp;type=91955886">9</a> <a href="/measurements/edit?page=10&amp;type=91955886">10</a> <a class="next_page" rel="next" href="/measurements/edit?page=2&amp;type=91955886">Next &raquo;</a></div></td>
+          
+        </tr>
+        
+      </tfoot>
+      
+      <tbody>
+
+        
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/29/2015</td>
+          <td class="col-num">19.1</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/170628596" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/28/2015</td>
+          <td class="col-num">19.2</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/170469471" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/27/2015</td>
+          <td class="col-num">19.2</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/170302021" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/26/2015</td>
+          <td class="col-num">19</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/170180603" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/25/2015</td>
+          <td class="col-num">18.7</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/170026899" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/23/2015</td>
+          <td class="col-num">18.7</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/169746860" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/22/2015</td>
+          <td class="col-num">18.4</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/169598005" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/21/2015</td>
+          <td class="col-num">18.9</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/169442801" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/20/2015</td>
+          <td class="col-num">19.1</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/169275794" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="first">
+            Body Fat
+          </td>
+          <td class="col-num">4/19/2015</td>
+          <td class="col-num">19.1</td>
+          </td>
+          <td>
+              <a href="/measurements/delete/169153647" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
+          </td>
+        </tr>
+  
+  
+      </tbody>
+        
+    </table>
+  
+    <h1 class="main-title">Add New Entry</h1>
+    
+    <p class="cont-2">  
+    
+      <label>Date:</label>
+
+      <select class="select short" id="measurement_entry_date_2i" name="measurement[entry_date(2i)]">
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option selected="selected" value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+<select class="select short" id="measurement_entry_date_3i" name="measurement[entry_date(3i)]">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option selected="selected" value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+<select class="select short" id="measurement_entry_date_1i" name="measurement[entry_date(1i)]">
+<option selected="selected" value="2015">2015</option>
+<option value="2014">2014</option>
+<option value="2013">2013</option>
+<option value="2012">2012</option>
+<option value="2011">2011</option>
+<option value="2010">2010</option>
+<option value="2009">2009</option>
+<option value="2008">2008</option>
+<option value="2007">2007</option>
+<option value="2006">2006</option>
+<option value="2005">2005</option>
+<option value="2004">2004</option>
+<option value="2003">2003</option>
+<option value="2002">2002</option>
+<option value="2001">2001</option>
+<option value="2000">2000</option>
+<option value="1999">1999</option>
+<option value="1998">1998</option>
+<option value="1997">1997</option>
+<option value="1996">1996</option>
+<option value="1995">1995</option>
+<option value="1994">1994</option>
+<option value="1993">1993</option>
+<option value="1992">1992</option>
+<option value="1991">1991</option>
+<option value="1990">1990</option>
+<option value="1989">1989</option>
+<option value="1988">1988</option>
+<option value="1987">1987</option>
+<option value="1986">1986</option>
+<option value="1985">1985</option>
+<option value="1984">1984</option>
+<option value="1983">1983</option>
+<option value="1982">1982</option>
+<option value="1981">1981</option>
+<option value="1980">1980</option>
+<option value="1979">1979</option>
+<option value="1978">1978</option>
+<option value="1977">1977</option>
+<option value="1976">1976</option>
+<option value="1975">1975</option>
+<option value="1974">1974</option>
+<option value="1973">1973</option>
+<option value="1972">1972</option>
+<option value="1971">1971</option>
+<option value="1970">1970</option>
+<option value="1969">1969</option>
+<option value="1968">1968</option>
+<option value="1967">1967</option>
+<option value="1966">1966</option>
+<option value="1965">1965</option>
+<option value="1964">1964</option>
+<option value="1963">1963</option>
+<option value="1962">1962</option>
+<option value="1961">1961</option>
+<option value="1960">1960</option>
+<option value="1959">1959</option>
+<option value="1958">1958</option>
+<option value="1957">1957</option>
+<option value="1956">1956</option>
+<option value="1955">1955</option>
+<option value="1954">1954</option>
+<option value="1953">1953</option>
+<option value="1952">1952</option>
+<option value="1951">1951</option>
+<option value="1950">1950</option>
+<option value="1949">1949</option>
+<option value="1948">1948</option>
+<option value="1947">1947</option>
+<option value="1946">1946</option>
+<option value="1945">1945</option>
+<option value="1944">1944</option>
+<option value="1943">1943</option>
+<option value="1942">1942</option>
+<option value="1941">1941</option>
+<option value="1940">1940</option>
+<option value="1939">1939</option>
+<option value="1938">1938</option>
+<option value="1937">1937</option>
+<option value="1936">1936</option>
+<option value="1935">1935</option>
+<option value="1934">1934</option>
+<option value="1933">1933</option>
+<option value="1932">1932</option>
+<option value="1931">1931</option>
+<option value="1930">1930</option>
+<option value="1929">1929</option>
+<option value="1928">1928</option>
+<option value="1927">1927</option>
+<option value="1926">1926</option>
+<option value="1925">1925</option>
+<option value="1924">1924</option>
+<option value="1923">1923</option>
+<option value="1922">1922</option>
+<option value="1921">1921</option>
+<option value="1920">1920</option>
+<option value="1919">1919</option>
+<option value="1918">1918</option>
+<option value="1917">1917</option>
+<option value="1916">1916</option>
+<option value="1915">1915</option>
+</select>
+
+      
+      <label>Amount:</label>
+      
+        <input class="text short" id="measurement_display_value" name="measurement[display_value]" size="30" type="text" />
+      
+      <input type="submit" class="button  add-new-entry" value="Add New Entry"/>
+          
+    </p>
+      
+  </form><!-- / #checkIn -->
+
+</div><!-- / #main -->
+
+<div id="sidebar">
+
+  <div class="block-1">
+    
+    <h4 class="balloon"><span>Weigh Yourself</span></h4>
+    
+    <p>
+      To help track your progress, you should record your weight periodically.
+We suggest once a week because your weight fluctuates daily due to uncontrollable factors like water.
+Try to always weigh yourself at the same time of day - we suggest early in the morning before breakfast.
+
+    </p>
+    
+  </div>
+
+  <div class="block-1">
+    
+    <h4 class="balloon"><span>Take Your Measurements</span></h4>
+    
+    <p>
+      Taking your measurements can be an even better gauge of your progress because when you burn fat and build heavier muscle,
+your weight may not change or even increase even though your body is tighter and smaller.
+We suggest taking your measurements every 2-4 weeks.
+
+    </p>
+    
+  </div>
+
+</div><!-- / #sidebar -->
+
+
+    </div><!-- / #content -->
+
+  </div><!-- / #wrap -->
+
+  <section id="footer-wrapper">
+  <div class="uacf-logo-wrapper">
+      <a href="https://www.underarmour.com/?cid=MMF||MFPal|Site|||" class="uacf-logo"><img alt="Under Armour ConnectedFitness" src="http://d34yn14tavczy0.cloudfront.net/assets/uacf_logo-671e028e69854b1690cf32c59def25ef.png" /></a>
+  </div>
+  <div id="footer">
+    <div id="footerContent">
+        <div id="language_select">
+          <form accept-charset="UTF-8" action="/account/change_language" class="form settings_form" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
+            <input id="originating_path" name="originating_path" type="hidden" />
+            <select id="preference_language_setting" name="preference[language_setting]"><option value="en" selected="selected">English</option>
+<option value="de">Deutsch</option>
+<option value="es">Español</option>
+<option value="fr">Français</option>
+<option value="pt">Português (Brasil)</option>
+<option value="it">Italiano</option>
+<option value="nb">Norsk</option>
+<option value="nl">Nederlands</option>
+<option value="ru">Pусский</option>
+<option value="sv">Svensk</option>
+<option value="da">Dansk</option>
+<option value="ko">한국어</option>
+<option value="ja">日本語</option>
+<option value="zh-CN">中文(简体)</option>
+<option value="zh-TW">中文(台灣)</option></select>
+</form>
+        </div>
+
+      <ul class="bars">
+  <li>
+    <a href="http://www.myfitnesspal.com/">Calorie Counter</a>
+  </li>
+
+  <li>
+    <a href="http://blog.myfitnesspal.com">Blog</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/account/terms_and_privacy?with_layout=true">Terms</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/account/terms_and_privacy?with_layout=true#privacy">Privacy</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/welcome/contact_us">Contact Us</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/api">API</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/jobs">Jobs</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/forums/show/13-website-suggestions-feedback">Feedback</a>
+  </li>
+
+  <li>
+    <a href="http://www.myfitnesspal.com/welcome/guidelines">Community Guidelines</a>
+  </li>
+</ul>
+
+
+      <p class="copy">Copyright 2005-2015 MyFitnessPal, Inc.</p>
+
+        <a class="she-knows-it" href="http://www.sheknows.com/channels/health-and-wellness" >SheKnows Health & Beauty</a>
+
+      <div style="display:none;">
+        <!-- Begin comScore Tag --><script>var _comscore = _comscore || [];_comscore.push({ c1: "2", c2: "15476338" });(function() {var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";el.parentNode.insertBefore(s, el);})();</script><noscript><img src="http://b.scorecardresearch.com/p?c1=2&c2=15476338&cv=2.0&cj=1" /></noscript><!-- End comScore Tag -->
+      </div>
+    </div><!-- / #footerContent -->
+  </div><!-- / #footer -->
+
+  <div id="loginform" style="display:none;" >
+  <form accept-charset="UTF-8" action="https://www.myfitnesspal.com/account/login" class="form login" id="fancy_login" method="post" style="margin:0;"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
+  <div class="member-login" >
+    <h2>Member Login</h2>
+    <ul>
+      <li>
+        <a href="#" class="facebook-login-css" id="facebook-login-css">Log in with Facebook</a>
+      </li>
+      <li class="or" >- or -</li>
+      <li>
+        <label>Username:</label>
+        <input name="username" type="text" class="text" tabIndex="5" />
+      </li>
+      <li>
+        <label>Password:</label>
+        <input name="password" type="password" class="text" tabIndex="6" />
+      </li>
+      <li>
+        <input checked="checked" class="checkbox" id="remember_me" name="remember_me" tabIndex="7" type="checkbox" value="1" /> 
+        <label for="remember_me" >Remember me next time</label>
+      </li>
+      <li class="submit">
+        <input type="submit" value="Log In" tabIndex="8" />
+      </li>
+      <li>
+      <a href="http://www.myfitnesspal.com/account/forgot_password">Forgot password or username?</a>
+      </li>
+      <li>
+        Not a member yet? <a href="http://www.myfitnesspal.com/account/create">Sign up now!</a>
+      </li>
+  </div>
+</form></div>
+
+</section>
+
+
+  
+
+
+  <!--[if lte IE 7]></div><![endif]-->
+  <!--[if IE 6]></div><![endif]-->
+
+
+
+  
+
+
+  
+</body>
+</html>
