@@ -230,36 +230,19 @@ class Client(MFPBase):
 
         return day
 
-    def get_measurements(self, measurement='Weight', date1=None, date2=None):
-
-        # no dates were entered
-        if date1 is None and date2 is None:
-
-            # retrieves entries for the past 30 days
+    def get_measurements(
+        self, measurement='Weight', lower_bound=None, upper_bound=None
+    ):
+        """ Returns measurements of a given name between two dates."""
+        if upper_bound is None:
             upper_bound = datetime.date.today()
+        if lower_bound is None:
             lower_bound = upper_bound - datetime.timedelta(days=30)
 
-        # both dates were entered to form a date range
-        elif date1 is not None and date2 is not None:
-
-            # retrieves entries between the two dates
-            if date1 >= date2:
-                upper_bound = date1
-                lower_bound = date2
-            else:
-                upper_bound = date2
-                lower_bound = date1
-
-        # one date was entered as the start date
-        else:
-
-            # retrieves entries since the date entered
-            upper_bound = datetime.date.today()
-
-            if date1 is not None:
-                lower_bound = date1
-            else:
-                lower_bound = date2
+        # If they entered the dates in the opposite order, let's
+        # just flip them around for them as a convenience
+        if lower_bound > upper_bound:
+            lower_bound, upper_bound = upper_bound, lower_bound
 
         # get the URL for the main check in page
         document = self._get_document_for_url(
