@@ -13,6 +13,14 @@ from myfitnesspal.entry import Entry
 from myfitnesspal.meal import Meal
 
 
+try:
+    import keyring
+    keyring_installed = True
+except:
+    keyring_installed = False
+    pass
+
+
 class Client(MFPBase):
     BASE_URL = 'http://www.myfitnesspal.com/'
     BASE_URL_SECURE = 'https://www.myfitnesspal.com/'
@@ -30,8 +38,12 @@ class Client(MFPBase):
     }
 
     def __init__(self, username, password, login=True, unit_aware=False):
-        self.username = username
-        self.password = password
+        if keyring_installed:
+            self.username = username
+            self.password = keyring.get_password('myfitnesspal', username)
+        else:
+            self.username = username
+            self.password = password
         self.unit_aware = unit_aware
 
         self.session = requests.Session()
