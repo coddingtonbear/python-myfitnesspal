@@ -16,7 +16,7 @@ class Day(MFPBase):
         raise KeyError("No meal named '%s' exists for this date" % value)
 
     def keys(self):
-        keys = ''
+        keys = []
         for meal in self.meals:
             keys.append(meal.name)
         return keys
