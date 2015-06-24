@@ -5,7 +5,7 @@ import re
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
 import requests
-import ordereddict
+from collections import OrderedDict as ordereddict
 
 from myfitnesspal.base import MFPBase
 from myfitnesspal.day import Day
@@ -57,7 +57,10 @@ class Client(MFPBase):
                 'password': self.password,
             }
         )
-        if 'Incorrect username or password' in result.content:
+        # result.content is bytes so we decode it ASSUMING utf8 (which may be a
+        # bad assumption?)
+        content = result.content.decode('utf8')
+        if 'Incorrect username or password' in content:
             raise ValueError(
                 "Incorrect username or password."
             )
