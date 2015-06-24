@@ -34,5 +34,4 @@ if __name__ == "__main__":
         day = client.get_date(a_day)
         print("Fetching", a_day)
         print("Day", day)
-        print(day.notes)
 
