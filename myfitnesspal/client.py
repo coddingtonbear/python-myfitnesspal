@@ -5,7 +5,7 @@ import re
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
 import requests
-from collections import OrderedDict as ordereddict
+from collections import OrderedDict
 
 from myfitnesspal.base import MFPBase
 from myfitnesspal.day import Day
@@ -58,7 +58,7 @@ class Client(MFPBase):
             }
         )
         # result.content is bytes so we decode it ASSUMING utf8 (which may be a
-        # bad assumption?)
+        # bad assumption?) PORTING_CHECK
         content = result.content.decode('utf8')
         if 'Incorrect username or password' in content:
             raise ValueError(
@@ -264,7 +264,7 @@ class Client(MFPBase):
             )
 
         page = 1
-        measurements = ordereddict.OrderedDict()
+        measurements = OrderedDict()
 
         # retrieve entries until finished
         while True:
@@ -302,7 +302,7 @@ class Client(MFPBase):
         # find the tr element for each measurement entry on the page
         trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
 
-        measurements = ordereddict.OrderedDict()
+        measurements = OrderedDict()
 
         # create a dictionary out of the date and value of each entry
         for entry in trs:
@@ -313,7 +313,7 @@ class Client(MFPBase):
             else:
                 measurements[entry[1].text] = entry[2].text
 
-        temp_measurements = ordereddict.OrderedDict()
+        temp_measurements = OrderedDict()
 
         # converts the date to a datetime object and the value to a float
         for date in measurements:
