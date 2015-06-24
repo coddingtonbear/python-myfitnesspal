@@ -341,7 +341,7 @@ class Client(MFPBase):
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]
         header_text = [notes_header.text] if notes_header.text else []
-        lines = header_text + map(lambda x: x.tail, notes_header)
+        lines = header_text + list(map(lambda x: x.tail, notes_header))
         return '\n'.join([l.strip() for l in lines])
 
     def _get_water(self, document):
