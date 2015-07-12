@@ -1,10 +1,10 @@
 import os
+import unittest
 
 import lxml.html
-from mimic import MimicTestBase
 
 
-class MFPTestCase(MimicTestBase):
+class MFPTestCase(unittest.TestCase):
     def get_html_document(self, file_name):
         file_path = os.path.join(
             os.path.dirname(__file__),

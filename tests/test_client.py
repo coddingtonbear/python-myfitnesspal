@@ -1,8 +1,8 @@
+from collections import OrderedDict
 import datetime
 
 from measurement.measures import Energy, Weight
-from collections import OrderedDict
-import mimic
+from mock import patch
 
 from myfitnesspal import Client
 
@@ -21,19 +21,6 @@ class TestClient(MFPTestCase):
             login=False
         )
         super(TestClient, self).setUp()
-
-    def _stub_response_document(self, filename):
-        self.mimic.stub_out_with_mock(
-            self.client,
-            '_get_document_for_url'
-        )
-        self.client._get_document_for_url(
-            mimic.IgnoreArg()
-        ).multiple_times().and_return(
-            self.get_html_document(
-                filename
-            )
-        )
 
     def test_get_measurement_ids(self):
         document = self.get_html_document('measurements.html')
@@ -64,15 +51,13 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_measurements(self):
-        self._stub_response_document('measurements.html')
-
-        self.mimic.replay_all()
-
-        actual_measurements = self.client.get_measurements(
-            'Body Fat',
-            self.arbitrary_date1,
-            self.arbitrary_date2,
-        )
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document('measurements.html')
+            actual_measurements = self.client.get_measurements(
+                'Body Fat',
+                self.arbitrary_date1,
+                self.arbitrary_date2,
+            )
 
         expected_measurements = OrderedDict(
             [
@@ -93,12 +78,11 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_day_unit_unaware(self):
-        self._stub_response_document('diary.html')
         self.client.unit_aware = False
 
-        self.mimic.replay_all()
-
-        day = self.client.get_date(self.arbitrary_date1)
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document('diary.html')
+            day = self.client.get_date(self.arbitrary_date1)
 
         expected_dict = {
             "lunch": [],
@@ -226,12 +210,11 @@ class TestClient(MFPTestCase):
         )
 
     def test_get_day(self):
-        self._stub_response_document('diary.html')
         self.client.unit_aware = True
 
-        self.mimic.replay_all()
-
-        day = self.client.get_date(self.arbitrary_date1)
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document('diary.html')
+            day = self.client.get_date(self.arbitrary_date1)
 
         expected_dict = {
             "lunch": [],
