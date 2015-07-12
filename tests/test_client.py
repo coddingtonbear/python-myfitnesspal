@@ -1,7 +1,7 @@
 import datetime
 
 from measurement.measures import Energy, Weight
-import ordereddict
+from collections import OrderedDict
 import mimic
 
 from myfitnesspal import Client
@@ -74,7 +74,7 @@ class TestClient(MFPTestCase):
             self.arbitrary_date2,
         )
 
-        expected_measurements = ordereddict.OrderedDict(
+        expected_measurements = OrderedDict(
             [
                 (datetime.date(2015, 4, 28), 19.2),
                 (datetime.date(2015, 4, 27), 19.2),

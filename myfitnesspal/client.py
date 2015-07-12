@@ -5,7 +5,7 @@ import re
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
 import requests
-import ordereddict
+from collections import OrderedDict
 
 from myfitnesspal.base import MFPBase
 from myfitnesspal.day import Day
@@ -57,7 +57,10 @@ class Client(MFPBase):
                 'password': self.password,
             }
         )
-        if 'Incorrect username or password' in result.content:
+        # result.content is bytes so we decode it ASSUMING utf8 (which may be a
+        # bad assumption?) PORTING_CHECK
+        content = result.content.decode('utf8')
+        if 'Incorrect username or password' in content:
             raise ValueError(
                 "Incorrect username or password."
             )
@@ -261,7 +264,7 @@ class Client(MFPBase):
             )
 
         page = 1
-        measurements = ordereddict.OrderedDict()
+        measurements = OrderedDict()
 
         # retrieve entries until finished
         while True:
@@ -299,7 +302,7 @@ class Client(MFPBase):
         # find the tr element for each measurement entry on the page
         trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
 
-        measurements = ordereddict.OrderedDict()
+        measurements = OrderedDict()
 
         # create a dictionary out of the date and value of each entry
         for entry in trs:
@@ -310,7 +313,7 @@ class Client(MFPBase):
             else:
                 measurements[entry[1].text] = entry[2].text
 
-        temp_measurements = ordereddict.OrderedDict()
+        temp_measurements = OrderedDict()
 
         # converts the date to a datetime object and the value to a float
         for date in measurements:
@@ -338,7 +341,7 @@ class Client(MFPBase):
     def _get_notes(self, document):
         notes_header = document.xpath("//p[@class='note']")[0]
         header_text = [notes_header.text] if notes_header.text else []
-        lines = header_text + map(lambda x: x.tail, notes_header)
+        lines = header_text + list(map(lambda x: x.tail, notes_header))
         return '\n'.join([l.strip() for l in lines])
 
     def _get_water(self, document):
