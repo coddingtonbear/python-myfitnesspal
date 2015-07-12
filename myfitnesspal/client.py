@@ -282,7 +282,7 @@ class Client(MFPBase):
                 break
 
             # continue if the lower bound has not been reached
-            elif results.keys()[-1] > lower_bound:
+            elif list(results.keys())[-1] > lower_bound:
                 page += 1
                 continue
 
