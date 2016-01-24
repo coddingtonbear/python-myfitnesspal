@@ -7,18 +7,11 @@ from measurement.measures import Energy, Weight, Volume
 import requests
 from collections import OrderedDict
 
-from myfitnesspal.base import MFPBase
-from myfitnesspal.day import Day
-from myfitnesspal.entry import Entry
-from myfitnesspal.meal import Meal
-
-
-try:
-    import keyring
-    keyring_installed = True
-except:
-    keyring_installed = False
-    pass
+from .base import MFPBase
+from .day import Day
+from .entry import Entry
+from .keyring_utils import get_password_from_keyring
+from .meal import Meal
 
 
 class Client(MFPBase):
@@ -37,13 +30,11 @@ class Client(MFPBase):
         'sugar': (Weight, 'g'),
     }
 
-    def __init__(self, username, password, login=True, unit_aware=False):
-        if keyring_installed:
-            self.username = username
-            self.password = keyring.get_password('myfitnesspal', username)
-        else:
-            self.username = username
-            self.password = password
+    def __init__(self, username, password=None, login=True, unit_aware=False):
+        self.username = username
+        if password is None:
+            password = get_password_from_keyring(self.username)
+        self.__password = password
         self.unit_aware = unit_aware
 
         self.session = requests.Session()
@@ -66,7 +57,7 @@ class Client(MFPBase):
                 'utf8': utf8_field,
                 'authenticity_token': authenticity_token,
                 'username': self.username,
-                'password': self.password,
+                'password': self.__password,
             }
         )
         # result.content is bytes so we decode it ASSUMING utf8 (which may be a
