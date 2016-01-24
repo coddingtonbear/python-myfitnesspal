@@ -1,3 +1,12 @@
+# 1.7 (2016-01-24)
+
+* Adds command-line API.  Currently only two commands have been added: ``store-password`` and ``delete-password``.
+* Adds keyring support.  The application will now fetch passwords from the system keyring if they are unspecified.  You can store passwords in the keychain usin g the new ``store-password`` subcommand.
+
+# 1.6 (2015-07-11)
+
+* Adds Python 3 support and drops support for Python 2.6.
+
 # 1.5 (2015-05-15)
 
 * Adds new `get_measurements` method which returns measurements entered into MyFitnessPal.
