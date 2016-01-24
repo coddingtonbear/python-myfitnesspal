@@ -1,4 +1,4 @@
-import multiprocessing
+import multiprocessing  # noqa
 
 from setuptools import setup, find_packages
 
@@ -24,7 +24,12 @@ setup(
     install_requires=requirements,
     test_suite='nose.collector',
     tests_require=[
-        'gmcquillan-mimic',
         'nose',
-    ]
+        'mock',
+    ],
+    entry_points={
+        'console_scripts': [
+            'myfitnesspal = myfitnesspal.cmdline:main'
+        ]
+    },
 )
