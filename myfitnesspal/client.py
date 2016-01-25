@@ -294,7 +294,7 @@ class Client(MFPBase):
                 break
 
         # remove entries that are not within the dates specified
-        for date in measurements.keys():
+        for date in list(measurements.keys()):
             if not upper_bound >= date >= lower_bound:
                 del measurements[date]
 
