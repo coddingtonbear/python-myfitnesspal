@@ -1,3 +1,8 @@
+# 1.7.1 (2016-01-24)
+
+* Fixes bug in measurement iteration on Python 3 (Thanks @dchristle!).
+* Moves ``demo.py`` into command-line subcommand named ``day`` with some alterations.
+
 # 1.7 (2016-01-24)
 
 * Adds command-line API.  Currently only two commands have been added: ``store-password`` and ``delete-password``.
