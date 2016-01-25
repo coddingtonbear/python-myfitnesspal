@@ -14,7 +14,7 @@ class Entry(MFPBase):
 
     @property
     def name(self):
-        return self._name
+        return self._name.strip()
 
     @property
     def nutrition_information(self):

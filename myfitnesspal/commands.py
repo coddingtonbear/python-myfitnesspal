@@ -1,11 +1,18 @@
+from __future__ import print_function
+
 import argparse
+from datetime import datetime
 from getpass import getpass
 import logging
+
+from blessed import Terminal
+from dateutil.parser import parse as dateparse
 
 from .keyring_utils import (
     delete_password_in_keyring,
     store_password_in_keyring,
 )
+from . import Client
 
 
 COMMANDS = {}
@@ -84,3 +91,51 @@ def delete_password(args, *extra, **kwargs):
     args = parser.parse_args(extra)
 
     delete_password_in_keyring(args.username)
+
+
+@command(
+    "Display MyFitnessPal data for a given date.",
+)
+def day(args, *extra, **kwargs):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'username',
+        help='The MyFitnessPal username for which to delete a stored password.'
+    )
+    parser.add_argument(
+        'date',
+        nargs='?',
+        default=datetime.now().strftime('%Y-%m-%d'),
+        type=lambda datestr: dateparse(datestr).date(),
+        help='The date for which to display information.'
+    )
+    args = parser.parse_args(extra)
+
+    client = Client(args.username)
+    day = client.get_date(args.date)
+
+    t = Terminal()
+
+    print(t.blue(args.date.strftime('%Y-%m-%d')))
+    for meal in day.meals:
+        print(t.bold(meal.name.title()))
+        for entry in meal.entries:
+            print('* {entry.name}'.format(entry=entry))
+            print(
+                t.italic_bright_black(
+                    '  {entry.nutrition_information}'.format(entry=entry)
+                )
+            )
+        print('')
+
+    print(t.bold("Totals"))
+    for key, value in day.totals.items():
+        print(
+            '{key}: {value}'.format(
+                key=key.title(),
+                value=value,
+            )
+        )
+    print("Water: {amount}".format(amount=day.water))
+    if day.notes:
+        print(t.italic(day.notes))
