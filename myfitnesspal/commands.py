@@ -10,6 +10,7 @@ from dateutil.parser import parse as dateparse
 
 from .keyring_utils import (
     delete_password_in_keyring,
+    get_password_from_keyring_or_interactive,
     store_password_in_keyring,
 )
 from . import Client
@@ -111,7 +112,8 @@ def day(args, *extra, **kwargs):
     )
     args = parser.parse_args(extra)
 
-    client = Client(args.username)
+    password = get_password_from_keyring_or_interactive(args.username)
+    client = Client(args.username, password)
     day = client.get_date(args.date)
 
     t = Terminal()

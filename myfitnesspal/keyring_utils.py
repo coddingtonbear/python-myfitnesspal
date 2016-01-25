@@ -1,3 +1,5 @@
+import getpass
+
 import keyring
 
 
@@ -39,3 +41,14 @@ def delete_password_in_keyring(username):
         KEYRING_SYSTEM,
         username,
     )
+
+
+def get_password_from_keyring_or_interactive(username):
+    try:
+        return get_password_from_keyring(username)
+    except NoStoredPasswordAvailable:
+        return getpass.getpass(
+            "MyFitnessPal password for {username}: ".format(
+                username=username,
+            )
+        )
