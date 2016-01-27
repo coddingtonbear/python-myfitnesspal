@@ -1,11 +1,12 @@
 import datetime
-import os.path
+import logging
 import re
 
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
 import requests
 from collections import OrderedDict
+from six.moves.urllib import parse
 
 from .base import MFPBase
 from .day import Day
@@ -14,9 +15,13 @@ from .keyring_utils import get_password_from_keyring
 from .meal import Meal
 
 
+logger = logging.getLogger(__name__)
+
+
 class Client(MFPBase):
     BASE_URL = 'http://www.myfitnesspal.com/'
     BASE_URL_SECURE = 'https://www.myfitnesspal.com/'
+    BASE_API_URL = 'https://api.myfitnesspal.com/'
     LOGIN_PATH = 'account/login'
     ABBREVIATIONS = {
         'carbs': 'carbohydrates',
@@ -31,18 +36,45 @@ class Client(MFPBase):
     }
 
     def __init__(self, username, password=None, login=True, unit_aware=False):
-        self.username = username
+        self.provided_username = username
         if password is None:
-            password = get_password_from_keyring(self.username)
+            password = get_password_from_keyring(username)
         self.__password = password
         self.unit_aware = unit_aware
+
+        self._user_metadata = {}
+        self._auth_data = {}
 
         self.session = requests.Session()
         if login:
             self._login()
 
+    @property
+    def user_id(self):
+        return self._auth_data['user_id']
+
+    @property
+    def user_metadata(self):
+        return self._user_metadata
+
+    @property
+    def access_token(self):
+        return self._auth_data['access_token']
+
+    @property
+    def effective_username(self):
+        """ One's actual username may be different from the one used for login
+
+        This method will return the actual username if it is available, but
+        will fall back to the one provided if it is not.
+
+        """
+        if self.user_metadata:
+            return self.user_metadata['username']
+        return self.provided_username
+
     def _login(self):
-        login_url = os.path.join(self.BASE_URL_SECURE, self.LOGIN_PATH)
+        login_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_PATH)
         document = self._get_document_for_url(login_url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
@@ -56,7 +88,7 @@ class Client(MFPBase):
             data={
                 'utf8': utf8_field,
                 'authenticity_token': authenticity_token,
-                'username': self.username,
+                'username': self.effective_username,
                 'password': self.__password,
             }
         )
@@ -68,6 +100,66 @@ class Client(MFPBase):
                 "Incorrect username or password."
             )
 
+        self._auth_data = self._get_auth_data()
+        self._user_metadata = self._get_user_metadata()
+
+    def _get_auth_data(self):
+        result = self.session.get(
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                '/user/auth_token'
+            ) + '?refresh=true'
+        )
+        if not result.ok:
+            raise RuntimeError(
+                "Unable to fetch authentication token from MyFitnessPal: "
+                "status code: {status}".format(
+                    status=result.status_code
+                )
+            )
+
+        return result.json()
+
+    def _get_user_metadata(self):
+        requested_fields = [
+            'diary_preferences',
+            'goal_preferences',
+            'unit_preferences',
+            'paid_subscriptions',
+            'account',
+            'goal_displays',
+            'location_preferences',
+            'system_data',
+            'profiles',
+            'step_sources'
+        ]
+        query_string = parse.urlencode([
+            ('fields[]', name, ) for name in requested_fields
+        ])
+        metadata_url = parse.urljoin(
+            self.BASE_API_URL,
+            '/v2/users/{user_id}'.format(user_id=self.user_id)
+        ) + '?' + query_string
+        result = self.session.get(
+            metadata_url,
+            headers={
+                'Authorization': 'Bearer {token}'.format(
+                    token=self.access_token,
+                ),
+                'mfp-client-id': 'mfp-main-js',
+                'mfp-user-id': self.user_id,
+            }
+        )
+        if not result.ok:
+            logger.warning(
+                "Unable to fetch user metadata; this may cause Myfitnesspal "
+                "to behave incorrectly if you have logged-in with your "
+                "e-mail address rather than your basic username; status %s.",
+                result.status_code,
+            )
+
+        return result.json()['item']
+
     def _get_full_name(self, raw_name):
         name = raw_name.lower()
         if name not in self.ABBREVIATIONS:
@@ -75,16 +167,15 @@ class Client(MFPBase):
         return self.ABBREVIATIONS[name]
 
     def _get_url_for_date(self, date, username):
-        return os.path.join(
+        return parse.urljoin(
             self.BASE_URL,
-            'food/diary/',
-            username
+            'food/diary/' + username
         ) + '?date=%s' % (
             date.strftime('%Y-%m-%d')
         )
 
     def _get_url_for_measurements(self, page=1, measurement_id=1):
-        return os.path.join(
+        return parse.urljoin(
             self.BASE_URL,
             'measurements/edit'
         ) + '?page=%d&type=%d' % (page, measurement_id)
@@ -217,7 +308,7 @@ class Client(MFPBase):
         document = self._get_document_for_url(
             self._get_url_for_date(
                 date,
-                kwargs.get('username', self.username)
+                kwargs.get('username', self.effective_username)
             )
         )
 
@@ -358,4 +449,4 @@ class Client(MFPBase):
             return None
 
     def __unicode__(self):
-        return u'MyFitnessPal Client for %s' % self.username
+        return u'MyFitnessPal Client for %s' % self.effective_username
