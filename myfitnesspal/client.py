@@ -104,7 +104,7 @@ class Client(MFPBase):
         self._user_metadata = self._get_user_metadata()
 
     def _get_auth_data(self):
-        result = self.session.get(
+        result = self._get_request_for_url(
             parse.urljoin(
                 self.BASE_URL_SECURE,
                 '/user/auth_token'
@@ -140,16 +140,7 @@ class Client(MFPBase):
             self.BASE_API_URL,
             '/v2/users/{user_id}'.format(user_id=self.user_id)
         ) + '?' + query_string
-        result = self.session.get(
-            metadata_url,
-            headers={
-                'Authorization': 'Bearer {token}'.format(
-                    token=self.access_token,
-                ),
-                'mfp-client-id': 'mfp-main-js',
-                'mfp-user-id': self.user_id,
-            }
-        )
+        result = self._get_request_for_url(metadata_url, send_token=True)
         if not result.ok:
             logger.warning(
                 "Unable to fetch user metadata; this may cause Myfitnesspal "
@@ -180,8 +171,31 @@ class Client(MFPBase):
             'measurements/edit'
         ) + '?page=%d&type=%d' % (page, measurement_id)
 
-    def _get_content_for_url(self, url):
-        return self.session.get(url).content.decode('utf8')
+    def _get_request_for_url(
+        self, url, send_token=False, headers=None, **kwargs
+    ):
+        if headers is None:
+            headers = {}
+
+        if send_token:
+            headers.update({
+                'Authorization': 'Bearer {token}'.format(
+                    token=self.access_token,
+                ),
+                'mfp-client-id': 'mfp-main-js',
+                'mfp-user-id': self.user_id,
+            })
+
+        return self.session.get(
+            url,
+            headers=headers,
+            **kwargs
+        )
+
+    def _get_content_for_url(self, *args, **kwargs):
+        return (
+            self._get_request_for_url(*args, **kwargs).content.decode('utf8')
+        )
 
     def _get_document_for_url(self, url):
         content = self._get_content_for_url(url)
