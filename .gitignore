@@ -11,3 +11,4 @@ include/*
 *egg*
 share/*
 .tox/*
+pip-selfcheck.json
