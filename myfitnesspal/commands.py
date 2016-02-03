@@ -108,7 +108,7 @@ def day(args, *extra, **kwargs):
         nargs='?',
         default=datetime.now().strftime('%Y-%m-%d'),
         type=lambda datestr: dateparse(datestr).date(),
-        help='The date for which to display information.'
+        help=u'The date for which to display information.'
     )
     args = parser.parse_args(extra)
 
@@ -122,22 +122,22 @@ def day(args, *extra, **kwargs):
     for meal in day.meals:
         print(t.bold(meal.name.title()))
         for entry in meal.entries:
-            print('* {entry.name}'.format(entry=entry))
+            print(u'* {entry.name}'.format(entry=entry))
             print(
                 t.italic_bright_black(
-                    '  {entry.nutrition_information}'.format(entry=entry)
+                    u'  {entry.nutrition_information}'.format(entry=entry)
                 )
             )
-        print('')
+        print(u'')
 
     print(t.bold("Totals"))
     for key, value in day.totals.items():
         print(
-            '{key}: {value}'.format(
+            u'{key}: {value}'.format(
                 key=key.title(),
                 value=value,
             )
         )
-    print("Water: {amount}".format(amount=day.water))
+    print(u'Water: {amount}'.format(amount=day.water))
     if day.notes:
         print(t.italic(day.notes))
