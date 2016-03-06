@@ -425,9 +425,14 @@ class Client(MFPBase):
 
         # converts the date to a datetime object and the value to a float
         for date in measurements:
+
+            # replace 'st' with period to correctly convert UK stone/pounds
             temp_measurements[
                 datetime.datetime.strptime(date, '%m/%d/%Y').date()
-            ] = self._get_numeric(measurements[date], flt=True)
+            ] = self._get_numeric(
+                measurements[date].replace('st','.'),
+                flt=True
+            )
 
         measurements = temp_measurements
 
