@@ -152,7 +152,7 @@ class Client(MFPBase):
         return result.json()['item']
 
     def _get_full_name(self, raw_name):
-        name = raw_name.lower()
+        name = raw_name.lower().strip()
         if name not in self.ABBREVIATIONS:
             return name
         return self.ABBREVIATIONS[name]
