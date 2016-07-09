@@ -241,7 +241,7 @@ class Client(MFPBase):
             except IndexError:
                 # This is the 'delete' button
                 continue
-            value = self._get_numeric(column.text)
+            value = self._extract_value(column)
             nutrition[nutr_name] = self._get_measurement(nutr_name, value)
 
         return nutrition
@@ -282,7 +282,9 @@ class Client(MFPBase):
                     except IndexError:
                         # This is the 'delete' button
                         continue
-                    value = self._get_numeric(column.text)
+                    
+                    value = self._extract_value(column)
+                    
                     nutrition[nutr_name] = self._get_measurement(
                         nutr_name,
                         value
@@ -303,6 +305,14 @@ class Client(MFPBase):
             )
 
         return meals
+
+    def _extract_value(self, element):
+        if len(element.getchildren()) == 0:
+            value = self._get_numeric(element.text)
+        else:
+            value = self._get_numeric(element.xpath("span[@class='macro-value']")[0].text)
+        
+        return value
 
     def get_date(self, *args, **kwargs):
         if len(args) == 3:
