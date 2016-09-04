@@ -463,7 +463,13 @@ class Client(MFPBase):
         return '\n'.join([l.strip() for l in lines])
 
     def _get_water(self, document):
-        water_header = document.xpath("//div[@class='water-counter']/p/a")[0]
+        result = document.xpath("//div[@class='water-counter']/p/a")
+
+        if(len(result) < 1):
+            return None
+
+        water_header = result[0]
+        
         try:
             cups = int(water_header.tail.strip())
             if self.unit_aware:
