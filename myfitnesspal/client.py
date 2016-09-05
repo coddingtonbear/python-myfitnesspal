@@ -463,13 +463,32 @@ class Client(MFPBase):
         return '\n'.join([l.strip() for l in lines])
 
     def _get_water(self, document):
-        water_header = document.xpath("//div[@class='water-counter']/p/a")[0]
         try:
-            cups = int(water_header.tail.strip())
+            water_value = document.xpath(
+                "//span[@class='water-value-static']"
+            )[0].text
+            if water_value is None:
+                return None
+            else:
+                water_value = water_value.strip()
+            water_unit = document.xpath(
+                "//span[@class='water-unit']"
+            )[0].text.strip()
+
+            value = int(water_value)
             if self.unit_aware:
-                return Volume(us_cup=cups)
-            return cups
-        except (ValueError, TypeError):
+                unit_map = {
+                    'ml': 'ml',
+                    'cups': 'us_cup'
+                }
+                return Volume(
+                    **{unit_map[water_unit]: value}
+                )
+            return value
+        except (TypeError, ValueError, KeyError, IndexError):
+            logger.exception(
+                "Error encountered while gathering water metrics."
+            )
             return None
 
     def __unicode__(self):
