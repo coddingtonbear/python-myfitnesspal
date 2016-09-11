@@ -8,7 +8,7 @@ with open('requirements.txt', 'r') as in_:
 
 setup(
     name='myfitnesspal',
-    version='1.8.4',
+    version='1.8.5',
     url='http://github.com/coddingtonbear/python-myfitnesspal/',
     description='Access health and fitness data stored in Myfitnesspal',
     author='Adam Coddington',
