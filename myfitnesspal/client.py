@@ -13,6 +13,7 @@ from .day import Day
 from .entry import Entry
 from .keyring_utils import get_password_from_keyring
 from .meal import Meal
+from .note import Note
 
 
 logger = logging.getLogger(__name__)
@@ -338,8 +339,11 @@ class Client(MFPBase):
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
-        notes = self._get_notes(document)
-        water = self._get_water(document)
+
+        # Since this data requires an additional request, let's just
+        # allow the day object to run the request if necessary.
+        notes = lambda: self._get_notes(date)
+        water = lambda: self._get_water(date)
 
         day = Day(
             date=date,
@@ -456,40 +460,31 @@ class Client(MFPBase):
 
         return ids
 
-    def _get_notes(self, document):
-        notes_header = document.xpath("//p[@class='note']")[0]
-        header_text = [notes_header.text] if notes_header.text else []
-        lines = header_text + list(map(lambda x: x.tail, notes_header))
-        return '\n'.join([l.strip() for l in lines])
-
-    def _get_water(self, document):
-        try:
-            water_value = document.xpath(
-                "//span[@class='water-value-static']"
-            )[0].text
-            if water_value is None:
-                return None
-            else:
-                water_value = water_value.strip()
-            water_unit = document.xpath(
-                "//span[@class='water-unit']"
-            )[0].text.strip()
-
-            value = int(water_value)
-            if self.unit_aware:
-                unit_map = {
-                    'ml': 'ml',
-                    'cups': 'us_cup'
-                }
-                return Volume(
-                    **{unit_map[water_unit]: value}
-                )
-            return value
-        except (TypeError, ValueError, KeyError, IndexError):
-            logger.exception(
-                "Error encountered while gathering water metrics."
+    def _get_notes(self, date):
+        result = self._get_request_for_url(
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                '/food/note',
+            ) + "?date={date}".format(
+                date=date.strftime('%Y-%m-%d')
             )
-            return None
+        )
+        return Note(result.json()['item'])
+
+    def _get_water(self, date):
+        result = self._get_request_for_url(
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                '/food/water',
+            ) + "?date={date}".format(
+                date=date.strftime('%Y-%m-%d')
+            )
+        )
+        value = result.json()['item']['milliliters']
+        if not self.unit_aware:
+            return value
+
+        return Volume(ml=value)
 
     def __unicode__(self):
         return u'MyFitnessPal Client for %s' % self.effective_username

@@ -53,11 +53,11 @@ class Day(MFPBase):
 
     @property
     def notes(self):
-        return self._notes
+        return self._notes()
 
     @property
     def water(self):
-        return self._water
+        return self._water()
 
     def get_as_dict(self):
         return dict(
