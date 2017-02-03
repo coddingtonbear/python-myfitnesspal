@@ -12,3 +12,4 @@ include/*
 share/*
 .tox/*
 pip-selfcheck.json
+.vscode/

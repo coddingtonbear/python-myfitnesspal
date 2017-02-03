@@ -1,6 +1,7 @@
 import datetime
 import logging
 import re
+import json
 
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
@@ -14,6 +15,7 @@ from .entry import Entry
 from .keyring_utils import get_password_from_keyring
 from .meal import Meal
 from .note import Note
+from .food_entry import Food_Entry
 
 
 logger = logging.getLogger(__name__)
@@ -49,7 +51,9 @@ class Client(MFPBase):
         self.session = requests.Session()
         if login:
             self._login()
-
+    @property
+    def authenticity_token(self):
+        return self._authenticity_token
     @property
     def user_id(self):
         return self._auth_data['user_id']
@@ -100,7 +104,7 @@ class Client(MFPBase):
             raise ValueError(
                 "Incorrect username or password."
             )
-
+        self._authenticity_token = authenticity_token
         self._auth_data = self._get_auth_data()
         self._user_metadata = self._get_user_metadata()
 
@@ -190,6 +194,27 @@ class Client(MFPBase):
         return self.session.get(
             url,
             headers=headers,
+            **kwargs
+        )
+    def _post_request_for_url(
+        self, url, data, send_token=False, headers=None, **kwargs
+    ):
+        if headers is None:
+            headers = {}
+
+        if send_token:
+            headers.update({
+                'Authorization': 'Bearer {token}'.format(
+                    token=self.access_token,
+                ),
+                'Content-Type' : 'application/x-www-form-urlencoded',
+                'mfp-client-id': 'mfp-main-js',
+                'mfp-user-id': self.user_id,
+            })
+        return self.session.post(
+            url,
+            headers=headers,
+            data=data,
             **kwargs
         )
 
@@ -459,7 +484,7 @@ class Client(MFPBase):
             ids[option.text] = int(option.attrib.get('value'))
 
         return ids
-
+  
     def _get_notes(self, date):
         result = self._get_request_for_url(
             parse.urljoin(
@@ -485,6 +510,22 @@ class Client(MFPBase):
             return value
 
         return Volume(ml=value)
+
+    def save_weight(self, weight):
+        result = self._post_request_for_url(
+            parse.urljoin(
+                self.BASE_URL,
+                '/measurements/save'
+            ),
+             {'authenticity_token':self.authenticity_token, 'weight[display_value]':weight}
+        )
+        if not result.ok:
+            raise RuntimeError(
+                "Unable to update weight in MyFitnessPal "
+                "status code: {status}".format(
+                    status=result.status_code
+                )
+            )
 
     def __unicode__(self):
         return u'MyFitnessPal Client for %s' % self.effective_username
