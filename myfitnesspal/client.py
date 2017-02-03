@@ -1,7 +1,6 @@
 import datetime
 import logging
 import re
-import json
 
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
@@ -15,7 +14,6 @@ from .entry import Entry
 from .keyring_utils import get_password_from_keyring
 from .meal import Meal
 from .note import Note
-from .food_entry import Food_Entry
 
 
 logger = logging.getLogger(__name__)
