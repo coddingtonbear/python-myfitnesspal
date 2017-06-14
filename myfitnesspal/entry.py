@@ -1,10 +1,21 @@
 from myfitnesspal.base import MFPBase
+import re
 
 
 class Entry(MFPBase):
     def __init__(self, name, nutrition):
         self._name = name
         self._nutrition = nutrition
+
+
+    #split out quantity and measuring unit out of entry name
+        regex = r'(?P<short_name>.+), (?P<quantity>\d+.*) (?P<unit>\w+|serving\(s\))(?: \(.+\))?'
+        match = re.search(regex, name)
+
+        self._quantity = match.group('quantity')
+        self._unit = match.group('unit')
+        self._short_name = match.group('short_name')
+
 
     def __getitem__(self, value):
         return self.totals[value]
@@ -24,6 +35,7 @@ class Entry(MFPBase):
     def totals(self):
         return self.nutrition_information
 
+
     def get_as_dict(self):
         return {
             'name': self.name,
@@ -35,3 +47,15 @@ class Entry(MFPBase):
             self.name,
             self.nutrition_information,
         )
+
+    @property
+    def short_name(self):
+        return self._short_name.strip()
+
+    @property
+    def unit(self):
+        return self._unit
+
+    @property
+    def quantity(self):
+        return self._quantity
