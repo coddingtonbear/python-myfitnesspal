@@ -3,7 +3,6 @@ import re
 from myfitnesspal.base import MFPBase
 
 
-
 class Entry(MFPBase):
     def __init__(self, name, nutrition):
         self._name = name
@@ -17,7 +16,6 @@ class Entry(MFPBase):
         self._quantity = None
         self._unit = None
         self._short_name = None
-
         if match:
             self._quantity = match.group('quantity')
             self._unit = match.group('unit')
