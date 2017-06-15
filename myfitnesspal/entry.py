@@ -1,5 +1,7 @@
-from myfitnesspal.base import MFPBase
 import re
+
+from myfitnesspal.base import MFPBase
+
 
 
 class Entry(MFPBase):
@@ -8,13 +10,18 @@ class Entry(MFPBase):
         self._nutrition = nutrition
 
 
-    #split out quantity and measuring unit out of entry name
+        #split out quantity and measuring unit out of entry name
         regex = r'(?P<short_name>.+), (?P<quantity>\d+.*) (?P<unit>\w+|serving\(s\))(?: \(.+\))?'
         match = re.search(regex, name)
 
-        self._quantity = match.group('quantity')
-        self._unit = match.group('unit')
-        self._short_name = match.group('short_name')
+        self._quantity = None
+        self._unit = None
+        self._short_name = None
+
+        if match:
+            self._quantity = match.group('quantity')
+            self._unit = match.group('unit')
+            self._short_name = match.group('short_name')
 
 
     def __getitem__(self, value):
