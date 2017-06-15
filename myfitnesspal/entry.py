@@ -7,8 +7,7 @@ class Entry(MFPBase):
     def __init__(self, name, nutrition):
         self._name = name
         self._nutrition = nutrition
-
-
+        
         #split out quantity and measuring unit out of entry name
         regex = r'(?P<short_name>.+), (?P<quantity>\d+.*) (?P<unit>\w+|serving\(s\))(?: \(.+\))?'
         match = re.search(regex, name)
@@ -20,7 +19,6 @@ class Entry(MFPBase):
             self._quantity = match.group('quantity')
             self._unit = match.group('unit')
             self._short_name = match.group('short_name')
-
 
     def __getitem__(self, value):
         return self.totals[value]
@@ -55,7 +53,9 @@ class Entry(MFPBase):
 
     @property
     def short_name(self):
-        return self._short_name.strip()
+        if self._short_name:
+            return self._short_name.strip()
+        return self._short_name
 
     @property
     def unit(self):
