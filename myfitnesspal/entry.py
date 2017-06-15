@@ -9,7 +9,7 @@ class Entry(MFPBase):
         self._nutrition = nutrition
         
         #split out quantity and measuring unit out of entry name
-        regex = r'(?P<short_name>.+), (?P<quantity>\d+.*) (?P<unit>\w+|serving\(s\))(?: \(.+\))?'
+        regex = r'(?P<short_name>.+), (?P<quantity>\d[\d\.]*) (?P<unit>[\w\(\)]+)(?: \(.*\))?'
         match = re.search(regex, name)
 
         self._quantity = None
