@@ -306,7 +306,35 @@ class Client(MFPBase):
             )
 
         return meals
+    
+    def _get_url_for_exercise(self, date, username):
+        return parse.urljoin(
+            self.BASE_URL,
+            'exercise/diary/' + username
+        ) + '?date=%s' % (
+            date.strftime('%Y-%m-%d')
+        
 
+    def _get_exercise_goals(self, document):
+        total_header = document.xpath("//span[@class='soFar']")[0]
+        goal_header = total_header.getparent()
+        columns = goal_header.findall('td')
+
+        fields = self._get_fields(document)
+
+        exercise = {}
+        for n in range(1, len(columns)):
+            column = columns[n]
+            try:
+                ex_name = fields[n]
+            except IndexError:
+                # This is the 'delete' button
+                continue
+            value = self._extract_value(column)
+            exercise[ex_name] = self._get_measurement(ex_name, value)
+
+        return exercise
+            
     def _extract_value(self, element):
         if len(element.getchildren()) == 0:
             value = self._get_numeric(element.text)
