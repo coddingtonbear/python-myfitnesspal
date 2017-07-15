@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime
 from getpass import getpass
 import logging
+import sys
 
 from blessed import Terminal
 from dateutil.parser import parse as dateparse
@@ -141,3 +142,46 @@ def day(args, *extra, **kwargs):
     print(u'Water: {amount}'.format(amount=day.water))
     if day.notes:
         print(t.italic(day.notes))
+
+
+@command(
+    "Display MyFitnessPal data for a given date, output in CSV format.",
+)
+def daycsv(args, *extra, **kwargs):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'username',
+        help='The MyFitnessPal username for which to delete a stored password.'
+    )
+    parser.add_argument(
+        'date',
+        nargs='?',
+        default=datetime.now().strftime('%Y-%m-%d'),
+        type=lambda datestr: dateparse(datestr).date(),
+        help=u'The date for which to display information.'
+    )
+    args = parser.parse_args(extra)
+
+    password = get_password_from_keyring_or_interactive(args.username)
+    client = Client(args.username, password)
+    day = client.get_date(args.date)
+
+    sys.stdout.write(" , , , Calories, Carbs, Fat, Protein, Sodium, Sugar\n")
+
+    for meal in day.meals:
+        for entry in meal.entries:
+            sys.stdout.write(args.date.strftime('%Y-%m-%d , '))
+            sys.stdout.write(meal.name.title() + ' , ')
+            sys.stdout.write('"' + entry.name + '" , ')
+            for key in sorted(entry.nutrition_information.iterkeys()):
+              sys.stdout.write(str(entry.nutrition_information[key]) + ' , ')
+            sys.stdout.write('\n')
+
+    sys.stdout.write(args.date.strftime('%Y-%m-%d , DAY TOTALS , , '))
+    for key in sorted(day.totals.iterkeys()):
+      sys.stdout.write(str(day.totals[key]) + ' , ')
+    if day.notes:
+        sys.stdout.write('"' + day.notes + '"')
+    else:
+        sys.stdout.write(" ")
+    sys.stdout.write('\n')
