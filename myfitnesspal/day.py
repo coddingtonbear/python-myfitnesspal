@@ -8,6 +8,7 @@ class Day(MFPBase):
         self._goals = goals
         self._notes = notes
         self._water = water
+        self._totals = None
 
     def __getitem__(self, value):
         for meal in self._meals:
@@ -33,15 +34,10 @@ class Day(MFPBase):
 
     @property
     def totals(self):
-        nutrition = {}
-        for entry in self.entries:
-            for k, v in entry.nutrition_information.items():
-                if k not in nutrition:
-                    nutrition[k] = v
-                else:
-                    nutrition[k] += v
+        if self._totals is None:
+            self._compute_totals()
 
-        return nutrition
+        return self._totals
 
     @property
     def goals(self):
@@ -63,6 +59,16 @@ class Day(MFPBase):
         return dict(
             (m.name, m.get_as_list(), ) for m in self.meals
         )
+
+    def _compute_totals(self):
+        totals = {}
+        for entry in self.entries:
+            for k, v in entry.nutrition_information.items():
+                if k not in totals:
+                    totals[k] = v
+                else:
+                    totals[k] += v
+        self._totals = totals
 
     def __unicode__(self):
         return u'%s %s' % (
