@@ -342,7 +342,6 @@ class TestClient(MFPTestCase):
             }
         )
 
-
     def test_get_day_get_totals_multiple_times(self):
         # Given: A `day` with information unit aware
         self.client.unit_aware = True
