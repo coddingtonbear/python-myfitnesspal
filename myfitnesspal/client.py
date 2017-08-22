@@ -411,9 +411,9 @@ class Client(MFPBase):
             date = args[0]
         else:
             raise ValueError(
-                'get_exercise accepts either a single datetime or date instance, '
-                'or three integers representing year, month, and day '
-                'respectively.'
+                'get_exercise accepts either a single datetime '
+                'or date instance, or three integers representing '
+                'year, month, and day respectively.'
             )
 
         # get the exercise URL
