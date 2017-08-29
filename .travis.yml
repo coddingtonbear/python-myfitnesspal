@@ -4,6 +4,6 @@ python:
     - "2.7"
     - "3.4"
 install:
-    - pip install -q -e . --use-mirrors
+    - pip install -q -e .
 script:
     - python setup.py test
