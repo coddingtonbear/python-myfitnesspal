@@ -581,7 +581,7 @@ class Client(MFPBase):
 
         # here's where we need that required element
         data['authenticity_token'] = self._authenticity_token
-        
+
         # Weight has it's own key value pair
         if measurement == 'Weight':
             data['weight[display_value]'] = value
