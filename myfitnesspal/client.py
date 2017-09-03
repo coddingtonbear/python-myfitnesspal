@@ -105,6 +105,9 @@ class Client(MFPBase):
         self._auth_data = self._get_auth_data()
         self._user_metadata = self._get_user_metadata()
 
+        # authenticity token required for measurement set function.
+        self._authenticity_token = authenticity_token
+
     def _get_auth_data(self):
         result = self._get_request_for_url(
             parse.urljoin(
@@ -541,6 +544,80 @@ class Client(MFPBase):
                 del measurements[date]
 
         return measurements
+
+    def set_measurements(
+        self, measurement='Weight', value=None
+    ):
+        """ Sets measurement for today's date."""
+        if value is None:
+            raise ValueError(
+                "Cannot update blank value."
+            )
+
+        # get the URL for the main check in page
+        # this is left in because we need to parse
+        # the 'measurement' name to set the value.
+        document = self._get_document_for_url(
+            self._get_url_for_measurements()
+        )
+       
+        # gather the IDs for all measurement types
+        measurement_ids = self._get_measurement_ids(document)
+       
+        # check if the measurement exists before going too far
+        if measurement not in measurement_ids.keys():
+            raise ValueError(
+                "Measurement '%s' does not exist." % measurement
+            )
+       
+        # build the update url.
+        update_url = parse.urljoin(
+                    self.BASE_URL,
+                    'measurements/save'
+        ) 
+
+        # setup a dict for the post        
+        data = {}
+
+        # here's where we need that required element        
+        data['authenticity_token'] = self._authenticity_token
+        
+        # Weight has it's own key value pair
+        if measurement == 'Weight':
+            data['weight[display_value]'] = value
+        
+        # the other measurements have generic names with an incrementing numeric index.
+        measurement_index = 0
+        
+        # iterate all the measurement_ids
+        for measurement_id in measurement_ids.keys():
+            # create the measurement_type[n] key value pair
+            data['measurement_type[' + str(measurement_index) + ']'] = measurement_ids[measurement_id]
+            
+            # and if it corresponds to the value we want to update
+            if measurement == measurement_id:    
+                # create the measurement_value[n] key value pair and assign it the value.
+                data['measurement_value[' + str(measurement_index) + ']'] = value
+            else:
+                # otherwise, create the key value pair and leave it blank
+                data['measurement_value[' + str(measurement_index) + ']'] = ""
+            
+            measurement_index += 1
+
+        # now post it.
+        result = self.session.post(
+            update_url,
+            data=data
+        )
+        
+        # throw an error if it failed.
+        if not result.ok:
+            raise RuntimeError(
+                "Unable to update measurement in MyFitnessPal: "
+                "status code: {status}".format(
+                    status=result.status_code
+                )
+            )
 
     def _get_measurements(self, document):
 
