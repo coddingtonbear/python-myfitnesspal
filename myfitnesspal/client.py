@@ -579,7 +579,7 @@ class Client(MFPBase):
         # setup a dict for the post
         data = {}
 
-        # here's where we need that required element        
+        # here's where we need that required element
         data['authenticity_token'] = self._authenticity_token
         
         # Weight has it's own key value pair
@@ -592,17 +592,22 @@ class Client(MFPBase):
 
         # iterate all the measurement_ids
         for measurement_id in measurement_ids.keys():
-            # create the measurement_type[n] 
+            # create the measurement_type[n]
             # key value pair
-            data['measurement_type[' + str(measurement_index) + ']'] = measurement_ids[measurement_id]
+            n = str(measurement_index)
+            meas_type = 'measurement_type[' + n + ']'
+            meas_val = 'measurement_value[' + n + ']'
+
+            data[meas_type] = measurement_ids[measurement_id]
 
             # and if it corresponds to the value we want to update
             if measurement == measurement_id:
-                # create the measurement_value[n] key value pair and assign it the value.
-                data['measurement_value[' + str(measurement_index) + ']'] = value
+                # create the measurement_value[n]
+                # key value pair and assign it the value.
+                data[meas_val] = value
             else:
                 # otherwise, create the key value pair and leave it blank
-                data['measurement_value[' + str(measurement_index) + ']'] = ""
+                data[meas_val] = ""
 
             measurement_index += 1
 
