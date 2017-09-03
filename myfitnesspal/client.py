@@ -560,23 +560,23 @@ class Client(MFPBase):
         document = self._get_document_for_url(
             self._get_url_for_measurements()
         )
-       
+
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
-       
+
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
             raise ValueError(
                 "Measurement '%s' does not exist." % measurement
             )
-       
+
         # build the update url.
         update_url = parse.urljoin(
                     self.BASE_URL,
                     'measurements/save'
-        ) 
+        )
 
-        # setup a dict for the post        
+        # setup a dict for the post
         data = {}
 
         # here's where we need that required element        
@@ -585,23 +585,25 @@ class Client(MFPBase):
         # Weight has it's own key value pair
         if measurement == 'Weight':
             data['weight[display_value]'] = value
-        
-        # the other measurements have generic names with an incrementing numeric index.
+
+        # the other measurements have generic names with
+        # an incrementing numeric index.
         measurement_index = 0
-        
+
         # iterate all the measurement_ids
         for measurement_id in measurement_ids.keys():
-            # create the measurement_type[n] key value pair
+            # create the measurement_type[n] 
+            # key value pair
             data['measurement_type[' + str(measurement_index) + ']'] = measurement_ids[measurement_id]
-            
+
             # and if it corresponds to the value we want to update
-            if measurement == measurement_id:    
+            if measurement == measurement_id:
                 # create the measurement_value[n] key value pair and assign it the value.
                 data['measurement_value[' + str(measurement_index) + ']'] = value
             else:
                 # otherwise, create the key value pair and leave it blank
                 data['measurement_value[' + str(measurement_index) + ']'] = ""
-            
+
             measurement_index += 1
 
         # now post it.
@@ -609,7 +611,7 @@ class Client(MFPBase):
             update_url,
             data=data
         )
-        
+
         # throw an error if it failed.
         if not result.ok:
             raise RuntimeError(
