@@ -349,18 +349,20 @@ class Client(MFPBase):
                 # an anchor tag within a div that doesn't exist
 
                 # check for `td > a`
-                if columns[0].find('a') is None:
+                name = ''
+                if columns[0].find('a'):
+                    name = columns[0].find('a').text.strip()
+
+                # If name is empty string:                
+                if columns[0].find('a') is None or not name:
 
                     # check for `td > div > a`
-                    if columns[0].find('div').find('a') is None or not columns[0].find('a').text.strip():
+                    if columns[0].find('div').find('a') is None:
                         # if neither, return `td.text`
                         name = columns[0].text.strip()
                     else:
                         # otherwise return `td > div > a.text`
                         name = columns[0].find('div').find('a').text.strip()
-                else:
-                    # otherwise, our first check for `td > a` will have passed
-                    name = columns[0].find('a').text.strip()
 
                 attrs = {}
 
