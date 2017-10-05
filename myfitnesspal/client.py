@@ -353,7 +353,7 @@ class Client(MFPBase):
                 if columns[0].find('a'):
                     name = columns[0].find('a').text.strip()
 
-                # If name is empty string:                
+                # If name is empty string:
                 if columns[0].find('a') is None or not name:
 
                     # check for `td > div > a`
