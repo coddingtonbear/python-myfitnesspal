@@ -352,7 +352,7 @@ class Client(MFPBase):
                 if columns[0].find('a') is None:
 
                     # check for `td > div > a`
-                    if columns[0].find('div').find('a') is None:
+                    if columns[0].find('div').find('a') is None or not columns[0].find('a').text.strip():
                         # if neither, return `td.text`
                         name = columns[0].text.strip()
                     else:
@@ -372,7 +372,7 @@ class Client(MFPBase):
                         # This is the 'delete' button
                         continue
 
-                    if column.text is None:
+                    if column.text is None or 'N/A' in column.text:
                         value = None
                     else:
                         value = self._get_numeric(column.text)
