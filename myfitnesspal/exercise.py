@@ -22,6 +22,14 @@ class Exercise(MFPBase):
     def name(self):
         return self._name
 
+    @property
+    def totals(self):
+        exercises = {'minutes':0, 'calories burned':0 }
+        for entry in self.entries:
+            exercises['minutes'] += entry['minutes']
+            exercises['calories burned'] += entry['calories burned']
+        return exercises
+
     def get_as_list(self):
         return [e.get_as_dict() for e in self.entries]
 
