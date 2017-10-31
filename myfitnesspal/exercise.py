@@ -24,7 +24,7 @@ class Exercise(MFPBase):
 
     @property
     def totals(self):
-        exercises = {'minutes':0, 'calories burned':0 }
+        exercises = {'minutes' : 0, 'calories burned' : 0}
         for entry in self.entries:
             exercises['minutes'] += entry['minutes']
             exercises['calories burned'] += entry['calories burned']
