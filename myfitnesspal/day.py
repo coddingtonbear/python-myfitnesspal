@@ -2,7 +2,8 @@ from myfitnesspal.base import MFPBase
 
 
 class Day(MFPBase):
-    def __init__(self, date, meals=None, goals=None, notes=None, water=None, complete=False):
+    def __init__(self, date, meals=None, goals=None, notes=None,
+                 water=None, complete=False):
         self._date = date
         self._meals = meals
         self._goals = goals
