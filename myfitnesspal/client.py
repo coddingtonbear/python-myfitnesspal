@@ -248,6 +248,15 @@ class Client(MFPBase):
 
         return nutrition
 
+    def _get_completion(self, document):
+        completion_header = document.xpath("//div[@id='complete_day']")[0]
+        completion_message = completion_header.getchildren()[0]
+
+        if "day_incomplete_message" in completion_message.classes:
+            return(False)
+        elif "day_complete_message" in completion_message.classes:
+            return(True)
+
     def _get_meals(self, document):
         meals = []
         fields = None
@@ -462,6 +471,7 @@ class Client(MFPBase):
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
+        complete = self._get_completion(document)
 
         # Since this data requires an additional request, let's just
         # allow the day object to run the request if necessary.
@@ -473,7 +483,8 @@ class Client(MFPBase):
             meals=meals,
             goals=goals,
             notes=notes,
-            water=water
+            water=water,
+            complete=complete
         )
 
         return day
