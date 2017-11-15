@@ -253,9 +253,9 @@ class Client(MFPBase):
         completion_message = completion_header.getchildren()[0]
 
         if "day_incomplete_message" in completion_message.classes:
-            return(False)
+            return False
         elif "day_complete_message" in completion_message.classes:
-            return(True)
+            return True
 
     def _get_meals(self, document):
         meals = []
