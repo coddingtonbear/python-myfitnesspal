@@ -187,6 +187,10 @@ class TestClient(MFPTestCase):
             self.arbitrary_date1,
         )
         self.assertEquals(
+            day.complete,
+            False,
+        )
+        self.assertEquals(
             day.goals,
             {
                 'calories': 2500,
@@ -319,6 +323,10 @@ class TestClient(MFPTestCase):
             self.arbitrary_date1,
         )
         self.assertEquals(
+            day.complete,
+            False,
+        )
+        self.assertEquals(
             day.goals,
             {
                 'calories': Energy(Calorie=2500),
@@ -339,4 +347,15 @@ class TestClient(MFPTestCase):
                 'sodium': Weight(mg=2069),
                 'sugar': Weight(g=58),
             }
+        )
+
+    def test_get_completed_day(self):
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document(
+                'completed_diary.html')
+            day = self.client.get_date(self.arbitrary_date1)
+
+        self.assertEquals(
+            day.complete,
+            True,
         )
