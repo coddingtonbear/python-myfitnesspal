@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import datetime
+import copy
 
 from measurement.measures import Energy, Weight
 from mock import patch
@@ -349,6 +350,20 @@ class TestClient(MFPTestCase):
             }
         )
 
+    def test_get_day_get_totals_multiple_times(self):
+        # Given: A `day` with information unit aware
+        self.client.unit_aware = True
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document('diary.html')
+            day = self.client.get_date(self.arbitrary_date1)
+
+        # When: Getting `totals` multiple times
+        totals_1 = copy.deepcopy(day.totals)
+        totals_2 = copy.deepcopy(day.totals)
+
+        # Then: `totals` remain the same
+        self.assertEquals(totals_1, totals_2)
+        
     def test_get_exercise(self):
         with patch.object(self.client, '_get_document_for_url') as get_doc:
             get_doc.return_value = self.get_html_document('exercise.html')
