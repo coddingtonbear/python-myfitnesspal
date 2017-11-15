@@ -13,6 +13,7 @@ from .day import Day
 from .entry import Entry
 from .keyring_utils import get_password_from_keyring
 from .meal import Meal
+from .exercise import Exercise
 from .note import Note
 
 
@@ -247,6 +248,15 @@ class Client(MFPBase):
 
         return nutrition
 
+    def _get_completion(self, document):
+        completion_header = document.xpath("//div[@id='complete_day']")[0]
+        completion_message = completion_header.getchildren()[0]
+
+        if "day_incomplete_message" in completion_message.classes:
+            return False
+        elif "day_complete_message" in completion_message.classes:
+            return True
+
     def _get_meals(self, document):
         meals = []
         fields = None
@@ -307,12 +317,136 @@ class Client(MFPBase):
 
         return meals
 
+    def _get_url_for_exercise(self, date, username):
+        return parse.urljoin(
+            self.BASE_URL,
+            'exercise/diary/' + username
+        ) + '?date=%s' % (
+            date.strftime('%Y-%m-%d')
+        )
+
+    def _get_exercise(self, document):
+        exercises = []
+        ex_headers = document.xpath("//table[@class='table0']")
+
+        for ex_header in ex_headers:
+            fields = []
+            tds = ex_header.findall('thead')[0].findall('tr')[0].findall('td')
+            ex_name = tds[0].text.lower()
+            if len(fields) == 0:
+                for field in tds:
+                    fields.append(
+                        self._get_full_name(
+                            field.text
+                        )
+                    )
+            # comment
+            row = ex_header.findall('tbody')[0].findall('tr')[0]
+            entries = []
+            while True:
+                # comment
+                if not row.attrib.get('class') is None:
+                    break
+                columns = row.findall('td')
+
+                # Cardio diary exercise descriptions are anchor tags
+                # within divs, but strength training exercise
+                # descriptions are just anchor tags within the td.
+
+                # But *first* we need to check whether an anchor
+                # tag exists, or we throw an error looking for
+                # an anchor tag within a div that doesn't exist
+
+                # check for `td > a`
+                name = ''
+                if columns[0].find('a') is not None:
+                    name = columns[0].find('a').text.strip()
+
+                # If name is empty string:
+                if columns[0].find('a') is None or not name:
+
+                    # check for `td > div > a`
+                    if columns[0].find('div').find('a') is None:
+                        # if neither, return `td.text`
+                        name = columns[0].text.strip()
+                    else:
+                        # otherwise return `td > div > a.text`
+                        name = columns[0].find('div').find('a').text.strip()
+
+                attrs = {}
+
+                for n in range(1, len(columns)):
+                    column = columns[n]
+                    try:
+                        attr_name = fields[n]
+                    except IndexError:
+                        # This is the 'delete' button
+                        continue
+
+                    if column.text is None or 'N/A' in column.text:
+                        value = None
+                    else:
+                        value = self._get_numeric(column.text)
+
+                    attrs[attr_name] = self._get_measurement(
+                        attr_name,
+                        value
+                    )
+
+                entries.append(
+                    Entry(
+                        name,
+                        attrs,
+                    )
+                )
+                # comment
+                row = row.getnext()
+
+            exercises.append(
+                Exercise(
+                    ex_name,
+                    entries,
+                )
+            )
+
+        return exercises
+
+    def get_exercise(self, *args, **kwargs):
+        if len(args) == 3:
+            date = datetime.date(
+                int(args[0]),
+                int(args[1]),
+                int(args[2]),
+            )
+        elif len(args) == 1 and isinstance(args[0], datetime.date):
+            date = args[0]
+        else:
+            raise ValueError(
+                'get_exercise accepts either a single datetime '
+                'or date instance, or three integers representing '
+                'year, month, and day respectively.'
+            )
+
+        # get the exercise URL
+
+        document = self._get_document_for_url(
+            self._get_url_for_exercise(
+                date,
+                kwargs.get('username', self.effective_username)
+            )
+        )
+
+        # gather the exercise goals
+        exercise = self._get_exercise(document)
+
+        return exercise
+
     def _extract_value(self, element):
         if len(element.getchildren()) == 0:
             value = self._get_numeric(element.text)
         else:
             value = self._get_numeric(element.xpath("span[@class='macro-value']")[0].text)
-        
+
         return value
 
     def get_date(self, *args, **kwargs):
@@ -339,6 +473,7 @@ class Client(MFPBase):
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
+        complete = self._get_completion(document)
 
         # Since this data requires an additional request, let's just
         # allow the day object to run the request if necessary.
@@ -350,7 +485,8 @@ class Client(MFPBase):
             meals=meals,
             goals=goals,
             notes=notes,
-            water=water
+            water=water,
+            complete=complete
         )
 
         return day
@@ -459,6 +595,17 @@ class Client(MFPBase):
             ids[option.text] = int(option.attrib.get('value'))
 
         return ids
+
+    def get_measurement_id_options(self):
+        """ Returns list of measurement choices."""
+        # get the URL for the main check in page
+        document = self._get_document_for_url(
+            self._get_url_for_measurements()
+        )
+
+        # gather the IDs for all measurement types
+        measurement_ids = self._get_measurement_ids(document)
+        return measurement_ids
 
     def _get_notes(self, date):
         result = self._get_request_for_url(
