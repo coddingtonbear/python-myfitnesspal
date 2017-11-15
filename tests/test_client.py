@@ -426,6 +426,7 @@ class TestClient(MFPTestCase):
         self.assertEquals(
             expected_strength,
             actual_strength,
+        )
 
     def test_get_completed_day(self):
         with patch.object(self.client, '_get_document_for_url') as get_doc:
