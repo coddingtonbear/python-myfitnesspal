@@ -349,7 +349,12 @@ class Client(MFPBase):
                 # an anchor tag within a div that doesn't exist
 
                 # check for `td > a`
-                if columns[0].find('a') is None:
+                name = ''
+                if columns[0].find('a') is not None:
+                    name = columns[0].find('a').text.strip()
+
+                # If name is empty string:
+                if columns[0].find('a') is None or not name:
 
                     # check for `td > div > a`
                     if columns[0].find('div').find('a') is None:
@@ -358,9 +363,6 @@ class Client(MFPBase):
                     else:
                         # otherwise return `td > div > a.text`
                         name = columns[0].find('div').find('a').text.strip()
-                else:
-                    # otherwise, our first check for `td > a` will have passed
-                    name = columns[0].find('a').text.strip()
 
                 attrs = {}
 
@@ -372,7 +374,7 @@ class Client(MFPBase):
                         # This is the 'delete' button
                         continue
 
-                    if column.text is None:
+                    if column.text is None or 'N/A' in column.text:
                         value = None
                     else:
                         value = self._get_numeric(column.text)
@@ -582,6 +584,17 @@ class Client(MFPBase):
             ids[option.text] = int(option.attrib.get('value'))
 
         return ids
+
+    def get_measurement_id_options(self):
+        """ Returns list of measurement choices."""
+        # get the URL for the main check in page
+        document = self._get_document_for_url(
+            self._get_url_for_measurements()
+        )
+
+        # gather the IDs for all measurement types
+        measurement_ids = self._get_measurement_ids(document)
+        return measurement_ids
 
     def _get_notes(self, date):
         result = self._get_request_for_url(
