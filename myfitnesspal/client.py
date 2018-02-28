@@ -252,13 +252,16 @@ class Client(MFPBase):
         return nutrition
 
     def _get_completion(self, document):
-        completion_header = document.xpath("//div[@id='complete_day']")[0]
-        completion_message = completion_header.getchildren()[0]
+        try:
+            completion_header = document.xpath("//div[@id='complete_day']")[0]
+            completion_message = completion_header.getchildren()[0]
 
-        if "day_incomplete_message" in completion_message.classes:
-            return False
-        elif "day_complete_message" in completion_message.classes:
-            return True
+            if "day_incomplete_message" in completion_message.classes:
+                return False
+            elif "day_complete_message" in completion_message.classes:
+                return True
+        except IndexError:
+            return False  # Who knows, probably not my diary.
 
     def _get_meals(self, document):
         meals = []
