@@ -4,5 +4,5 @@ keyrings.alt>=1.1,<2.0
 lxml>=3.2.1
 measurement>=1.5
 python-dateutil>=2.4,<3
-requests>=1.2.3
+requests>=2.17.0
 six>=1.9.0
