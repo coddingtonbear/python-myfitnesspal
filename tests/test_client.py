@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import datetime
+import copy
 
 from measurement.measures import Energy, Weight
 from mock import patch
@@ -187,6 +188,10 @@ class TestClient(MFPTestCase):
             self.arbitrary_date1,
         )
         self.assertEquals(
+            day.complete,
+            False,
+        )
+        self.assertEquals(
             day.goals,
             {
                 'calories': 2500,
@@ -319,6 +324,10 @@ class TestClient(MFPTestCase):
             self.arbitrary_date1,
         )
         self.assertEquals(
+            day.complete,
+            False,
+        )
+        self.assertEquals(
             day.goals,
             {
                 'calories': Energy(Calorie=2500),
@@ -339,4 +348,108 @@ class TestClient(MFPTestCase):
                 'sodium': Weight(mg=2069),
                 'sugar': Weight(g=58),
             }
+        )
+
+    def test_get_day_get_totals_multiple_times(self):
+        # Given: A `day` with information unit aware
+        self.client.unit_aware = True
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document('diary.html')
+            day = self.client.get_date(self.arbitrary_date1)
+
+        # When: Getting `totals` multiple times
+        totals_1 = copy.deepcopy(day.totals)
+        totals_2 = copy.deepcopy(day.totals)
+
+        # Then: `totals` remain the same
+        self.assertEquals(totals_1, totals_2)
+        
+    def test_get_exercise(self):
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document('exercise.html')
+            day = self.client.get_exercise(self.arbitrary_date1)
+
+        # The returned object should be an array of length 2
+        self.assertEquals(
+            len(day),
+            2,
+        )
+
+        # The first object of the array should be our cardio
+        self.assertEquals(
+            day[0].name,
+            'cardiovascular',
+        )
+
+        # The second object should be our strength training
+        self.assertEquals(
+            day[1].name,
+            'strength training',
+        )
+
+        expected_cardio = [
+            {
+                'name': 'Yoga',
+                'nutrition_information': {
+                    'minutes': 20,
+                    'calories burned': 62
+                }
+            },
+            {
+                'name': 'Swimming, breaststroke, general',
+                'nutrition_information': {
+                    'minutes': 10,
+                    'calories burned': 124
+                }
+            },
+            {
+                'name': 'Running (jogging), 8 mph (7.5 min mile)',
+                'nutrition_information': {
+                    'minutes': 20,
+                    'calories burned': 335
+                }
+            }
+        ]
+        actual_cardio = day[0].get_as_list()
+
+        expected_strength = [
+            {
+                'name': 'Bench Press, Barbell',
+                'nutrition_information': {
+                    'sets': 3,
+                    'reps/set': 10,
+                    'weight/set': 30
+                }
+            },
+            {
+                'name': 'Pull Ups (pull-ups)',
+                'nutrition_information': {
+                    'sets': 3,
+                    'reps/set': 8,
+                    'weight/set': None
+                }
+            }
+        ]
+
+        actual_strength = day[1].get_as_list()
+
+        self.assertEquals(
+            expected_cardio,
+            actual_cardio,
+        )
+
+        self.assertEquals(
+            expected_strength,
+            actual_strength,
+        )
+
+    def test_get_completed_day(self):
+        with patch.object(self.client, '_get_document_for_url') as get_doc:
+            get_doc.return_value = self.get_html_document(
+                'completed_diary.html')
+            day = self.client.get_date(self.arbitrary_date1)
+
+        self.assertEquals(
+            day.complete,
+            True,
         )
