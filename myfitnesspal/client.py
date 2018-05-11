@@ -591,14 +591,14 @@ class Client(MFPBase):
 
         exercises = self._get_exercises(document)
         return exercises
-
-    def _get_url_for_exercise(self, date, username):
-        return parse.urljoin(
-            self.BASE_URL,
-            'exercise/diary/' + username
-        ) + '?date=%s' % (
-            date.strftime('%Y-%m-%d')
-            )
+#
+#    def _get_url_for_exercise(self, date, username):
+#        return parse.urljoin(
+#            self.BASE_URL,
+#            'exercise/diary/' + username
+#        ) + '?date=%s' % (
+#            date.strftime('%Y-%m-%d')
+#            )
 
     def _get_exercise_fields(self, document):
         meal_header = document.xpath("//tr")[0]
