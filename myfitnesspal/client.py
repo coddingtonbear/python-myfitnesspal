@@ -578,9 +578,9 @@ class Client(MFPBase):
             date = args[0]
         else:
             raise ValueError(
-                'get_exercise accepts either a single datetime or date instance, '
-                'or three integers representing year, month, and day '
-                'respectively.'
+                'get_exercise accepts either a single datetime or'
+                'date instance, or three integers representing year,'
+                'month, and day respectively.'
             )
         document = self._get_document_for_url(
             self._get_url_for_exercise(
@@ -589,24 +589,8 @@ class Client(MFPBase):
             )
         )
 
-        #meals = self._get_meals(document)
         exercises = self._get_exercises(document)
-
-        # Since this data requires an additional request, let's just
-        # allow the day object to run the request if necessary.
-        #notes = lambda: self._get_notes(date)
-        #water = lambda: self._get_water(date)
-
-        # day = Day(
-        #     date=date,
-        #     meals=meals,
-        #     goals=goals,
-        #     notes=notes,
-        #     water=water
-        # )
-
         return exercises
-
 
     def _get_url_for_exercise(self, date, username):
         return parse.urljoin(
@@ -636,14 +620,13 @@ class Client(MFPBase):
         exercises = []
         for tr in trs:
             tds = tr.findall('td')
-            found_exercise = tds[0].findall("div[@class='exercise-description']/a")
-            if found_exercise:
+            found_ex = tds[0].findall("div[@class='exercise-description']/a")
+            if found_ex:
                 exercise = {}
                 ex_name = fields[0]
-                exercise_description = found_exercise[0]
+                exercise_description = found_ex[0]
                 exercise[ex_name] = exercise_description.text.strip()
                 for n in range(1, len(tds)):
-                #for td in tds[1:]:
                     td = tds[n]
                     try:
                         ex_name = fields[n]
