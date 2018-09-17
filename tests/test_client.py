@@ -363,11 +363,11 @@ class TestClient(MFPTestCase):
 
         # Then: `totals` remain the same
         self.assertEquals(totals_1, totals_2)
-        
+
     def test_get_exercise(self):
         with patch.object(self.client, '_get_document_for_url') as get_doc:
             get_doc.return_value = self.get_html_document('exercise.html')
-            day = self.client.get_exercise(self.arbitrary_date1)
+            day = self.client._get_exercises(self.arbitrary_date1)
 
         # The returned object should be an array of length 2
         self.assertEquals(
