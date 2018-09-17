@@ -232,7 +232,11 @@ class Client(MFPBase):
         return fields
 
     def _get_goals(self, document):
-        total_header = document.xpath("//tr[@class='total']")[0]
+        try:
+            total_header = document.xpath("//tr[@class='total']")[0]
+        except IndexError:
+            return None
+
         goal_header = total_header.getnext()  # The following TR contains goals
         columns = goal_header.findall('td')
 
