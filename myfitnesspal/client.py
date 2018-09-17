@@ -214,10 +214,13 @@ class Client(MFPBase):
         return measure(**{kwarg: value})
 
     def _get_numeric(self, string, flt=False):
-        if flt:
-            return float(re.sub(r'[^\d.]+', '', string))
-        else:
-            return int(re.sub(r'[^\d.]+', '', string))
+        try:
+            if flt:
+                return float(re.sub(r'[^\d.]+', '', string))
+            else:
+                return int(re.sub(r'[^\d.]+', '', string))
+        except ValueError:
+            return 0
 
     def _get_fields(self, document):
         meal_header = document.xpath("//tr[@class='meal_header']")[0]
@@ -303,9 +306,9 @@ class Client(MFPBase):
                     except IndexError:
                         # This is the 'delete' button
                         continue
-                    
+
                     value = self._extract_value(column)
-                    
+
                     nutrition[nutr_name] = self._get_measurement(
                         nutr_name,
                         value
@@ -489,6 +492,8 @@ class Client(MFPBase):
         # allow the day object to run the request if necessary.
         notes = lambda: self._get_notes(date)
         water = lambda: self._get_water(date)
+        exercises = lambda: self.get_exercises(date)
+
 
         day = Day(
             date=date,
@@ -496,6 +501,7 @@ class Client(MFPBase):
             goals=goals,
             notes=notes,
             water=water,
+            exercises=exercises,
             complete=complete
         )
 
@@ -564,6 +570,77 @@ class Client(MFPBase):
                 del measurements[date]
 
         return measurements
+
+    def get_exercises(self, *args, **kwargs):
+        if len(args) == 3:
+            date = datetime.date(
+                int(args[0]),
+                int(args[1]),
+                int(args[2]),
+            )
+        elif len(args) == 1 and isinstance(args[0], datetime.date):
+            date = args[0]
+        else:
+            raise ValueError(
+                'get_exercise accepts either a single datetime or'
+                'date instance, or three integers representing year,'
+                'month, and day respectively.'
+            )
+        document = self._get_document_for_url(
+            self._get_url_for_exercise(
+                date,
+                kwargs.get('username', self.effective_username)
+            )
+        )
+
+        exercises = self._get_exercises(document)
+        return exercises
+#
+#    def _get_url_for_exercise(self, date, username):
+#        return parse.urljoin(
+#            self.BASE_URL,
+#            'exercise/diary/' + username
+#        ) + '?date=%s' % (
+#            date.strftime('%Y-%m-%d')
+#            )
+
+    def _get_exercise_fields(self, document):
+        meal_header = document.xpath("//tr")[0]
+        tds = meal_header.findall('td')
+        fields = ['name']
+        for field in tds[1:]:
+            fields.append(
+                self._get_full_name(
+                    field.text
+                )
+            )
+        return fields
+
+    def _get_exercises(self, document):
+        fields = self._get_exercise_fields(document)
+
+        exercise_table = document.xpath("//tbody")[0]
+        trs = exercise_table.findall('tr')
+        exercises = []
+        for tr in trs:
+            tds = tr.findall('td')
+            found_ex = tds[0].findall("div[@class='exercise-description']/a")
+            if found_ex:
+                exercise = {}
+                ex_name = fields[0]
+                exercise_description = found_ex[0]
+                exercise[ex_name] = exercise_description.text.strip()
+                for n in range(1, len(tds)):
+                    td = tds[n]
+                    try:
+                        ex_name = fields[n]
+                    except IndexError:
+                        # This is the 'delete' button
+                        continue
+                    value = self._extract_value(td)
+                    exercise[ex_name] = self._get_measurement(ex_name, value)
+                exercises.append(exercise)
+        return exercises
 
     def set_measurements(
         self, measurement='Weight', value=None
