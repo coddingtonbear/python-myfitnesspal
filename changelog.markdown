@@ -1,3 +1,19 @@
+# 1.12 (2018-09-16)
+
+* Adds support for accessing exercise information via the '.exercise' property.  Thanks @cathyyul!
+* Adds functionality allowing one to set measurements; thanks @rbelzile!
+* Adds 'completion' property to indicate whether an entry was marked completed.  Thanks @samhinshaw!
+* Fixes support for fetching exercise names from public profiles.  Thanks again, @samhinshaw!
+* Fixes a bug introduced by MFP UI changes causing get_goals to stop working properly.  Thanks for the fix, @zagi!
+* Fixes a bug that would cause loading data to fail if no completion div existed.  Thanks @datamachine!
+* Fixes a bug that caused 'n/a' appearing in a column to cause data to be unfetchable.  Thanks @jgissend10!
+
+Note that version 1.11 does not exist; I'm just not very good at using a computer.
+
+# 1.10 (2017-08-29)
+
+* Adds support for fetching exercise information.  Thanks @samhinshaw!
+
 # 1.9 (2017-06-15)
 
 * Adds support for fetching `unit`, `quantity`, and `short_name` for entries.
