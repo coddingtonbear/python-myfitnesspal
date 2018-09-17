@@ -380,8 +380,14 @@ class Client(MFPBase):
 
                     # check for `td > div > a`
                     if columns[0].find('div').find('a') is None:
-                        # if neither, return `td.text`
-                        name = columns[0].text.strip()
+                        # then check for just `td > div`
+                        # (this will occur when viewing a public diary entry)
+                        if columns[0].find('div') is not None:
+                            # if it exists, return `td > div.text`
+                            name = columns[0].find('div').text.strip()
+                        else:
+                            # if neither, return `td.text`
+                            name = columns[0].text.strip()
                     else:
                         # otherwise return `td > div > a.text`
                         name = columns[0].find('div').find('a').text.strip()
