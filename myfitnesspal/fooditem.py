@@ -51,8 +51,8 @@ class FoodItem(MFPBase):
         return self._verified
 
     @property
-    def default_serving(self):
-        return self._default_serving
+    def serving(self):
+        return self._serving
 
     @property
     def calcium(self):
