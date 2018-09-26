@@ -1,6 +1,7 @@
 import datetime
 import logging
 import re
+import datetime as dt
 
 import lxml.html
 from measurement.measures import Energy, Weight, Volume
@@ -15,6 +16,8 @@ from .keyring_utils import get_password_from_keyring
 from .meal import Meal
 from .exercise import Exercise
 from .note import Note
+from .fooditem import FoodItem
+from .fooditemserving import FoodItemServing
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +28,7 @@ class Client(MFPBase):
     BASE_URL_SECURE = 'https://www.myfitnesspal.com/'
     BASE_API_URL = 'https://api.myfitnesspal.com/'
     LOGIN_PATH = 'account/login'
+    SEARCH_PATH = 'food/search'
     ABBREVIATIONS = {
         'carbs': 'carbohydrates',
     }
@@ -734,3 +738,141 @@ class Client(MFPBase):
 
     def __unicode__(self):
         return u'MyFitnessPal Client for %s' % self.effective_username
+
+    def get_food_search_results(self, query):
+        search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
+        document = self._get_document_for_url(search_url)
+        authenticity_token = document.xpath(
+            "(//input[@name='authenticity_token']/@value)[1]"
+        )[0]
+        utf8_field = document.xpath(
+            "(//input[@name='utf8']/@value)[1]"
+        )[0]
+
+        result = self.session.post(
+            search_url,
+            data={
+                'utf8': utf8_field,
+                'authenticity_token': authenticity_token,
+                'search': query,
+                'date': dt.datetime.today().strftime('%Y-%m-%d'),
+                'meal': '0',
+            }
+        )
+
+        # result.content is bytes so we decode it ASSUMING utf8 (which may be a
+        # bad assumption?) PORTING_CHECK
+        content = result.content.decode('utf8')
+        document = lxml.html.document_fromstring(content)
+        if 'Matching Foods:' not in content:
+            raise ValueError(
+                "Unable to load search results."
+            )
+
+        return self._get_food_search_results(document)
+
+    def _get_food_search_results(self, document):
+        item_divs = document.xpath("//li[@class='matched-food']")
+
+        items = []
+        for item_div in item_divs:
+            # get mfp info from search results
+            a = item_div.xpath(".//div[@class='search-title-container']/a")[0]
+            mfp_id = int(a.get('data-external-id'))
+            mfp_name = a.text
+            verif = True if item_div.xpath(
+                ".//div[@class='verified verified-list-icon']") else False
+            nutr_info = item_div.xpath(
+                ".//p[@class='search-nutritional-info']"
+            )[0].text.strip().split(',')
+            brand = ''
+            if len(nutr_info) >= 3:
+                brand = ' '.join(nutr_info[0:-2]).strip()
+            serving = nutr_info[-2].strip()
+            calories = float(nutr_info[-1].replace('calories', '').strip())
+            items.append(
+                FoodItem(
+                    mfp_id,
+                    mfp_name,
+                    brand,
+                    verif,
+                    serving,
+                    calories,
+                )
+            )
+
+        return items
+
+    def get_food_item_details(self, mfp_id):
+        # api call for food item's details
+        requested_fields = [
+            'nutritional_contents',
+            'serving_sizes',
+            'confirmations',
+        ]
+        query_string = parse.urlencode([
+            ('fields[]', name, ) for name in requested_fields
+        ])
+        metadata_url = parse.urljoin(
+            self.BASE_API_URL,
+            '/v2/foods/{mfp_id}'.format(mfp_id=mfp_id)
+        ) + '?' + query_string
+        result = self._get_request_for_url(metadata_url, send_token=True)
+        if not result.ok:
+            logger.warning(
+                "Unable to fetch item details; this may cause Myfitnesspal "
+                "to behave incorrectly if you have logged-in with your "
+                "e-mail address rather than your basic username; status %s.",
+                result.status_code,
+            )
+        resp = result.json()['item']
+
+        # identifying serving info
+        servings = []
+        default_serving = None
+        for s in resp['serving_sizes']:
+            serving = FoodItemServing(
+                s['id'],
+                s['nutrition_multiplier'],
+                s['value'],
+                s['unit'],
+                s['index'],
+            )
+            servings.append(serving)
+            if serving.index == 0:
+                default_serving = serving.unit
+
+        # identifying calories for default serving
+        nutr_info = resp['nutritional_contents']
+        if 'energy' in nutr_info:
+            calories = nutr_info['energy']['value']
+        else:
+            calories = 0.0
+
+        # returning food item's details
+        return FoodItem(
+            mfp_id,
+            resp['description'],
+            resp.get('brand_name'),
+            resp['verified'],
+            default_serving,
+            calories,
+            calcium=nutr_info.get('calcium', 0.0),
+            carbohydrates=nutr_info.get('carbohydrates', 0.0),
+            cholesterol=nutr_info.get('cholesterol', 0.0),
+            fat=nutr_info.get('fat', 0.0),
+            fiber=nutr_info.get('fiber', 0.0),
+            iron=nutr_info.get('iron', 0.0),
+            monounsaturated_fat=nutr_info.get('monounsaturated_fat', 0.0),
+            polyunsaturated_fat=nutr_info.get('polyunsaturated_fat', 0.0),
+            potassium=nutr_info.get('potassium', 0.0),
+            protein=nutr_info.get('protein', 0.0),
+            saturated_fat=nutr_info.get('saturated_fat', 0.0),
+            sodium=nutr_info.get('sodium', 0.0),
+            sugar=nutr_info.get('sugar', 0.0),
+            trans_fat=nutr_info.get('trans_fat', 0.0),
+            vitamin_a=nutr_info.get('vitamin_a', 0.0),
+            vitamin_c=nutr_info.get('vitamin_c', 0.0),
+            confirmations=resp['confirmations'],
+            servings=servings
+        )
