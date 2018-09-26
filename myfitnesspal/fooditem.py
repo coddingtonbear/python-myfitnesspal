@@ -55,6 +55,10 @@ class FoodItem(MFPBase):
         return self._serving
 
     @property
+    def calories(self):
+        return self._calories
+
+    @property
     def calcium(self):
         return self._calcium
 
