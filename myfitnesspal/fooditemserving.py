@@ -28,3 +28,9 @@ class FoodItemServing(MFPBase):
     @property
     def index(self):
         return self._index
+
+    def __unicode__(self):
+        return u'%.2f x %s' % (
+            self.value,
+            self.unit
+        )
