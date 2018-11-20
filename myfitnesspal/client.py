@@ -22,7 +22,7 @@ from .fooditemserving import FoodItemServing
 
 logger = logging.getLogger(__name__)
 
-BRITISH_UNIT_MATCHER = re.compile(r'(?:(?P<st>\d+) st)?\W*(?:(?P<lbs>\d+) lb)?')
+BRITISH_UNIT_MATCHER = re.compile(r'(?:(?P<st>\d+) st)\W*(?:(?P<lbs>\d+) lb)?')
 
 
 class Client(MFPBase):
