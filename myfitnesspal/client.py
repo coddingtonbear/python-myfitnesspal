@@ -22,6 +22,8 @@ from .fooditemserving import FoodItemServing
 
 logger = logging.getLogger(__name__)
 
+BRITISH_UNIT_MATCHER = re.compile(r'(?:(?P<st>\d+) st)?\W*(?:(?P<lbs>\d+) lb)?')
+
 
 class Client(MFPBase):
     BASE_URL = 'http://www.myfitnesspal.com/'
@@ -217,12 +219,18 @@ class Client(MFPBase):
         measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
         return measure(**{kwarg: value})
 
-    def _get_numeric(self, string, flt=False):
+    def _get_numeric(self, string, data_type=int):
+        value = re.sub(r'[^\d.]+', '', string)
+
+        matched = BRITISH_UNIT_MATCHER.match(string)
+        if matched:
+            value = (
+                int(matched.groupdict()['lbs'] or 0)
+                + (int(matched.groupdict()['st'] or 0) * 14)
+            )
+
         try:
-            if flt:
-                return float(re.sub(r'[^\d.]+', '', string))
-            else:
-                return int(re.sub(r'[^\d.]+', '', string))
+            return data_type(value)
         except ValueError:
             return 0
 
@@ -659,7 +667,6 @@ class Client(MFPBase):
             )
 
     def _get_measurements(self, document):
-
         # find the tr element for each measurement entry on the page
         trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
 
@@ -680,7 +687,7 @@ class Client(MFPBase):
         for date in measurements:
             temp_measurements[
                 datetime.datetime.strptime(date, '%m/%d/%Y').date()
-            ] = self._get_numeric(measurements[date], flt=True)
+            ] = self._get_numeric(measurements[date], data_type=float)
 
         measurements = temp_measurements
 
