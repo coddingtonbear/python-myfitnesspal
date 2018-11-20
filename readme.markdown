@@ -189,6 +189,49 @@ weight
 
 Measurements are returned as ordered dictionaries. The first argument specifies the measurement name, which can be any name listed in the MyFitnessPal [Check-In](http://www.myfitnesspal.com/measurements/check_in/) page. When specifying a date range, the order of the date arguments does not matter.
 
+Food Search Examples
+--------------------
+
+To search for items:
+
+```python
+import myfitnesspal
+
+client = myfitnesspal.Client('my_username')
+
+food_items = client.get_food_search_results("bacon cheeseburger")
+food_items
+# >> [<Bacon Cheeseburger -- Sodexo Campus>,
+# <Junior Bacon Cheeseburger -- Wendy's>,
+# <Bacon Cheeseburger -- Continental Café>,
+# <Bacon Cheddar Cheeseburger -- Applebees>,
+# <Bacon Cheeseburger - Plain -- Homemade>,
+# <Jr. Bacon Cheeseburger -- Wendys>,
+# ...
+
+print("{} ({}), {}, cals={}, mfp_id={}".format(
+    food_items[0].name,
+    food_items[0].brand,
+    food_items[0].serving,
+    food_items[0].calories,
+    food_items[0].mfp_id
+))
+# > Bacon Cheeseburger (Sodexo Campus), 1 Sandwich, cals = 420.0
+```
+
+To get details for a particular food:
+```python
+import myfitnesspal
+
+client = myfitnesspal.Client('my_username')
+
+item = client.get_food_item_details("89755756637885")
+item.servings
+# > [<1.00 x Sandwich>]
+item.saturated_fat
+# > 10.0
+```
+
 Command-line API
 ----------------
 
