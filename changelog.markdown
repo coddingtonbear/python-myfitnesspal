@@ -1,3 +1,7 @@
+# 1.13 (2018-11-20)
+
+* Adds support for searching for food items and accessing their nutritional values.  Thanks @pydolan!
+
 # 1.12 (2018-09-16)
 
 * Adds support for accessing exercise information via the '.exercise' property.  Thanks @cathyyul!
