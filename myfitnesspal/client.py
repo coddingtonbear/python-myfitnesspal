@@ -170,7 +170,7 @@ class Client(MFPBase):
 
     def _get_url_for_date(self, date, username):
         return parse.urljoin(
-            self.BASE_URL,
+            self.BASE_URL_SECURE,
             'food/diary/' + username
         ) + '?date=%s' % (
             date.strftime('%Y-%m-%d')
@@ -178,7 +178,7 @@ class Client(MFPBase):
 
     def _get_url_for_measurements(self, page=1, measurement_id=1):
         return parse.urljoin(
-            self.BASE_URL,
+            self.BASE_URL_SECURE,
             'measurements/edit'
         ) + '?page=%d&type=%d' % (page, measurement_id)
 
@@ -344,7 +344,7 @@ class Client(MFPBase):
 
     def _get_url_for_exercise(self, date, username):
         return parse.urljoin(
-            self.BASE_URL,
+            self.BASE_URL_SECURE,
             'exercise/diary/' + username
         ) + '?date=%s' % (
             date.strftime('%Y-%m-%d')
@@ -612,7 +612,7 @@ class Client(MFPBase):
 
         # build the update url.
         update_url = parse.urljoin(
-                    self.BASE_URL,
+                    self.BASE_URL_SECURE,
                     'measurements/save'
         )
 
