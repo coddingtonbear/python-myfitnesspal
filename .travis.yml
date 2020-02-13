@@ -3,6 +3,7 @@ python:
     - "2.7"
     - "3.6"
 install:
+    - pip install --upgrade pip
     - pip install -q -e .
 script:
     - python setup.py test
