@@ -4,6 +4,7 @@ python:
     - "3.6"
 install:
     - pip install --upgrade pip
+    - [ `python -c "print(__import__('sys').version_info[0])"` == 2 ] && pip install sphinx==1.8.5
     - pip install -q -e .
 script:
     - python setup.py test
