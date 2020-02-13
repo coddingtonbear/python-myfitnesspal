@@ -595,7 +595,7 @@ class Client(MFPBase):
             )
         if date is None:
             date = dt.datetime.now().date()
-        if not isinstance(date,datetime.date):
+        if not isinstance(date, datetime.date):
             raise ValueError(
                 "Date must be a datetime.date object."
             )
