@@ -1,6 +1,5 @@
 blessed>=1.8.5,<2.0
-keyring>=8.0,<9.0
-keyrings.alt>=1.1,<2.0
+keyring>=8.0,<22.0
 lxml>=4.2.5
 measurement>=1.5
 python-dateutil>=2.4,<3
