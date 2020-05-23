@@ -586,12 +586,18 @@ class Client(MFPBase):
         return measurements
 
     def set_measurements(
-        self, measurement='Weight', value=None
+        self, measurement='Weight', value=None, date=None
     ):
         """ Sets measurement for today's date."""
         if value is None:
             raise ValueError(
                 "Cannot update blank value."
+            )
+        if date is None:
+            date = dt.datetime.now().date()
+        if not isinstance(date, datetime.date):
+            raise ValueError(
+                "Date must be a datetime.date object."
             )
 
         # get the URL for the main check in page
@@ -613,43 +619,18 @@ class Client(MFPBase):
         # build the update url.
         update_url = parse.urljoin(
                     self.BASE_URL_SECURE,
-                    'measurements/save'
+                    'measurements/new'
         )
 
         # setup a dict for the post
-        data = {}
-
-        # here's where we need that required element
-        data['authenticity_token'] = self._authenticity_token
-
-        # Weight has it's own key value pair
-        if measurement == 'Weight':
-            data['weight[display_value]'] = value
-
-        # the other measurements have generic names with
-        # an incrementing numeric index.
-        measurement_index = 0
-
-        # iterate all the measurement_ids
-        for measurement_id in measurement_ids.keys():
-            # create the measurement_type[n]
-            # key value pair
-            n = str(measurement_index)
-            meas_type = 'measurement_type[' + n + ']'
-            meas_val = 'measurement_value[' + n + ']'
-
-            data[meas_type] = measurement_ids[measurement_id]
-
-            # and if it corresponds to the value we want to update
-            if measurement == measurement_id:
-                # create the measurement_value[n]
-                # key value pair and assign it the value.
-                data[meas_val] = value
-            else:
-                # otherwise, create the key value pair and leave it blank
-                data[meas_val] = ""
-
-            measurement_index += 1
+        data = {
+            'authenticity_token': self._authenticity_token,
+            'measurement[display_value]': value,
+            'type': measurement_ids.get(measurement),
+            'measurement[entry_date(2i)]': date.month,
+            'measurement[entry_date(3i)]': date.day,
+            'measurement[entry_date(1i)]': date.year
+        }
 
         # now post it.
         result = self.session.post(
