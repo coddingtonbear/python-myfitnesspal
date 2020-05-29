@@ -4,7 +4,7 @@ import re
 import datetime as dt
 
 import lxml.html
-from measurement.measures import Energy, Weight, Volume
+from measurement.measures import Energy, Mass, Volume
 import requests
 from collections import OrderedDict
 from six.moves.urllib import parse
@@ -36,11 +36,11 @@ class Client(MFPBase):
     }
     DEFAULT_MEASURE_AND_UNIT = {
         'calories': (Energy, 'Calorie'),
-        'carbohydrates': (Weight, 'g'),
-        'fat': (Weight, 'g'),
-        'protein': (Weight, 'g'),
-        'sodium': (Weight, 'mg'),
-        'sugar': (Weight, 'g'),
+        'carbohydrates': (Mass, 'g'),
+        'fat': (Mass, 'g'),
+        'protein': (Mass, 'g'),
+        'sodium': (Mass, 'mg'),
+        'sugar': (Mass, 'g'),
     }
 
     def __init__(self, username, password=None, login=True, unit_aware=False):
