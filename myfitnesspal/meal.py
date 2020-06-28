@@ -8,7 +8,7 @@ class Meal(MFPBase):
 
     def __getitem__(self, value):
         if not isinstance(value, int):
-            raise ValueError('Index must be an integer')
+            raise ValueError("Index must be an integer")
         return self.entries[value]
 
     def __len__(self):
@@ -37,8 +37,5 @@ class Meal(MFPBase):
     def get_as_list(self):
         return [e.get_as_dict() for e in self.entries]
 
-    def __unicode__(self):
-        return u'%s %s' % (
-            self.name.title(),
-            self.totals
-        )
+    def __str__(self):
+        return f"{self.name.title()} {self.totals}"

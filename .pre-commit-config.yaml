@@ -1,0 +1,38 @@
+default_language_version:
+  python: python3
+repos:
+  # Sort imports prior to black reformatting, to
+  # ensure black always takes prescedence
+  - repo: https://github.com/timothycrosley/isort
+    rev: 4.3.21
+    hooks:
+      - id: isort
+  - repo: https://github.com/ambv/black
+    rev: 19.10b0
+    hooks:
+      - id: black
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.4.0
+    hooks:
+      - id: end-of-file-fixer
+        files: '.*\.py$'
+      - id: flake8
+        additional_dependencies:
+          - flake8-bugbear==19.3.0
+          - flake8-printf-formatting==1.1.0
+          - flake8-pytest==1.3
+          - flake8-pytest-style==0.1.3
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v1.25.1
+    hooks:
+      - id: pyupgrade
+        args: ["--py37-plus"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.782
+    hooks:
+      - id: mypy
+        args:
+          - --pretty
+          - --show-error-codes
+          - --show-error-context
+          - --ignore-missing-imports

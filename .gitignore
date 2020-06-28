@@ -12,3 +12,6 @@ include/*
 share/*
 .tox/*
 pip-selfcheck.json
+env/*
+.vscode/*
+.mypy_cache/*
