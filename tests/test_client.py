@@ -1,9 +1,9 @@
 import copy
 import datetime
 from collections import OrderedDict
+from unittest.mock import patch
 
 from measurement.measures import Energy, Weight
-from mock import patch
 
 from myfitnesspal import Client
 
