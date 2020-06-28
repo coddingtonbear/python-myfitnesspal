@@ -159,14 +159,17 @@ class Client(MFPBase):
         return self.ABBREVIATIONS[name]
 
     def _get_url_for_date(self, date, username):
-        return parse.urljoin(
-            self.BASE_URL_SECURE, "food/diary/" + username
-        ) + "?date=%s" % (date.strftime("%Y-%m-%d"))
+        date_str = date.strftime("%Y-%m-%d")
+        return (
+            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
+            + f"?date={date_str}"
+        )
 
     def _get_url_for_measurements(self, page=1, measurement_id=1):
-        return parse.urljoin(
-            self.BASE_URL_SECURE, "measurements/edit"
-        ) + "?page=%d&type=%d" % (page, measurement_id)
+        return (
+            parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
+            + f"?page={page}&type={measurement_id}"
+        )
 
     def _get_request_for_url(self, url, send_token=False, headers=None, **kwargs):
         if headers is None:
@@ -303,9 +306,11 @@ class Client(MFPBase):
         return meals
 
     def _get_url_for_exercise(self, date, username):
-        return parse.urljoin(
-            self.BASE_URL_SECURE, "exercise/diary/" + username
-        ) + "?date=%s" % (date.strftime("%Y-%m-%d"))
+        date_str = date.strftime("%Y-%m-%d")
+        return (
+            parse.urljoin(self.BASE_URL_SECURE, "exercise/diary/" + username)
+            + f"?date={date_str}"
+        )
 
     def _get_exercise(self, document):
         exercises = []
@@ -436,9 +441,9 @@ class Client(MFPBase):
 
         # Since this data requires an additional request, let's just
         # allow the day object to run the request if necessary.
-        notes = lambda: self._get_notes(date)
-        water = lambda: self._get_water(date)
-        exercises = lambda: self._get_exercises(date)
+        notes = lambda: self._get_notes(date)  # noqa: E731
+        water = lambda: self._get_water(date)  # noqa: E731
+        exercises = lambda: self._get_exercises(date)  # noqa: E731
 
         day = Day(
             date=date,
@@ -476,7 +481,7 @@ class Client(MFPBase):
         if measurement in measurement_ids.keys():
             measurement_id = measurement_ids[measurement]
         else:
-            raise ValueError("Measurement '%s' does not exist." % measurement)
+            raise ValueError(f"Measurement '{measurement}' does not exist.")
 
         page = 1
         measurements = OrderedDict()
@@ -531,7 +536,7 @@ class Client(MFPBase):
 
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
-            raise ValueError("Measurement '%s' does not exist." % measurement)
+            raise ValueError(f"Measurement '{measurement}' does not exist.")
 
         # build the update url.
         update_url = parse.urljoin(self.BASE_URL_SECURE, "measurements/new")
