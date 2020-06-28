@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from getpass import getpass
 
-from blessed import Terminal
+from rich import print
 from dateutil.parser import parse as dateparse
 
 from . import Client
@@ -105,19 +105,21 @@ def day(args, *extra, **kwargs):
     client = Client(args.username, password)
     day = client.get_date(args.date)
 
-    t = Terminal()
-
-    print(t.blue(args.date.strftime("%Y-%m-%d")))
+    date_str = args.date.strftime("%Y-%m-%d")
+    print(f"[blue]{date_str}[/blue]")
     for meal in day.meals:
-        print(t.bold(meal.name.title()))
+        print(f"[bold]{meal.name.title()}[/bold]")
         for entry in meal.entries:
             print(f"* {entry.name}")
-            print(t.italic_bright_black(f"  {entry.nutrition_information}"))
+            print(
+                f"  [italic bright_black]{entry.nutrition_information}"
+                f"[/italic bright_black]"
+            )
         print("")
 
-    print(t.bold("Totals"))
+    print("[bold]Totals[/bold]")
     for key, value in day.totals.items():
         print("{key}: {value}".format(key=key.title(), value=value,))
     print(f"Water: {day.water}")
     if day.notes:
-        print(t.italic(day.notes))
+        print(f"[italic]{day.notes}[/italic]")

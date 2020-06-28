@@ -2,6 +2,8 @@ import argparse
 import logging
 import sys
 
+from rich.logging import RichHandler
+
 from .commands import COMMANDS, get_command_list
 
 logger = logging.getLogger(__name__)
@@ -20,11 +22,9 @@ def main(args=None):
 
     # Set up a simple console logger
     logging.basicConfig(level=args.loglevel)
-    logging.addLevelName(
-        logging.WARNING, "\033[1;31m%s\033[1;0m" % logging.getLevelName(logging.WARNING)
-    )
-    logging.addLevelName(
-        logging.ERROR, "\033[1;41m%s\033[1;0m" % logging.getLevelName(logging.ERROR)
+
+    logging.basicConfig(
+        level=args.loglevel, format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
     )
 
     try:

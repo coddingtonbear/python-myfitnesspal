@@ -44,7 +44,7 @@ class Entry(MFPBase):
             "nutrition_information": self.nutrition_information,
         }
 
-    def __unicode__(self):
+    def __str__(self):
         return f"{self.name} {self.nutrition_information}"
 
     @property

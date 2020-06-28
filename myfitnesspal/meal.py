@@ -37,5 +37,5 @@ class Meal(MFPBase):
     def get_as_list(self):
         return [e.get_as_dict() for e in self.entries]
 
-    def __unicode__(self):
-        return "{} {}".format(self.name.title(), self.totals)
+    def __str__(self):
+        return f"{self.name.title()} {self.totals}"

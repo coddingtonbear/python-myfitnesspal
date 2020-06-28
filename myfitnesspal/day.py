@@ -25,7 +25,7 @@ class Day(MFPBase):
         for meal in self._meals:
             if meal.name.lower() == value.lower():
                 return meal
-        raise KeyError("No meal named '%s' exists for this date" % value)
+        raise KeyError(f"No meal named '{value}' exists for this date")
 
     def keys(self):
         keys = []
@@ -86,5 +86,6 @@ class Day(MFPBase):
                     totals[k] += v
         self._totals = totals
 
-    def __unicode__(self):
-        return "{} {}".format(self.date.strftime("%x"), self.totals)
+    def __str__(self):
+        date_str = self.date.strftime("%x")
+        return f"{date_str} {self.totals}"

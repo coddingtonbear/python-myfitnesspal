@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 from measurement.measures import Energy, Weight
 from mock import patch
+
 from myfitnesspal import Client
 
 from .base import MFPTestCase

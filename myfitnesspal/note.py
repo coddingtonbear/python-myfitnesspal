@@ -1,7 +1,5 @@
 import datetime
 
-from six import text_type
-
 
 class Note(str):
     def __new__(cls, note_data):

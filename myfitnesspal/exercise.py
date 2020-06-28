@@ -25,5 +25,5 @@ class Exercise(MFPBase):
     def get_as_list(self):
         return [e.get_as_dict() for e in self.entries]
 
-    def __unicode__(self):
-        return "%s" % (self.name.title())
+    def __str__(self):
+        return self.name.title()

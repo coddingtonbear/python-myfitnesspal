@@ -1,13 +1,12 @@
-import datetime as dt
+import datetime
 import logging
 import re
 from collections import OrderedDict
 
-import requests
-from six.moves.urllib import parse
-
 import lxml.html
+import requests
 from measurement.measures import Energy, Mass, Volume
+from six.moves.urllib import parse
 
 from .base import MFPBase
 from .day import Day
@@ -518,7 +517,7 @@ class Client(MFPBase):
         if value is None:
             raise ValueError("Cannot update blank value.")
         if date is None:
-            date = dt.datetime.now().date()
+            date = datetime.datetime.now().date()
         if not isinstance(date, datetime.date):
             raise ValueError("Date must be a datetime.date object.")
 
@@ -624,8 +623,8 @@ class Client(MFPBase):
 
         return Volume(ml=value)
 
-    def __unicode__(self):
-        return "MyFitnessPal Client for %s" % self.effective_username
+    def __str__(self):
+        return f"MyFitnessPal Client for {self.effective_username}"
 
     def get_food_search_results(self, query):
         search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
@@ -641,7 +640,7 @@ class Client(MFPBase):
                 "utf8": utf8_field,
                 "authenticity_token": authenticity_token,
                 "search": query,
-                "date": dt.datetime.today().strftime("%Y-%m-%d"),
+                "date": datetime.datetime.today().strftime("%Y-%m-%d"),
                 "meal": "0",
             },
         )
