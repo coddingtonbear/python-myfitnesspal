@@ -38,4 +38,4 @@ class Meal(MFPBase):
         return [e.get_as_dict() for e in self.entries]
 
     def __unicode__(self):
-        return u"%s %s" % (self.name.title(), self.totals)
+        return "{} {}".format(self.name.title(), self.totals)

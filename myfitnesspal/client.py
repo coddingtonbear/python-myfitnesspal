@@ -1,24 +1,23 @@
-import datetime
+import datetime as dt
 import logging
 import re
-import datetime as dt
+from collections import OrderedDict
+
+import requests
+from six.moves.urllib import parse
 
 import lxml.html
 from measurement.measures import Energy, Mass, Volume
-import requests
-from collections import OrderedDict
-from six.moves.urllib import parse
 
 from .base import MFPBase
 from .day import Day
 from .entry import Entry
-from .keyring_utils import get_password_from_keyring
-from .meal import Meal
 from .exercise import Exercise
-from .note import Note
 from .fooditem import FoodItem
 from .fooditemserving import FoodItemServing
-
+from .keyring_utils import get_password_from_keyring
+from .meal import Meal
+from .note import Note
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +139,7 @@ class Client(MFPBase):
         )
         metadata_url = (
             parse.urljoin(
-                self.BASE_API_URL, "/v2/users/{user_id}".format(user_id=self.user_id)
+                self.BASE_API_URL, f"/v2/users/{self.user_id}"
             )
             + "?"
             + query_string
@@ -179,7 +178,7 @@ class Client(MFPBase):
         if send_token:
             headers.update(
                 {
-                    "Authorization": "Bearer {token}".format(token=self.access_token,),
+                    "Authorization": f"Bearer {self.access_token}",
                     "mfp-client-id": "mfp-main-js",
                     "mfp-user-id": self.user_id,
                 }
@@ -628,7 +627,7 @@ class Client(MFPBase):
         return Volume(ml=value)
 
     def __unicode__(self):
-        return u"MyFitnessPal Client for %s" % self.effective_username
+        return "MyFitnessPal Client for %s" % self.effective_username
 
     def get_food_search_results(self, query):
         search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
@@ -697,7 +696,7 @@ class Client(MFPBase):
             [("fields[]", name,) for name in requested_fields]
         )
         metadata_url = (
-            parse.urljoin(self.BASE_API_URL, "/v2/foods/{mfp_id}".format(mfp_id=mfp_id))
+            parse.urljoin(self.BASE_API_URL, f"/v2/foods/{mfp_id}")
             + "?"
             + query_string
         )

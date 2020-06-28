@@ -1,20 +1,17 @@
-from __future__ import print_function
-
 import argparse
+import logging
 from datetime import datetime
 from getpass import getpass
-import logging
 
 from blessed import Terminal
 from dateutil.parser import parse as dateparse
 
+from . import Client
 from .keyring_utils import (
     delete_password_in_keyring,
     get_password_from_keyring_or_interactive,
     store_password_in_keyring,
 )
-from . import Client
-
 
 COMMANDS = {}
 
@@ -26,9 +23,9 @@ def get_command_list():
     for name, info in COMMANDS.items():
         if info["is_alias"]:
             continue
-        message = "{0}: {1}".format(name, info["description"])
+        message = "{}: {}".format(name, info["description"])
         if info["aliases"]:
-            message = message + "; aliases: {0}".format(", ".join(info["aliases"]))
+            message = message + "; aliases: {}".format(", ".join(info["aliases"]))
         command_lines.append(message)
     prolog = "available commands:\n"
     return prolog + "\n".join(["  " + cmd for cmd in command_lines])
@@ -69,7 +66,7 @@ def store_password(args, *extra, **kwargs):
     args = parser.parse_args(extra)
 
     password = getpass(
-        "MyFitnessPal Password for {username}: ".format(username=args.username)
+        f"MyFitnessPal Password for {args.username}: "
     )
 
     store_password_in_keyring(args.username, password)
@@ -102,7 +99,7 @@ def day(args, *extra, **kwargs):
         nargs="?",
         default=datetime.now().strftime("%Y-%m-%d"),
         type=lambda datestr: dateparse(datestr).date(),
-        help=u"The date for which to display information.",
+        help="The date for which to display information.",
     )
     args = parser.parse_args(extra)
 
@@ -116,17 +113,17 @@ def day(args, *extra, **kwargs):
     for meal in day.meals:
         print(t.bold(meal.name.title()))
         for entry in meal.entries:
-            print(u"* {entry.name}".format(entry=entry))
+            print(f"* {entry.name}")
             print(
                 t.italic_bright_black(
-                    u"  {entry.nutrition_information}".format(entry=entry)
+                    f"  {entry.nutrition_information}"
                 )
             )
-        print(u"")
+        print("")
 
     print(t.bold("Totals"))
     for key, value in day.totals.items():
-        print(u"{key}: {value}".format(key=key.title(), value=value,))
-    print(u"Water: {amount}".format(amount=day.water))
+        print("{key}: {value}".format(key=key.title(), value=value,))
+    print(f"Water: {day.water}")
     if day.notes:
         print(t.italic(day.notes))

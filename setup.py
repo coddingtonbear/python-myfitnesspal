@@ -1,6 +1,6 @@
 import multiprocessing  # noqa
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 requirements = []
 with open("requirements.txt", "r") as in_:

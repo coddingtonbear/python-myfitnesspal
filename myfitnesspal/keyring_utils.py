@@ -2,7 +2,6 @@ import getpass
 
 import keyring
 
-
 KEYRING_SYSTEM = "python-myfitnesspal://myfitnesspal-password"
 
 
@@ -36,5 +35,5 @@ def get_password_from_keyring_or_interactive(username):
         return get_password_from_keyring(username)
     except NoStoredPasswordAvailable:
         return getpass.getpass(
-            "MyFitnessPal password for {username}: ".format(username=username,)
+            f"MyFitnessPal password for {username}: "
         )

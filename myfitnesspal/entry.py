@@ -45,7 +45,7 @@ class Entry(MFPBase):
         }
 
     def __unicode__(self):
-        return u"%s %s" % (self.name, self.nutrition_information,)
+        return f"{self.name} {self.nutrition_information}"
 
     @property
     def short_name(self):

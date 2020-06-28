@@ -3,9 +3,9 @@ import datetime
 from six import text_type
 
 
-class Note(text_type):
+class Note(str):
     def __new__(cls, note_data):
-        self = super(Note, cls).__new__(cls, note_data["body"])
+        self = super().__new__(cls, note_data["body"])
         self._note_data = note_data
         return self
 

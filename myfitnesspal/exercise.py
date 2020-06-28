@@ -26,4 +26,4 @@ class Exercise(MFPBase):
         return [e.get_as_dict() for e in self.entries]
 
     def __unicode__(self):
-        return u"%s" % (self.name.title())
+        return "%s" % (self.name.title())

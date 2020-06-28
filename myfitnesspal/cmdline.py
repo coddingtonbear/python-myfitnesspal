@@ -2,9 +2,7 @@ import argparse
 import logging
 import sys
 
-
 from .commands import COMMANDS, get_command_list
-
 
 logger = logging.getLogger(__name__)
 

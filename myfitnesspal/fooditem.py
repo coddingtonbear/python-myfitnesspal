@@ -151,4 +151,4 @@ class FoodItem(MFPBase):
         return self._servings
 
     def __unicode__(self):
-        return u"%s -- %s" % (self.name, self.brand)
+        return f"{self.name} -- {self.brand}"

@@ -44,8 +44,7 @@ class Day(MFPBase):
     @property
     def entries(self):
         for meal in self._meals:
-            for entry in meal.entries:
-                yield entry
+            yield from meal.entries
 
     @property
     def totals(self):
@@ -75,7 +74,7 @@ class Day(MFPBase):
         return self._exercises()
 
     def get_as_dict(self):
-        return dict((m.name, m.get_as_list(),) for m in self.meals)
+        return {m.name: m.get_as_list() for m in self.meals}
 
     def _compute_totals(self):
         totals = {}
@@ -88,4 +87,4 @@ class Day(MFPBase):
         self._totals = totals
 
     def __unicode__(self):
-        return u"%s %s" % (self.date.strftime("%x"), self.totals,)
+        return "{} {}".format(self.date.strftime("%x"), self.totals)
