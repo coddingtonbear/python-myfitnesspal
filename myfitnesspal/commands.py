@@ -2,6 +2,7 @@ import argparse
 import logging
 from datetime import datetime
 from getpass import getpass
+from typing import Dict
 
 from dateutil.parser import parse as dateparse
 from rich import print
@@ -12,8 +13,9 @@ from .keyring_utils import (
     get_password_from_keyring_or_interactive,
     store_password_in_keyring,
 )
+from .types import CommandDefinition
 
-COMMANDS = {}
+COMMANDS: Dict[str, CommandDefinition] = {}
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +39,7 @@ def command(desc, name=None, aliases=None):
 
     def decorator(fn):
         main_name = name if name else fn.__name__
-        command_details = {
+        command_details: CommandDefinition = {
             "function": fn,
             "description": desc,
             "is_alias": False,
