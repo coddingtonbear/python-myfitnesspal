@@ -8,7 +8,7 @@ class Exercise(MFPBase):
 
     def __getitem__(self, value):
         if not isinstance(value, int):
-            raise ValueError('Index must be an integer')
+            raise ValueError("Index must be an integer")
         return self.entries[value]
 
     def __len__(self):
@@ -26,6 +26,4 @@ class Exercise(MFPBase):
         return [e.get_as_dict() for e in self.entries]
 
     def __unicode__(self):
-        return u'%s' % (
-            self.name.title()
-        )
+        return u"%s" % (self.name.title())

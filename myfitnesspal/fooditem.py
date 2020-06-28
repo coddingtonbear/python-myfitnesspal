@@ -2,13 +2,33 @@ from myfitnesspal.base import MFPBase
 
 
 class FoodItem(MFPBase):
-    def __init__(self, mfp_id, name, brand, verified, serving, calories,
-                 calcium=None, carbohydrates=None, cholesterol=None,
-                 fat=None, fiber=None, iron=None, monounsaturated_fat=None,
-                 polyunsaturated_fat=None, potassium=None, protein=None,
-                 saturated_fat=None, sodium=None, sugar=None, trans_fat=None,
-                 vitamin_a=None, vitamin_c=None, confirmations=None,
-                 servings=None):
+    def __init__(
+        self,
+        mfp_id,
+        name,
+        brand,
+        verified,
+        serving,
+        calories,
+        calcium=None,
+        carbohydrates=None,
+        cholesterol=None,
+        fat=None,
+        fiber=None,
+        iron=None,
+        monounsaturated_fat=None,
+        polyunsaturated_fat=None,
+        potassium=None,
+        protein=None,
+        saturated_fat=None,
+        sodium=None,
+        sugar=None,
+        trans_fat=None,
+        vitamin_a=None,
+        vitamin_c=None,
+        confirmations=None,
+        servings=None,
+    ):
         self._mfp_id = mfp_id
         self._name = name
         self._brand = brand
@@ -131,7 +151,4 @@ class FoodItem(MFPBase):
         return self._servings
 
     def __unicode__(self):
-        return u'%s -- %s' % (
-            self.name,
-            self.brand
-        )
+        return u"%s -- %s" % (self.name, self.brand)

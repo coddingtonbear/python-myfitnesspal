@@ -2,8 +2,16 @@ from myfitnesspal.base import MFPBase
 
 
 class Day(MFPBase):
-    def __init__(self, date, meals=None, goals=None, notes=None,
-                 water=None, exercises=None, complete=False):
+    def __init__(
+        self,
+        date,
+        meals=None,
+        goals=None,
+        notes=None,
+        water=None,
+        exercises=None,
+        complete=False,
+    ):
         self._date = date
         self._meals = meals
         self._goals = goals
@@ -66,11 +74,8 @@ class Day(MFPBase):
     def exercises(self):
         return self._exercises()
 
-
     def get_as_dict(self):
-        return dict(
-            (m.name, m.get_as_list(), ) for m in self.meals
-        )
+        return dict((m.name, m.get_as_list(),) for m in self.meals)
 
     def _compute_totals(self):
         totals = {}
@@ -83,7 +88,4 @@ class Day(MFPBase):
         self._totals = totals
 
     def __unicode__(self):
-        return u'%s %s' % (
-            self.date.strftime('%x'),
-            self.totals,
-        )
+        return u"%s %s" % (self.date.strftime("%x"), self.totals,)
