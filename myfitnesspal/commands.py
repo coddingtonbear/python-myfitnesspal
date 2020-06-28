@@ -3,8 +3,8 @@ import logging
 from datetime import datetime
 from getpass import getpass
 
-from rich import print
 from dateutil.parser import parse as dateparse
+from rich import print
 
 from . import Client
 from .keyring_utils import (

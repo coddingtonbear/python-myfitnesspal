@@ -24,7 +24,10 @@ def main(args=None):
     logging.basicConfig(level=args.loglevel)
 
     logging.basicConfig(
-        level=args.loglevel, format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
+        level=args.loglevel,
+        format="%(message)s",
+        datefmt="[%X]",
+        handlers=[RichHandler()],
     )
 
     try:
