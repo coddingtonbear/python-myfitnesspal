@@ -34,6 +34,4 @@ def get_password_from_keyring_or_interactive(username):
     try:
         return get_password_from_keyring(username)
     except NoStoredPasswordAvailable:
-        return getpass.getpass(
-            f"MyFitnessPal password for {username}: "
-        )
+        return getpass.getpass(f"MyFitnessPal password for {username}: ")

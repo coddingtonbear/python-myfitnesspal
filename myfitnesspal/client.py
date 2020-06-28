@@ -138,9 +138,7 @@ class Client(MFPBase):
             [("fields[]", name,) for name in requested_fields]
         )
         metadata_url = (
-            parse.urljoin(
-                self.BASE_API_URL, f"/v2/users/{self.user_id}"
-            )
+            parse.urljoin(self.BASE_API_URL, f"/v2/users/{self.user_id}")
             + "?"
             + query_string
         )
@@ -696,9 +694,7 @@ class Client(MFPBase):
             [("fields[]", name,) for name in requested_fields]
         )
         metadata_url = (
-            parse.urljoin(self.BASE_API_URL, f"/v2/foods/{mfp_id}")
-            + "?"
-            + query_string
+            parse.urljoin(self.BASE_API_URL, f"/v2/foods/{mfp_id}") + "?" + query_string
         )
         result = self._get_request_for_url(metadata_url, send_token=True)
         if not result.ok:

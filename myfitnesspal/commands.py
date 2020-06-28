@@ -65,9 +65,7 @@ def store_password(args, *extra, **kwargs):
     )
     args = parser.parse_args(extra)
 
-    password = getpass(
-        f"MyFitnessPal Password for {args.username}: "
-    )
+    password = getpass(f"MyFitnessPal Password for {args.username}: ")
 
     store_password_in_keyring(args.username, password)
 
@@ -114,11 +112,7 @@ def day(args, *extra, **kwargs):
         print(t.bold(meal.name.title()))
         for entry in meal.entries:
             print(f"* {entry.name}")
-            print(
-                t.italic_bright_black(
-                    f"  {entry.nutrition_information}"
-                )
-            )
+            print(t.italic_bright_black(f"  {entry.nutrition_information}"))
         print("")
 
     print(t.bold("Totals"))
