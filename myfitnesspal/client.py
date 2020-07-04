@@ -394,30 +394,17 @@ class Client(MFPBase):
 
                     attrs[attr_name] = self._get_measurement(attr_name, value)
 
-                entries.append(Entry(name, attrs,))
+                entries.append(Entry(name, attrs))
                 row = row.getnext()
 
-            exercises.append(Exercise(ex_name, entries,))
+            exercises.append(Exercise(ex_name, entries))
 
         return exercises
 
-    def _get_exercises(self, *args, **kwargs):
-        if len(args) == 3:
-            date = datetime.date(int(args[0]), int(args[1]), int(args[2]),)
-        elif len(args) == 1 and isinstance(args[0], datetime.date):
-            date = args[0]
-        else:
-            raise ValueError(
-                "get_exercise accepts either a single datetime "
-                "or date instance, or three integers representing "
-                "year, month, and day respectively."
-            )
-
+    def _get_exercises(self, date: datetime.date):
         # get the exercise URL
         document = self._get_document_for_url(
-            self._get_url_for_exercise(
-                date, kwargs.get("username", self.effective_username)
-            )
+            self._get_url_for_exercise(date, self.effective_username)
         )
 
         # gather the exercise goals

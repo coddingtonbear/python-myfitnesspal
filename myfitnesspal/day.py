@@ -21,8 +21,8 @@ class Day(MFPBase):
         complete: bool = False,
     ):
         self._date = date
-        self._meals = meals or []
-        self._goals = goals or {}
+        self._meals: List[Meal] = meals or []
+        self._goals: Dict[str, float] = goals or {}
         self._notes = notes
         self._water = water
         self._exercises = exercises

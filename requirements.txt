@@ -1,7 +1,7 @@
 blessed>=1.8.5,<2.0
 keyring>=8.0,<22.0
 lxml>=4.2.5,<5
-measurement>=1.5,<2
+measurement>=3.2.0,<4.0
 python-dateutil>=2.4,<3
 requests>=2.17.0,<3
 rich>=2.3.1,<3

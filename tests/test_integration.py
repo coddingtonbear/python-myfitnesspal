@@ -9,21 +9,48 @@ from .base import MFPTestCase
 
 
 class TestIntegration(MFPTestCase):
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         try:
-            self._username = os.environ["MFP_INTEGRATION_TESTING_USERNAME"]
-            self._password = os.environ["MFP_INTEGRATION_TESTING_PASSWORD"]
+            username = os.environ["MFP_INTEGRATION_TESTING_USERNAME"]
+            password = os.environ["MFP_INTEGRATION_TESTING_PASSWORD"]
         except KeyError:
             pytest.skip("Integration testing account not set in this environment.")
             return
 
-        self.client = Client(self._username, self._password,)
+        client = Client(username, password,)
 
-    def test_get_day(self):
         day_with_known_entries = datetime.date(2020, 7, 4)
 
-        day = self.client.get_date(day_with_known_entries)
+        cls.day = client.get_date(day_with_known_entries)
 
+    def test_get_exercises_dict(self):
+        expected_exercise_dicts = [
+            [
+                {
+                    "name": "Rowing, stationary, very vigorous effort",
+                    "nutrition_information": {
+                        "minutes": 30.0,
+                        "calories burned": 408.0,
+                    },
+                }
+            ],
+            [
+                {
+                    "name": "Squat",
+                    "nutrition_information": {
+                        "sets": 5.0,
+                        "reps/set": 5.0,
+                        "weight/set": 225.0,
+                    },
+                }
+            ],
+        ]
+        actual_exercises = [exercise.get_as_list() for exercise in self.day.exercises]
+
+        assert actual_exercises == expected_exercise_dicts
+
+    def test_get_day_meal_dict(self):
         expected_meal_dict = {
             "breakfast": [
                 {
@@ -67,6 +94,6 @@ class TestIntegration(MFPTestCase):
             "snacks": [],
         }
 
-        actual_meal_dict = day.get_as_dict()
+        actual_meal_dict = self.day.get_as_dict()
 
         assert actual_meal_dict == expected_meal_dict
