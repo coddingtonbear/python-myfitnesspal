@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Callable, Dict, List, Literal, Optional
 
 from typing_extensions import TypedDict
@@ -141,3 +143,40 @@ class NoteDataDict(TypedDict):
     body: str
     type: str
     date: str
+
+
+class FoodItemNutritionDict(TypedDict):
+    calcium: float
+    carbohydrates: float
+    cholesterol: float
+    fat: float
+    fiber: float
+    iron: float
+    monounsaturated_fat: float
+    polyunsaturated_fat: float
+    potassium: float
+    protein: float
+    saturated_fat: float
+    sodium: float
+    sugar: float
+    trans_fat: float
+    vitamin_a: float
+    vitamin_c: float
+
+
+class ServingSizeDict(TypedDict):
+    id: str
+    nutrition_multiplier: float
+    value: float
+    unit: str
+    index: int
+
+
+class FoodItemDetailsResponse(TypedDict):
+    description: str
+    brand_name: Optional[str]
+    verified: bool
+    nutrition: FoodItemNutritionDict
+    calories: float
+    confirmations: int
+    serving_sizes: List[ServingSizeDict]

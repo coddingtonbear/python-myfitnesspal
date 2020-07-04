@@ -9,6 +9,8 @@ from .base import MFPTestCase
 
 
 class TestIntegration(MFPTestCase):
+    client: Client
+
     @classmethod
     def setUpClass(cls):
         try:
@@ -18,11 +20,11 @@ class TestIntegration(MFPTestCase):
             pytest.skip("Integration testing account not set in this environment.")
             return
 
-        client = Client(username, password,)
+        cls.client = Client(username, password,)
 
         day_with_known_entries = datetime.date(2020, 7, 4)
 
-        cls.day = client.get_date(day_with_known_entries)
+        cls.day = cls.client.get_date(day_with_known_entries)
 
     def test_get_exercises_dict(self):
         expected_exercise_dicts = [
@@ -109,3 +111,27 @@ class TestIntegration(MFPTestCase):
         actual_water = self.day.water
 
         assert expected_water == actual_water
+
+    def test_search_results(self):
+        results = self.client.get_food_search_results("Tortilla Chips -- Juanita's")
+
+        # Don't assert that we get a particular match,
+        # just make sure that we receive items
+        # that happen to have an mfp_id; we can't
+        # really know how the search results might
+        # change in the future
+
+        assert len(results) > 0
+        for result in results:
+            assert isinstance(result.mfp_id, int)
+
+        # This is just to assert that we _do_ try
+        # to load extra nutrition information on-access
+        assert results[0].sodium > 0
+
+    def test_get_food_item_details(self):
+        juanitas_tortilla_chips_mfp_id = 63384601972733
+
+        result = self.client.get_food_item_details(juanitas_tortilla_chips_mfp_id)
+
+        assert result.mfp_id == juanitas_tortilla_chips_mfp_id

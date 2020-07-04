@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 import logging
 import re
@@ -17,7 +19,6 @@ from .entry import Entry
 from .exceptions import MyfitnesspalLoginError, MyfitnesspalRequestFailed
 from .exercise import Exercise
 from .fooditem import FoodItem
-from .fooditemserving import FoodItemServing
 from .keyring_utils import get_password_from_keyring
 from .meal import Meal
 from .note import Note
@@ -699,13 +700,14 @@ class Client(MFPBase):
             brand = ""
             if len(nutr_info) >= 3:
                 brand = " ".join(nutr_info[0:-2]).strip()
-            serving = nutr_info[-2].strip()
             calories = float(nutr_info[-1].replace("calories", "").strip())
-            items.append(FoodItem(mfp_id, mfp_name, brand, verif, serving, calories,))
+            items.append(
+                FoodItem(mfp_id, mfp_name, brand, verif, calories, client=self)
+            )
 
         return items
 
-    def get_food_item_details(self, mfp_id) -> FoodItem:
+    def _get_food_item_details(self, mfp_id: int) -> types.FoodItemDetailsResponse:
         # api call for food item's details
         requested_fields = [
             "nutritional_contents",
@@ -724,17 +726,6 @@ class Client(MFPBase):
 
         resp = result.json()["item"]
 
-        # identifying serving info
-        servings = []
-        default_serving = None
-        for s in resp["serving_sizes"]:
-            serving = FoodItemServing(
-                s["id"], s["nutrition_multiplier"], s["value"], s["unit"], s["index"],
-            )
-            servings.append(serving)
-            if serving.index == 0:
-                default_serving = serving.unit
-
         # identifying calories for default serving
         nutr_info = resp["nutritional_contents"]
         if "energy" in nutr_info:
@@ -742,30 +733,28 @@ class Client(MFPBase):
         else:
             calories = 0.0
 
+        return {
+            "description": resp["description"],
+            "brand_name": resp.get("brand_name"),
+            "verified": resp["verified"],
+            "nutrition": nutr_info,
+            "calories": calories,
+            "confirmations": resp["confirmations"],
+            "serving_sizes": resp["serving_sizes"],
+        }
+
+    def get_food_item_details(self, mfp_id: int) -> FoodItem:
+        details = self._get_food_item_details(mfp_id)
+
         # returning food item's details
         return FoodItem(
             mfp_id,
-            resp["description"],
-            resp.get("brand_name"),
-            resp["verified"],
-            default_serving,
-            calories,
-            calcium=nutr_info.get("calcium", 0.0),
-            carbohydrates=nutr_info.get("carbohydrates", 0.0),
-            cholesterol=nutr_info.get("cholesterol", 0.0),
-            fat=nutr_info.get("fat", 0.0),
-            fiber=nutr_info.get("fiber", 0.0),
-            iron=nutr_info.get("iron", 0.0),
-            monounsaturated_fat=nutr_info.get("monounsaturated_fat", 0.0),
-            polyunsaturated_fat=nutr_info.get("polyunsaturated_fat", 0.0),
-            potassium=nutr_info.get("potassium", 0.0),
-            protein=nutr_info.get("protein", 0.0),
-            saturated_fat=nutr_info.get("saturated_fat", 0.0),
-            sodium=nutr_info.get("sodium", 0.0),
-            sugar=nutr_info.get("sugar", 0.0),
-            trans_fat=nutr_info.get("trans_fat", 0.0),
-            vitamin_a=nutr_info.get("vitamin_a", 0.0),
-            vitamin_c=nutr_info.get("vitamin_c", 0.0),
-            confirmations=resp["confirmations"],
-            servings=servings,
+            details["description"],
+            details["brand_name"],
+            details["verified"],
+            details["calories"],
+            details=details["nutrition"],
+            confirmations=details["confirmations"],
+            serving_sizes=details["serving_sizes"],
+            client=self,
         )
