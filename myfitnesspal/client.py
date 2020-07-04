@@ -471,7 +471,7 @@ class Client(MFPBase):
 
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
-    ):
+    ) -> Dict[datetime.date, float]:
         """ Returns measurements of a given name between two dates."""
         if upper_bound is None:
             upper_bound = datetime.date.today()
@@ -529,7 +529,12 @@ class Client(MFPBase):
 
         return measurements
 
-    def set_measurements(self, measurement="Weight", value=None, date=None):
+    def set_measurements(
+        self,
+        measurement="Weight",
+        value: float = None,
+        date: Optional[datetime.date] = None,
+    ):
         """ Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
@@ -600,7 +605,7 @@ class Client(MFPBase):
 
         return measurements
 
-    def _get_measurement_ids(self, document):
+    def _get_measurement_ids(self, document) -> Dict[str, int]:
 
         # find the option element for all of the measurement choices
         options = document.xpath("//select[@id='type']/option")
@@ -613,7 +618,7 @@ class Client(MFPBase):
 
         return ids
 
-    def get_measurement_id_options(self):
+    def get_measurement_id_options(self) -> Dict[str, int]:
         """ Returns list of measurement choices."""
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
@@ -629,7 +634,7 @@ class Client(MFPBase):
         )
         return Note(result.json()["item"])
 
-    def _get_water(self, date):
+    def _get_water(self, date: datetime.date) -> float:
         result = self._get_request_for_url(
             parse.urljoin(self.BASE_URL_SECURE, "/food/water",)
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))
@@ -640,10 +645,10 @@ class Client(MFPBase):
 
         return Volume(ml=value)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"MyFitnessPal Client for {self.effective_username}"
 
-    def get_food_search_results(self, query):
+    def get_food_search_results(self, query: str) -> List[FoodItem]:
         search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
         document = self._get_document_for_url(search_url)
         authenticity_token = document.xpath(
@@ -671,7 +676,7 @@ class Client(MFPBase):
 
         return self._get_food_search_results(document)
 
-    def _get_food_search_results(self, document):
+    def _get_food_search_results(self, document) -> List[FoodItem]:
         item_divs = document.xpath("//li[@class='matched-food']")
 
         items = []
@@ -699,7 +704,7 @@ class Client(MFPBase):
 
         return items
 
-    def get_food_item_details(self, mfp_id):
+    def get_food_item_details(self, mfp_id) -> FoodItem:
         # api call for food item's details
         requested_fields = [
             "nutritional_contents",
