@@ -2,12 +2,15 @@ import datetime
 import logging
 import re
 from collections import OrderedDict
+from typing import Dict, List, Optional, overload
 
 import lxml.html
 import requests
+from measurement.base import MeasureBase
 from measurement.measures import Energy, Mass, Volume
 from six.moves.urllib import parse
 
+from . import types
 from .base import MFPBase
 from .day import Day
 from .entry import Entry
@@ -48,27 +51,33 @@ class Client(MFPBase):
         self.__password = password
         self.unit_aware = unit_aware
 
-        self._user_metadata = {}
-        self._auth_data = {}
+        self._user_metadata: Optional[types.UserMetadata] = None
+        self._auth_data: Optional[types.AuthData] = None
 
         self.session = requests.Session()
         if login:
             self._login()
 
     @property
-    def user_id(self):
+    def user_id(self) -> Optional[types.MyfitnesspalUserId]:
+        if self._auth_data is None:
+            return None
+
         return self._auth_data["user_id"]
 
     @property
-    def user_metadata(self):
+    def user_metadata(self) -> Optional[types.UserMetadata]:
         return self._user_metadata
 
     @property
-    def access_token(self):
+    def access_token(self) -> Optional[str]:
+        if self._auth_data is None:
+            return None
+
         return self._auth_data["access_token"]
 
     @property
-    def effective_username(self):
+    def effective_username(self) -> str:
         """ One's actual username may be different from the one used for login
 
         This method will return the actual username if it is available, but
@@ -108,7 +117,7 @@ class Client(MFPBase):
         # authenticity token required for measurement set function.
         self._authenticity_token = authenticity_token
 
-    def _get_auth_data(self):
+    def _get_auth_data(self) -> types.AuthData:
         result = self._get_request_for_url(
             parse.urljoin(self.BASE_URL_SECURE, "/user/auth_token") + "?refresh=true"
         )
@@ -120,7 +129,7 @@ class Client(MFPBase):
 
         return result.json()
 
-    def _get_user_metadata(self):
+    def _get_user_metadata(self) -> types.UserMetadata:
         requested_fields = [
             "diary_preferences",
             "goal_preferences",
@@ -152,26 +161,32 @@ class Client(MFPBase):
 
         return result.json()["item"]
 
-    def _get_full_name(self, raw_name):
+    def _get_full_name(self, raw_name: str) -> str:
         name = raw_name.lower().strip()
         if name not in self.ABBREVIATIONS:
             return name
         return self.ABBREVIATIONS[name]
 
-    def _get_url_for_date(self, date, username):
+    def _get_url_for_date(self, date: datetime.date, username: str) -> str:
         date_str = date.strftime("%Y-%m-%d")
         return (
             parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
             + f"?date={date_str}"
         )
 
-    def _get_url_for_measurements(self, page=1, measurement_id=1):
+    def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
             parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
             + f"?page={page}&type={measurement_id}"
         )
 
-    def _get_request_for_url(self, url, send_token=False, headers=None, **kwargs):
+    def _get_request_for_url(
+        self,
+        url: str,
+        send_token: bool = False,
+        headers: Optional[Dict[str, str]] = None,
+        **kwargs,
+    ) -> requests.Response:
         if headers is None:
             headers = {}
 
@@ -180,13 +195,14 @@ class Client(MFPBase):
                 {
                     "Authorization": f"Bearer {self.access_token}",
                     "mfp-client-id": "mfp-main-js",
-                    "mfp-user-id": self.user_id,
                 }
             )
+            if self.user_id:
+                headers["mfp-user-id"] = self.user_id
 
         return self.session.get(url, headers=headers, **kwargs)
 
-    def _get_content_for_url(self, *args, **kwargs):
+    def _get_content_for_url(self, *args, **kwargs) -> str:
         return self._get_request_for_url(*args, **kwargs).content.decode("utf8")
 
     def _get_document_for_url(self, url):
@@ -194,25 +210,24 @@ class Client(MFPBase):
 
         return lxml.html.document_fromstring(content)
 
-    def _get_measurement(self, name, value):
+    def _get_measurement(self, name: str, value: Optional[float]) -> MeasureBase:
         if not self.unit_aware:
             return value
         measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
         return measure(**{kwarg: value})
 
-    def _get_numeric(self, string, data_type=int):
-        value = re.sub(r"[^\d.]+", "", string)
-
+    def _get_numeric(self, string: str) -> float:
         matched = BRITISH_UNIT_MATCHER.match(string)
         if matched:
-            value = int(matched.groupdict()["lbs"] or 0) + (
-                int(matched.groupdict()["st"] or 0) * 14
+            return float(matched.groupdict()["lbs"] or 0) + (
+                float(matched.groupdict()["st"] or 0) * 14
             )
-
-        try:
-            return data_type(value)
-        except ValueError:
-            return 0
+        else:
+            try:
+                str_value = re.sub(r"[^\d.]+", "", string)
+                return float(str_value)
+            except ValueError:
+                return 0
 
     def _get_fields(self, document):
         meal_header = document.xpath("//tr[@class='meal_header']")[0]
@@ -246,7 +261,7 @@ class Client(MFPBase):
 
         return nutrition
 
-    def _get_completion(self, document):
+    def _get_completion(self, document) -> bool:
         try:
             completion_header = document.xpath("//div[@id='complete_day']")[0]
             completion_message = completion_header.getchildren()[0]
@@ -256,9 +271,11 @@ class Client(MFPBase):
             elif "day_complete_message" in completion_message.classes:
                 return True
         except IndexError:
-            return False  # Who knows, probably not my diary.
+            pass
 
-    def _get_meals(self, document):
+        return False  # Who knows, probably not my diary.
+
+    def _get_meals(self, document) -> List[Meal]:
         meals = []
         fields = None
         meal_headers = document.xpath("//tr[@class='meal_header']")
@@ -305,7 +322,7 @@ class Client(MFPBase):
 
         return meals
 
-    def _get_url_for_exercise(self, date, username):
+    def _get_url_for_exercise(self, date: datetime.date, username: str) -> str:
         date_str = date.strftime("%Y-%m-%d")
         return (
             parse.urljoin(self.BASE_URL_SECURE, "exercise/diary/" + username)
@@ -418,7 +435,15 @@ class Client(MFPBase):
 
         return value
 
-    def get_date(self, *args, **kwargs):
+    @overload
+    def get_date(self, year: int, month: int, day: int) -> Day:
+        ...
+
+    @overload
+    def get_date(self, date: datetime.date) -> Day:
+        ...
+
+    def get_date(self, *args, **kwargs) -> Day:
         if len(args) == 3:
             date = datetime.date(int(args[0]), int(args[1]), int(args[2]),)
         elif len(args) == 1 and isinstance(args[0], datetime.date):
@@ -582,7 +607,7 @@ class Client(MFPBase):
         for date in measurements:
             temp_measurements[
                 datetime.datetime.strptime(date, "%m/%d/%Y").date()
-            ] = self._get_numeric(measurements[date], data_type=float)
+            ] = self._get_numeric(measurements[date])
 
         measurements = temp_measurements
 
