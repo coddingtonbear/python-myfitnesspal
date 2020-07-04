@@ -35,7 +35,7 @@ class TestClient(MFPTestCase):
             "Shoulders": 92738861,
         }
 
-        self.assertEquals(
+        self.assertEqual(
             expected_ids, actual_ids,
         )
 
@@ -43,7 +43,7 @@ class TestClient(MFPTestCase):
         document = self.get_html_document("diary.html")
         meals = self.client._get_meals(document)
 
-        self.assertEquals(
+        self.assertEqual(
             len(meals), 4,
         )
 
@@ -67,7 +67,7 @@ class TestClient(MFPTestCase):
             ]
         )
 
-        self.assertEquals(
+        self.assertEqual(
             expected_measurements, actual_measurements,
         )
 
@@ -171,16 +171,16 @@ class TestClient(MFPTestCase):
         }
         actual_dict = day.get_as_dict()
 
-        self.assertEquals(
+        self.assertEqual(
             expected_dict, actual_dict,
         )
-        self.assertEquals(
+        self.assertEqual(
             day.date, self.arbitrary_date1,
         )
-        self.assertEquals(
+        self.assertEqual(
             day.complete, False,
         )
-        self.assertEquals(
+        self.assertEqual(
             day.goals,
             {
                 "calories": 2500,
@@ -191,7 +191,7 @@ class TestClient(MFPTestCase):
                 "sugar": 50,
             },
         )
-        self.assertEquals(
+        self.assertEqual(
             day.totals,
             {
                 "calories": 2279,
@@ -303,16 +303,16 @@ class TestClient(MFPTestCase):
         }
         actual_dict = day.get_as_dict()
 
-        self.assertEquals(
+        self.assertEqual(
             expected_dict, actual_dict,
         )
-        self.assertEquals(
+        self.assertEqual(
             day.date, self.arbitrary_date1,
         )
-        self.assertEquals(
+        self.assertEqual(
             day.complete, False,
         )
-        self.assertEquals(
+        self.assertEqual(
             day.goals,
             {
                 "calories": Energy(Calorie=2500),
@@ -323,7 +323,7 @@ class TestClient(MFPTestCase):
                 "sugar": Weight(g=50),
             },
         )
-        self.assertEquals(
+        self.assertEqual(
             day.totals,
             {
                 "calories": Energy(Calorie=2279),
@@ -347,7 +347,7 @@ class TestClient(MFPTestCase):
         totals_2 = copy.deepcopy(day.totals)
 
         # Then: `totals` remain the same
-        self.assertEquals(totals_1, totals_2)
+        self.assertEqual(totals_1, totals_2)
 
     def test_get_exercise(self):
         with patch.object(self.client, "_get_document_for_url") as get_doc:
@@ -355,17 +355,17 @@ class TestClient(MFPTestCase):
             day = self.client._get_exercises(self.arbitrary_date1)
 
         # The returned object should be an array of length 2
-        self.assertEquals(
+        self.assertEqual(
             len(day), 2,
         )
 
         # The first object of the array should be our cardio
-        self.assertEquals(
+        self.assertEqual(
             day[0].name, "cardiovascular",
         )
 
         # The second object should be our strength training
-        self.assertEquals(
+        self.assertEqual(
             day[1].name, "strength training",
         )
 
@@ -398,11 +398,11 @@ class TestClient(MFPTestCase):
 
         actual_strength = day[1].get_as_list()
 
-        self.assertEquals(
+        self.assertEqual(
             expected_cardio, actual_cardio,
         )
 
-        self.assertEquals(
+        self.assertEqual(
             expected_strength, actual_strength,
         )
 
@@ -411,6 +411,6 @@ class TestClient(MFPTestCase):
             get_doc.return_value = self.get_html_document("completed_diary.html")
             day = self.client.get_date(self.arbitrary_date1)
 
-        self.assertEquals(
+        self.assertEqual(
             day.complete, True,
         )
