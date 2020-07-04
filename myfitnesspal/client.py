@@ -14,6 +14,7 @@ from . import types
 from .base import MFPBase
 from .day import Day
 from .entry import Entry
+from .exceptions import MyfitnesspalLoginError, MyfitnesspalRequestFailed
 from .exercise import Exercise
 from .fooditem import FoodItem
 from .fooditemserving import FoodItemServing
@@ -109,7 +110,7 @@ class Client(MFPBase):
         # bad assumption?) PORTING_CHECK
         content = result.content.decode("utf8")
         if "Incorrect username or password" in content:
-            raise ValueError("Incorrect username or password.")
+            raise MyfitnesspalLoginError()
 
         self._auth_data = self._get_auth_data()
         self._user_metadata = self._get_user_metadata()
@@ -122,7 +123,7 @@ class Client(MFPBase):
             parse.urljoin(self.BASE_URL_SECURE, "/user/auth_token") + "?refresh=true"
         )
         if not result.ok:
-            raise RuntimeError(
+            raise MyfitnesspalRequestFailed(
                 "Unable to fetch authentication token from MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
@@ -573,7 +574,7 @@ class Client(MFPBase):
 
         # throw an error if it failed.
         if not result.ok:
-            raise RuntimeError(
+            raise MyfitnesspalRequestFailed(
                 "Unable to update measurement in MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
@@ -672,7 +673,7 @@ class Client(MFPBase):
         content = result.content.decode("utf8")
         document = lxml.html.document_fromstring(content)
         if "Matching Foods:" not in content:
-            raise ValueError("Unable to load search results.")
+            raise MyfitnesspalRequestFailed("Unable to load search results.")
 
         return self._get_food_search_results(document)
 
@@ -719,12 +720,8 @@ class Client(MFPBase):
         )
         result = self._get_request_for_url(metadata_url, send_token=True)
         if not result.ok:
-            logger.warning(
-                "Unable to fetch item details; this may cause Myfitnesspal "
-                "to behave incorrectly if you have logged-in with your "
-                "e-mail address rather than your basic username; status %s.",
-                result.status_code,
-            )
+            raise MyfitnesspalRequestFailed()
+
         resp = result.json()["item"]
 
         # identifying serving info
