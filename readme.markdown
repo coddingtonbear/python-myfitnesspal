@@ -36,7 +36,11 @@ myfitnesspal store-password my_username
 
 You will immediately be asked for your password, and that password will be stored in your system keyring for later interactions with MyFitnessPal.
 
-Please note that all examples below *assume* you've stored your password in your system keyring like above, but you can (as before) provide your password to the module directly as its second argument.
+Please note that all examples below *assume* you've stored your password in your system keyring like above, but you can also provide your password by providing your password as a keyword argument to the `myfitnesspal.Client` instance:
+
+```python
+client = myfitnesspal.Client('my_username', password='my_password')
+```
 
 Diary Examples
 --------------
