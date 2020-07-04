@@ -97,3 +97,15 @@ class TestIntegration(MFPTestCase):
         actual_meal_dict = self.day.get_as_dict()
 
         assert actual_meal_dict == expected_meal_dict
+
+    def test_get_notes(self):
+        expected_note = "Epstein didn't kill himself"
+        actual_note = self.day.notes
+
+        assert expected_note == actual_note
+
+    def test_get_water(self):
+        expected_water = 480.0
+        actual_water = self.day.water
+
+        assert expected_water == actual_water

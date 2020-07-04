@@ -135,3 +135,9 @@ NutritionDict = Dict[str, float]
 class MealEntry(TypedDict):
     name: str
     nutrition_information: NutritionDict
+
+
+class NoteDataDict(TypedDict):
+    body: str
+    type: str
+    date: str

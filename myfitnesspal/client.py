@@ -622,7 +622,7 @@ class Client(MFPBase):
         measurement_ids = self._get_measurement_ids(document)
         return measurement_ids
 
-    def _get_notes(self, date):
+    def _get_notes(self, date: datetime.date) -> Note:
         result = self._get_request_for_url(
             parse.urljoin(self.BASE_URL_SECURE, "/food/note",)
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))

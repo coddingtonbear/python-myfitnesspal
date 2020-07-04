@@ -9,7 +9,7 @@ class NoStoredPasswordAvailable(Exception):
     pass
 
 
-def get_password_from_keyring(username):
+def get_password_from_keyring(username: str) -> str:
     result = keyring.get_password(KEYRING_SYSTEM, username)
     if result is None:
         raise NoStoredPasswordAvailable(
@@ -22,15 +22,15 @@ def get_password_from_keyring(username):
     return result
 
 
-def store_password_in_keyring(username, password):
-    return keyring.set_password(KEYRING_SYSTEM, username, password,)
+def store_password_in_keyring(username: str, password: str) -> None:
+    return keyring.set_password(KEYRING_SYSTEM, username, password)
 
 
-def delete_password_in_keyring(username):
-    return keyring.delete_password(KEYRING_SYSTEM, username,)
+def delete_password_in_keyring(username: str) -> None:
+    return keyring.delete_password(KEYRING_SYSTEM, username)
 
 
-def get_password_from_keyring_or_interactive(username):
+def get_password_from_keyring_or_interactive(username: str) -> str:
     try:
         return get_password_from_keyring(username)
     except NoStoredPasswordAvailable:
