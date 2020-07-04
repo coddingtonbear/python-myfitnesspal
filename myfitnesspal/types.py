@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Literal, Optional
+from typing import Any, Callable, Dict, List, Optional
 
-from typing_extensions import TypedDict
+from typing_extensions import Literal, TypedDict
 
 
 class CommandDefinition(TypedDict):
