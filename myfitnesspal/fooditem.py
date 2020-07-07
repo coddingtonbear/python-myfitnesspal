@@ -51,7 +51,7 @@ class FoodItem(MFPBase):
     @property
     def details(self) -> FoodItemNutritionDict:
         self._load_nutrition_details()
-        assert self._details
+        assert self._details is not None
 
         return self._details
 
@@ -75,7 +75,7 @@ class FoodItem(MFPBase):
     def serving(self) -> Optional[str]:
         self._load_nutrition_details()
 
-        assert self._serving_sizes
+        assert self._serving_sizes is not None
 
         for s in self._serving_sizes:
             if s["index"] == 0:
@@ -155,7 +155,7 @@ class FoodItem(MFPBase):
     def confirmations(self) -> int:
         self._load_nutrition_details()
 
-        assert self._confirmations
+        assert self._confirmations is not None
 
         return self._confirmations
 
@@ -163,7 +163,7 @@ class FoodItem(MFPBase):
     def servings(self) -> List[FoodItemServing]:
         self._load_nutrition_details()
 
-        assert self._serving_sizes
+        assert self._serving_sizes is not None
 
         servings: List[FoodItemServing] = []
 

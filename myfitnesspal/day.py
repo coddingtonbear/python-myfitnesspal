@@ -59,7 +59,7 @@ class Day(MFPBase):
         if self._totals is None:
             self._compute_totals()
 
-        assert self._totals
+        assert self._totals is not None
 
         return self._totals
 
