@@ -137,6 +137,17 @@ spaghetti.totals
 #     'sugar': 3}
 ```
 
+Accessing a friend's diary
+--------------------------
+
+If a friend has their diary visibility set to public, you can grab their diary entries:
+
+```python
+friend_day = client.get_date_for_friend('friend_username',2020,8,23)
+>>> friend_day
+<08/23/20 {'calories': 891.0, 'carbohydrates': 105.0, 'fat': 38.0, 'protein': 29.0, 'sodium': 0.0, 'sugar': 2.0}>
+```
+
 Measurement Examples
 --------------------
 
