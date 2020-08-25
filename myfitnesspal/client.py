@@ -175,7 +175,14 @@ class Client(MFPBase):
             parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
             + f"?date={date_str}"
         )
-
+    
+    def _get_friend_url_for_date(self, date: datetime.date, friend_username: str) -> str:
+        date_str = date.strftime("%Y-%m-%d")
+        return (
+            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + friend_username)
+            + f"?date={date_str}"
+        )
+    
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
             parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
@@ -470,7 +477,7 @@ class Client(MFPBase):
         )
 
         return day
-
+    
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
