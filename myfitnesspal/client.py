@@ -175,14 +175,7 @@ class Client(MFPBase):
             parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
             + f"?date={date_str}"
         )
-    
-    def _get_friend_url_for_date(self, date: datetime.date, friend_username: str) -> str:
-        date_str = date.strftime("%Y-%m-%d")
-        return (
-            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + friend_username)
-            + f"?date={date_str}"
-        )
-    
+
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
             parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
@@ -477,46 +470,7 @@ class Client(MFPBase):
         )
 
         return day
-    
-    def get_date_for_friend(self, friend_username, *args, **kwargs) -> Day:
-        if len(args) == 3:
-            date = datetime.date(int(args[0]), int(args[1]), int(args[2]),)
-        elif len(args) == 1 and isinstance(args[0], datetime.date):
-            date = args[0]
-        else:
-            raise ValueError(
-                "get_date accepts either a single datetime or date instance, "
-                "or three integers representing year, month, and day "
-                "respectively."
-            )
-        document = self._get_document_for_url(
-            self._get_friend_url_for_date(
-                date, friend_username
-            )
-        )
 
-        meals = self._get_meals(document)
-        goals = self._get_goals(document)
-        complete = self._get_completion(document)
-
-        # Since this data requires an additional request, let's just
-        # allow the day object to run the request if necessary.
-        notes = lambda: self._get_notes(date)  # noqa: E731
-        water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date)  # noqa: E731
-
-        day = Day(
-            date=date,
-            meals=meals,
-            goals=goals,
-            notes=notes,
-            water=water,
-            exercises=exercises,
-            complete=complete,
-        )
-
-        return day
-    
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
