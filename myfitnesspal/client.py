@@ -45,6 +45,7 @@ class Client(MFPBase):
         "sodium": (Mass, "mg"),
         "sugar": (Mass, "g"),
         "fiber": (Mass, "g"),
+        "potass.": (Mass, "g"),
     }
 
     def __init__(self, username, password=None, login=True, unit_aware=False):
