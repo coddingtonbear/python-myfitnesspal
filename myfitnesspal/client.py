@@ -642,10 +642,10 @@ class Client(MFPBase):
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))
         )
         value = result.json()["item"]["milliliters"]
+        cups = int(Volume(ml=value).us_cup)
         if not self.unit_aware:
-            return value
-
-        return Volume(ml=value)
+            return cups
+        return Volume(us_cup=cups)
 
     def __str__(self) -> str:
         return f"MyFitnessPal Client for {self.effective_username}"
