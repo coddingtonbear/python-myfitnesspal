@@ -20,10 +20,20 @@ def main(args=None):
     parser.add_argument("command", type=str, nargs=1, choices=COMMANDS.keys())
     parser.add_argument("--loglevel", type=str, default="INFO")
     parser.add_argument("--traceback-locals", action="store_true")
+    parser.add_argument("--debugger", action="store_true")
     args, extra = parser.parse_known_args()
 
     # Set up a simple console logger
     logging.basicConfig(level=args.loglevel)
+
+    console = Console()
+
+    if args.debugger:
+        import debugpy
+
+        console.print("[blue]Awaiting debugger connection on 0.0.0.0:5678...[/blue]")
+        debugpy.listen(("0.0.0.0", 5678))
+        debugpy.wait_for_client()
 
     logging.basicConfig(
         level=args.loglevel,
@@ -31,8 +41,6 @@ def main(args=None):
         datefmt="[%X]",
         handlers=[RichHandler()],
     )
-
-    console = Console()
 
     try:
         if args.command[0] in COMMANDS:
