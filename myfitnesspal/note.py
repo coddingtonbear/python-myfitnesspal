@@ -27,7 +27,10 @@ class Note(str):
         if not date_str:
             return None
 
-        return datetime.datetime.strptime(date_str, "%Y-%m-%d",).date()
+        return datetime.datetime.strptime(
+            date_str,
+            "%Y-%m-%d",
+        ).date()
 
     def as_dict(self):
         return self._note_data
