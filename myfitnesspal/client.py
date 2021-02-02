@@ -106,6 +106,9 @@ class Client(MFPBase):
                 "username": self.effective_username,
                 "password": self.__password,
             },
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
+            },
         )
         # result.content is bytes so we decode it ASSUMING utf8 (which may be a
         # bad assumption?) PORTING_CHECK
