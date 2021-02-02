@@ -57,6 +57,11 @@ class Client(MFPBase):
         self._auth_data: Optional[types.AuthData] = None
 
         self.session = requests.Session()
+        self.session.headers.update(
+            {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
+            }
+        )
         if login:
             self._login()
 
@@ -105,9 +110,6 @@ class Client(MFPBase):
                 "authenticity_token": authenticity_token,
                 "username": self.effective_username,
                 "password": self.__password,
-            },
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
             },
         )
         # result.content is bytes so we decode it ASSUMING utf8 (which may be a
