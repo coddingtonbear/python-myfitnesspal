@@ -23,6 +23,9 @@ setup(
     packages=find_packages(),
     install_requires=requirements,
     test_suite="nose.collector",
-    tests_require=["nose", "mock",],
+    tests_require=[
+        "nose",
+        "mock",
+    ],
     entry_points={"console_scripts": ["myfitnesspal = myfitnesspal.cmdline:main"]},
 )
