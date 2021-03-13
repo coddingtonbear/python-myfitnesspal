@@ -853,7 +853,7 @@ class Client(MFPBase):
         for index, entry in enumerate(json_data["data"]):
             # Dates are returned without year.
             # As the returned dates will always begin from the current day, the
-            # correct date can be determined using the values index
+            # correct date can be determined using the entries index
             date = (
                 datetime.datetime.now()
                 - datetime.timedelta(days=len(json_data["data"]))
