@@ -828,6 +828,11 @@ class Client(MFPBase):
 
         report = OrderedDict(self._get_report_data(json_data))
 
+        if not report:
+            raise ValueError(
+                "Could not load any results for the given category & name"
+            )
+
         # Remove entries that are not within the dates specified
         for date in list(report.keys()):
             if not upper_bound >= date >= lower_bound:
@@ -848,7 +853,12 @@ class Client(MFPBase):
         )
 
     def _get_report_data(self, json_data: dict):
-        data = {}
+        report_data = {}
+
+        data = json_data.get("data")
+
+        if not data:
+            return report_data
 
         for index, entry in enumerate(json_data["data"]):
             # Dates are returned without year.
@@ -860,6 +870,6 @@ class Client(MFPBase):
                 + datetime.timedelta(days=index + 1)
             )
 
-            data.update({date.date(): entry["total"]})
+            report_data.update({date.date(): entry["total"]})
 
-        return data
+        return report_data
