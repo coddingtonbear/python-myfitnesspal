@@ -442,12 +442,12 @@ class TestClient(MFPTestCase):
             )
 
         # Dates are determined based on the assumption that the results will
-        # always start from the current day
+        # always start from the current day. Dates held in sample data file are
+        # therefore irrelevant for this test
 
         expected_measurements = OrderedDict(
             sorted(
                 [
-
                     (datetime.date.today(), 425.0),
                     (datetime.date.today() - datetime.timedelta(days=1), 1454.0),
                     (datetime.date.today() - datetime.timedelta(days=2), 1451.0),
