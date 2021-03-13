@@ -445,7 +445,7 @@ class TestClient(MFPTestCase):
 
         # Dates are determined based on the assumption that the results will
         # always start from the current day. Dates held in sample data file are
-        # therefore irrelevant for this test
+        # therefore irrelevant for this test.
 
         expected_measurements = OrderedDict(
             sorted(
