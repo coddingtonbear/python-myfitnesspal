@@ -320,8 +320,8 @@ import myfitnesspal
 
 client = myfitnesspal.Client('my_username')
 
-weight = client.get_report(report_name="Net Calories", report_category="Nutrition")
-weight
+net_calories = client.get_report(report_name="Net Calories", report_category="Nutrition")
+net_calories
 # >> OrderedDict([(datetime.date(2015, 5, 14), 1701.0), (datetime.date(2015, 5, 13), 1732.8), (datetime.date(2015, 5,12), 1721.8),
 #                 (datetime.date(2015, 5, 11), 1701.6), (datetime.date(2015, 5, 10), 1272.4), (datetime.date(2015, 5, 9), 1720.2),
 #                 (datetime.date(2015, 5, 8), 1071.0),  (datetime.date(2015, 5, 7), 1721.2),  (datetime.date(2015, 5, 6), 1270.8),
@@ -341,8 +341,8 @@ import datetime
 
 may = datetime.date(2015, 5, 1)
 
-body_fat = client.get_report("Net Calories", "Nutrition", may)
-body_fat
+net_calories = client.get_report("Net Calories", "Nutrition", may)
+net_calories
 # >> OrderedDict([(datetime.date(2015, 5, 14), 172.8), (datetime.date(2015, 5, 13), 173.1), (datetime.date(2015, 5, 12), 127.7),
 #                 (datetime.date(2015, 5, 11), 172.7), (datetime.date(2015, 5, 10), 172.8), (datetime.date(2015, 5, 9), 172.4),
 #                 (datetime.date(2015, 5, 8), 172.6),  (datetime.date(2015, 5, 7), 172.7),  (datetime.date(2015, 5, 6), 172.6),
@@ -356,8 +356,8 @@ To access report data within a date range:
 thisweek = datetime.date(2015, 5, 11)2
 lastweek = datetime.date(2015, 5, 4)
 
-weight = client.get_report("Net Calories", "Nutrition", thisweek, lastweek)
-weight
+net_calories = client.get_report("Net Calories", "Nutrition", thisweek, lastweek)
+net_calories
 # >> OrderedDict([(datetime.date(2015, 5, 11), 1721.6), (datetime.date(2015, 5, 10), 1722.4), (datetime.date(2015, 5,9), 1720.2),
 #                 (datetime.date(2015, 5, 8), 1271.0),  (datetime.date(2015, 5, 7), 1721.2),  (datetime.date(2015, 5, 6), 1720.8),
 #                 (datetime.date(2015, 5, 5), 1721.8),  (datetime.date(2015, 5, 4), 1274.2)])
