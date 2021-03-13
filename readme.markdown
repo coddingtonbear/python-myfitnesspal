@@ -315,7 +315,7 @@ Report Examples
 
 To access report data from the past 30 days:
 
-```python7
+```python
 import myfitnesspal
 
 client = myfitnesspal.Client('my_username')
@@ -335,7 +335,6 @@ weight
 #                 (datetime.date(2015, 4, 14), 1721.6)])
 ```
 
-To access report since a given date:
 
 ```python
 import datetime
@@ -351,7 +350,7 @@ body_fat
 #                 (datetime.date(2015, 5, 2), 172.6),  (datetime.date(2015, 5, 1), 172.7)])
 ```
 
-To access measurements within a date range:
+To access report data within a date range:
 
 ```python
 thisweek = datetime.date(2015, 5, 11)2
