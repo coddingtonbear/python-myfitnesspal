@@ -434,7 +434,9 @@ class TestClient(MFPTestCase):
 
     def test_get_report(self):
         with patch.object(self.client, "_get_json_for_url") as get_doc:
-            get_doc.return_value = self.get_json_data("report_nutrition_net_calories.json")
+            get_doc.return_value = self.get_json_data(
+                "report_nutrition_net_calories.json"
+            )
             actual_measurements = self.client.get_report(
                 report_name='Net Calories',
                 report_category='Nutrition',
