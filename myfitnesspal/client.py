@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import json
 import logging
 import re
 from collections import OrderedDict
@@ -222,6 +223,11 @@ class Client(MFPBase):
         content = self._get_content_for_url(url)
 
         return lxml.html.document_fromstring(content)
+
+    def _get_json_for_url(self, url):
+        content = self._get_content_for_url(url)
+
+        return json.loads(content)
 
     def _get_measurement(self, name: str, value: Optional[float]) -> MeasureBase:
         if not self.unit_aware:
@@ -795,3 +801,65 @@ class Client(MFPBase):
             serving_sizes=details["serving_sizes"],
             client=self,
         )
+
+    def get_report(
+        self,
+        report_name: str = "Net Calories",
+        report_category: str = "Nutrition",
+        lower_bound: Optional[datetime.date] = None,
+        upper_bound: Optional[datetime.date] = None,
+    ) -> Dict[datetime.date, float]:
+        """
+        Returns report data of a given name and category between two dates.
+        """
+        if upper_bound is None:
+            upper_bound = datetime.date.today()
+        if lower_bound is None:
+            lower_bound = upper_bound - datetime.timedelta(days=30)
+
+        # If dates are in the opposite order, flip them for convenience
+        if lower_bound > upper_bound:
+            lower_bound, upper_bound = upper_bound, lower_bound
+
+        # Get the URL for the report
+        json_data = self._get_json_for_url(
+            self._get_url_for_report(report_name, report_category, lower_bound)
+        )
+
+        report = OrderedDict(self._get_report_data(json_data))
+
+        # Remove entries that are not within the dates specified
+        for date in list(report.keys()):
+            if not upper_bound >= date >= lower_bound:
+                del report[date]
+
+        return report
+
+    def _get_url_for_report(
+        self, report_name: str, report_category: str, lower_bound: datetime.date
+    ):
+        delta = datetime.date.today() - lower_bound
+        return (
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                "reports/results/" + report_category.lower() + "/" + report_name,
+            )
+            + f"/{str(delta.days)}.json"
+        )
+
+    def _get_report_data(self, json_data: dict):
+        data = {}
+
+        for index, entry in enumerate(json_data["data"]):
+            # Dates are returned without year.
+            # As the returned dates will always begin from the current day, the
+            # correct date can be determined using the values index
+            date = (
+                datetime.datetime.now()
+                - datetime.timedelta(days=len(json_data["data"]))
+                + datetime.timedelta(days=index + 1)
+            )
+
+            data.update({date.date(): entry["total"]})
+
+        return data

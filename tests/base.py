@@ -1,3 +1,4 @@
+import json
 import os
 import unittest
 
@@ -11,3 +12,9 @@ class MFPTestCase(unittest.TestCase):
         with open(file_path, "r") as in_:
             content = in_.read()
         return lxml.html.document_fromstring(content)
+
+    def get_json_data(self, file_name):
+        file_path = os.path.join(os.path.dirname(__file__), "json", file_name)
+        with open(file_path, "r") as in_:
+            content = in_.read()
+        return json.loads(content)
