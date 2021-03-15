@@ -309,8 +309,6 @@ day.exercises[1].get_as_list()[0]['nutrition_information']['weight/set']
 # >> 20
 ```
 
-net_calories = client.get_report("Net Calories", "Nutrition", may)
-
 Report Examples
 --------------------
 
