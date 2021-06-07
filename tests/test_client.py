@@ -36,7 +36,8 @@ class TestClient(MFPTestCase):
         }
 
         self.assertEqual(
-            expected_ids, actual_ids,
+            expected_ids,
+            actual_ids,
         )
 
     def test_get_meals(self):
@@ -44,14 +45,17 @@ class TestClient(MFPTestCase):
         meals = self.client._get_meals(document)
 
         self.assertEqual(
-            len(meals), 4,
+            len(meals),
+            4,
         )
 
     def test_get_measurements(self):
         with patch.object(self.client, "_get_document_for_url") as get_doc:
             get_doc.return_value = self.get_html_document("measurements.html")
             actual_measurements = self.client.get_measurements(
-                "Body Fat", self.arbitrary_date1, self.arbitrary_date2,
+                "Body Fat",
+                self.arbitrary_date1,
+                self.arbitrary_date2,
             )
 
         expected_measurements = OrderedDict(
@@ -68,7 +72,8 @@ class TestClient(MFPTestCase):
         )
 
         self.assertEqual(
-            expected_measurements, actual_measurements,
+            expected_measurements,
+            actual_measurements,
         )
 
     def test_get_day_unit_unaware(self):
@@ -172,13 +177,16 @@ class TestClient(MFPTestCase):
         actual_dict = day.get_as_dict()
 
         self.assertEqual(
-            expected_dict, actual_dict,
+            expected_dict,
+            actual_dict,
         )
         self.assertEqual(
-            day.date, self.arbitrary_date1,
+            day.date,
+            self.arbitrary_date1,
         )
         self.assertEqual(
-            day.complete, False,
+            day.complete,
+            False,
         )
         self.assertEqual(
             day.goals,
@@ -304,13 +312,16 @@ class TestClient(MFPTestCase):
         actual_dict = day.get_as_dict()
 
         self.assertEqual(
-            expected_dict, actual_dict,
+            expected_dict,
+            actual_dict,
         )
         self.assertEqual(
-            day.date, self.arbitrary_date1,
+            day.date,
+            self.arbitrary_date1,
         )
         self.assertEqual(
-            day.complete, False,
+            day.complete,
+            False,
         )
         self.assertEqual(
             day.goals,
@@ -356,17 +367,20 @@ class TestClient(MFPTestCase):
 
         # The returned object should be an array of length 2
         self.assertEqual(
-            len(day), 2,
+            len(day),
+            2,
         )
 
         # The first object of the array should be our cardio
         self.assertEqual(
-            day[0].name, "cardiovascular",
+            day[0].name,
+            "cardiovascular",
         )
 
         # The second object should be our strength training
         self.assertEqual(
-            day[1].name, "strength training",
+            day[1].name,
+            "strength training",
         )
 
         expected_cardio = [
@@ -399,11 +413,13 @@ class TestClient(MFPTestCase):
         actual_strength = day[1].get_as_list()
 
         self.assertEqual(
-            expected_cardio, actual_cardio,
+            expected_cardio,
+            actual_cardio,
         )
 
         self.assertEqual(
-            expected_strength, actual_strength,
+            expected_strength,
+            actual_strength,
         )
 
     def test_get_completed_day(self):
@@ -412,5 +428,6 @@ class TestClient(MFPTestCase):
             day = self.client.get_date(self.arbitrary_date1)
 
         self.assertEqual(
-            day.complete, True,
+            day.complete,
+            True,
         )

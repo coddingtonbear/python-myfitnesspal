@@ -16,7 +16,9 @@ def get_password_from_keyring(username: str) -> str:
             "No MyFitnessPal password for {username} could be found "
             "in the system keychain.  Use the `store-password` "
             "command-line command for storing a password for this "
-            "username.".format(username=username,)
+            "username.".format(
+                username=username,
+            )
         )
 
     return result

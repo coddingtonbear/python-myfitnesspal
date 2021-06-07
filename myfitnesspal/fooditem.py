@@ -169,7 +169,11 @@ class FoodItem(MFPBase):
 
         for s in self._serving_sizes:
             serving = FoodItemServing(
-                s["id"], s["nutrition_multiplier"], s["value"], s["unit"], s["index"],
+                s["id"],
+                s["nutrition_multiplier"],
+                s["value"],
+                s["unit"],
+                s["index"],
             )
             servings.append(serving)
 

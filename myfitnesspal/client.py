@@ -60,6 +60,11 @@ class Client(MFPBase):
         self._auth_data: Optional[types.AuthData] = None
 
         self.session = requests.Session()
+        self.session.headers.update(
+            {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
+            }
+        )
         if login:
             self._login()
 
@@ -83,7 +88,7 @@ class Client(MFPBase):
 
     @property
     def effective_username(self) -> str:
-        """ One's actual username may be different from the one used for login
+        """One's actual username may be different from the one used for login
 
         This method will return the actual username if it is available, but
         will fall back to the one provided if it is not.
@@ -148,7 +153,13 @@ class Client(MFPBase):
             "step_sources",
         ]
         query_string = parse.urlencode(
-            [("fields[]", name,) for name in requested_fields]
+            [
+                (
+                    "fields[]",
+                    name,
+                )
+                for name in requested_fields
+            ]
         )
         metadata_url = (
             parse.urljoin(self.BASE_API_URL, f"/v2/users/{self.user_id}")
@@ -321,9 +332,19 @@ class Client(MFPBase):
 
                     nutrition[nutr_name] = self._get_measurement(nutr_name, value)
 
-                entries.append(Entry(name, nutrition,))
+                entries.append(
+                    Entry(
+                        name,
+                        nutrition,
+                    )
+                )
 
-            meals.append(Meal(meal_name, entries,))
+            meals.append(
+                Meal(
+                    meal_name,
+                    entries,
+                )
+            )
 
         return meals
 
@@ -437,7 +458,11 @@ class Client(MFPBase):
 
     def get_date(self, *args, **kwargs) -> Day:
         if len(args) == 3:
-            date = datetime.date(int(args[0]), int(args[1]), int(args[2]),)
+            date = datetime.date(
+                int(args[0]),
+                int(args[1]),
+                int(args[2]),
+            )
         elif len(args) == 1 and isinstance(args[0], datetime.date):
             date = args[0]
         else:
@@ -634,14 +659,20 @@ class Client(MFPBase):
 
     def _get_notes(self, date: datetime.date) -> Note:
         result = self._get_request_for_url(
-            parse.urljoin(self.BASE_URL_SECURE, "/food/note",)
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                "/food/note",
+            )
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))
         )
         return Note(result.json()["item"])
 
     def _get_water(self, date: datetime.date) -> float:
         result = self._get_request_for_url(
-            parse.urljoin(self.BASE_URL_SECURE, "/food/water",)
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                "/food/water",
+            )
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))
         )
         value = result.json()["item"]["milliliters"]
@@ -718,7 +749,13 @@ class Client(MFPBase):
             "confirmations",
         ]
         query_string = parse.urlencode(
-            [("fields[]", name,) for name in requested_fields]
+            [
+                (
+                    "fields[]",
+                    name,
+                )
+                for name in requested_fields
+            ]
         )
         metadata_url = (
             parse.urljoin(self.BASE_API_URL, f"/v2/foods/{mfp_id}") + "?" + query_string

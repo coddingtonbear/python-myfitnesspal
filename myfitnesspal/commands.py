@@ -87,7 +87,9 @@ def delete_password(args, *extra, **kwargs):
     delete_password_in_keyring(args.username)
 
 
-@command("Display MyFitnessPal data for a given date.",)
+@command(
+    "Display MyFitnessPal data for a given date.",
+)
 def day(args, *extra, **kwargs):
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -121,7 +123,12 @@ def day(args, *extra, **kwargs):
 
     print("[bold]Totals[/bold]")
     for key, value in day.totals.items():
-        print("{key}: {value}".format(key=key.title(), value=value,))
+        print(
+            "{key}: {value}".format(
+                key=key.title(),
+                value=value,
+            )
+        )
     print(f"Water: {day.water}")
     if day.notes:
         print(f"[italic]{day.notes}[/italic]")

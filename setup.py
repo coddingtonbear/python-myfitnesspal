@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as in_:
 
 setup(
     name="myfitnesspal",
-    version="1.16.1",
+    version="1.16.4",
     url="http://github.com/coddingtonbear/python-myfitnesspal/",
     description="Access health and fitness data stored in Myfitnesspal",
     author="Adam Coddington",
@@ -23,6 +23,9 @@ setup(
     packages=find_packages(),
     install_requires=requirements,
     test_suite="nose.collector",
-    tests_require=["nose", "mock",],
+    tests_require=[
+        "nose",
+        "mock",
+    ],
     entry_points={"console_scripts": ["myfitnesspal = myfitnesspal.cmdline:main"]},
 )

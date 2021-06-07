@@ -20,7 +20,10 @@ class TestIntegration(MFPTestCase):
             pytest.skip("Integration testing account not set in this environment.")
             return
 
-        cls.client = Client(username, password,)
+        cls.client = Client(
+            username,
+            password,
+        )
 
         day_with_known_entries = datetime.date(2020, 7, 4)
 
