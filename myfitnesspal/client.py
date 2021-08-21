@@ -159,9 +159,9 @@ class Client(MFPBase):
             ]
         )
         metadata_url = (
-            parse.urljoin(self.BASE_API_URL, f"/v2/users/{self.user_id}")
-            + "?"
-            + query_string
+                parse.urljoin(self.BASE_API_URL, f"/v2/users/{self.user_id}")
+                + "?"
+                + query_string
         )
         result = self._get_request_for_url(metadata_url, send_token=True)
         if not result.ok:
@@ -183,22 +183,22 @@ class Client(MFPBase):
     def _get_url_for_date(self, date: datetime.date, username: str) -> str:
         date_str = date.strftime("%Y-%m-%d")
         return (
-            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
-            + f"?date={date_str}"
+                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
+                + f"?date={date_str}"
         )
 
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
-            parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
-            + f"?page={page}&type={measurement_id}"
+                parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
+                + f"?page={page}&type={measurement_id}"
         )
 
     def _get_request_for_url(
-        self,
-        url: str,
-        send_token: bool = False,
-        headers: Optional[Dict[str, str]] = None,
-        **kwargs,
+            self,
+            url: str,
+            send_token: bool = False,
+            headers: Optional[Dict[str, str]] = None,
+            **kwargs,
     ) -> requests.Response:
         if headers is None:
             headers = {}
@@ -233,7 +233,7 @@ class Client(MFPBase):
         matched = BRITISH_UNIT_MATCHER.match(string)
         if matched:
             return float(matched.groupdict()["lbs"] or 0) + (
-                float(matched.groupdict()["st"] or 0) * 14
+                    float(matched.groupdict()["st"] or 0) * 14
             )
         else:
             try:
@@ -348,8 +348,8 @@ class Client(MFPBase):
     def _get_url_for_exercise(self, date: datetime.date, username: str) -> str:
         date_str = date.strftime("%Y-%m-%d")
         return (
-            parse.urljoin(self.BASE_URL_SECURE, "exercise/diary/" + username)
-            + f"?date={date_str}"
+                parse.urljoin(self.BASE_URL_SECURE, "exercise/diary/" + username)
+                + f"?date={date_str}"
         )
 
     def _get_exercise(self, document):
@@ -497,7 +497,7 @@ class Client(MFPBase):
         return day
 
     def get_measurements(
-        self, measurement="Weight", lower_bound=None, upper_bound=None
+            self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
         """ Returns measurements of a given name between two dates."""
         if upper_bound is None:
@@ -557,10 +557,10 @@ class Client(MFPBase):
         return measurements
 
     def set_measurements(
-        self,
-        measurement="Weight",
-        value: float = None,
-        date: Optional[datetime.date] = None,
+            self,
+            measurement="Weight",
+            value: float = None,
+            date: Optional[datetime.date] = None,
     ):
         """ Sets measurement for today's date."""
         if value is None:
@@ -725,8 +725,8 @@ class Client(MFPBase):
             )
             nutr_info = (
                 item_div.xpath(".//p[@class='search-nutritional-info']")[0]
-                .text.strip()
-                .split(",")
+                    .text.strip()
+                    .split(",")
             )
             brand = ""
             if len(nutr_info) >= 3:
@@ -755,7 +755,7 @@ class Client(MFPBase):
             ]
         )
         metadata_url = (
-            parse.urljoin(self.BASE_API_URL, f"/v2/foods/{mfp_id}") + "?" + query_string
+                parse.urljoin(self.BASE_API_URL, f"/v2/foods/{mfp_id}") + "?" + query_string
         )
         result = self._get_request_for_url(metadata_url, send_token=True)
         if not result.ok:
@@ -795,3 +795,104 @@ class Client(MFPBase):
             serving_sizes=details["serving_sizes"],
             client=self,
         )
+
+    ####### ADDED Function to Submit new Foods to MFP Dominic Schwarz <dominic.schwarz@dnic42.de> - 21.08.2021 #######
+    SUBMIT_PATH = "food/submit"
+    SUBMIT2_PATH = "food/duplicate"
+    SUBMIT3_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
+    SUBMIT4_PATH = "food/new"
+
+    def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
+                     sodium: float = "", potassium: float = "", saturated_fat: float = "",
+                     polyunsaturated_fat: float = "",
+                     fiber: float = "", monounsaturated_fat: float = "", sugar: float = "", trans_fat: str = float,
+                     cholesterol: float = "", vitamin_a: float = "", calcium: float = "", vitamin_c: float = "",
+                     iron: float = "",
+                     serving_size: str = "1 Serving", servingspercontainer: float = "1.0", ):
+        """Function to Submit new own Foods to MFP"""
+
+        # TODO Test Food Dict
+
+        submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
+        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT2_PATH)
+        now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        document = self._get_document_for_url(submit1_url)
+        authenticity_token = document.xpath(
+            "(//input[@name='authenticity_token']/@value)[1]"
+        )[0]
+        utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
+
+        result = self.session.post(
+            submit2_url,
+            data={
+                "utf8": utf8_field,
+                "authenticity_token": authenticity_token,
+                "date": datetime.datetime.today().strftime("%Y-%m-%d"),
+                "food[brand]": brand,
+                "food[description]": description
+            },
+        )
+        if result.status_code == 200:
+            document = lxml.html.document_fromstring(result.content.decode('utf-8'))
+            warning = document.xpath("//*[@id='main']/p[1]/span")
+            print(warning)
+            # TODO HANDLE DUPLICATE
+            # TODO HANDLE ALREADY EXISTS
+        elif result.status_code != 302:
+            print("Unexpected Behaviour")
+            # TODO ERROR HANDLING
+
+        submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT3_PATH)
+        document = self._get_document_for_url(submit3_url)
+        authenticity_token = document.xpath(
+            "(//input[@name='authenticity_token']/@value)[1]"
+        )[0]
+        utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
+
+        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT4_PATH)
+
+        result = self.session.post(
+            submit4_url,
+            data={
+                "utf8": utf8_field,
+                "authenticity_token": authenticity_token,
+                "date": datetime.datetime.today().strftime("%Y-%m-%d"),
+                "food[brand]": brand,
+                "food[description]": description,
+                "weight[serving_size]": serving_size,
+                "servingspercontainer": "{}".format(servingspercontainer),
+                "nutritional_content[calories]": "{}".format(calories),
+                "nutritional_content[sodium]": "{}".format(sodium),
+                "nutritional_content[fat]": "{}".format(fat),
+                "nutritional_content[potassium]": "{}".format(potassium),
+                "nutritional_content[saturated_fat]": "{}".format(saturated_fat),
+                "nutritional_content[carbs]": "{}".format(carbs),
+                "nutritional_content[polyunsaturated_fat]": "{}".format(polyunsaturated_fat),
+                "nutritional_content[fiber]": "{}".format(fiber),
+                "nutritional_content[monounsaturated_fat]": "{}".format(monounsaturated_fat),
+                "nutritional_content[sugar]": "{}".format(sugar),
+                "nutritional_content[trans_fat]": "{}".format(trans_fat),
+                "nutritional_content[protein]": "{}".format(protein),
+                "nutritional_content[cholesterol]": "{}".format(cholesterol),
+                "nutritional_content[vitamin_a]": "{}".format(vitamin_a),
+                "nutritional_content[calcium]": "{}".format(calcium),
+                "nutritional_content[vitamin_c]": "{}".format(vitamin_c),
+                "nutritional_content[iron]": "{}".format(iron),
+                "food_entry[quantity]": "1.0",
+                "food_entry[meal_id]": "0",
+                "addtodiary": "no",
+                "preserve_exact_description_and_brand": "true",
+                "sharefood": "1",
+                "continue": "Save"
+            },
+        )
+        if result.status_code == 200:
+            document = lxml.html.document_fromstring(result.content.decode('utf-8'))
+            error = document.xpath("//*[@id='errorExplanation']/ul/li")
+            print(error)
+
+            # TODO HANDLE DUPLICATE
+            # TODO HANDLE ALREADY EXISTS
+            return (False)
+
+        return (True)
