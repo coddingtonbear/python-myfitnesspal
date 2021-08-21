@@ -812,9 +812,8 @@ class Client(MFPBase):
         """Function to Submit new Foods to MFP"""
 
         # TODO Test Food Dict
-
+        #Step 1 to get Authenticity Token
         submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
-        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT2_PATH)
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         document = self._get_document_for_url(submit1_url)
         authenticity_token = document.xpath(
@@ -822,6 +821,8 @@ class Client(MFPBase):
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
+        #Step to to submit Brand and Description --> Possible returns Duplicates Warning
+        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT2_PATH)
         result = self.session.post(
             submit2_url,
             data={
@@ -841,11 +842,13 @@ class Client(MFPBase):
                 # TODO HANDLE ALREADY EXISTS
             except:
                 print("No Warning! :)")
-        elif result.status_code != 302:
-            print("Unexpected Behaviour")
-            return(False)
-            # TODO ERROR HANDLING
+        elif not result.ok:
+            raise MyfitnesspalRequestFailed(
+                "Unable to submit food to MyFitnessPal: "
+                "status code: {status}".format(status=result.status_code)
+            )
 
+        #Step 3 - Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
         submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT3_PATH)
         document = self._get_document_for_url(submit3_url)
         authenticity_token = document.xpath(
@@ -853,8 +856,9 @@ class Client(MFPBase):
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
-        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT4_PATH)
 
+        #Step4 - Final submit new Food with Nutrional Details
+        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT4_PATH)
         result = self.session.post(
             submit4_url,
             data={
@@ -890,16 +894,19 @@ class Client(MFPBase):
                 "continue": "Save"
             },
         )
+
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
             try:
                 error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
                 print(error)
+                # TODO HANDLE DUPLICATE
+                # TODO HANDLE ALREADY EXISTS
             except:
                 print("No Error :)")
+        elif not result.ok:
+            raise MyfitnesspalRequestFailed(
+                "Unable to submit food to MyFitnessPal: "
+                "status code: {status}".format(status=result.status_code)
+            )
 
-            # TODO HANDLE DUPLICATE
-            # TODO HANDLE ALREADY EXISTS
-            #return (False)
-
-        return (True)
