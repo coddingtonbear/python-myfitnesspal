@@ -834,12 +834,16 @@ class Client(MFPBase):
         )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
-            warning = document.xpath("//*[@id='main']/p[1]/span")
-            print(warning)
-            # TODO HANDLE DUPLICATE
-            # TODO HANDLE ALREADY EXISTS
+            try:
+                warning = document.xpath("//*[@id='main']/p[1]/span")[0].text
+                print(warning)
+                # TODO HANDLE DUPLICATE
+                # TODO HANDLE ALREADY EXISTS
+            except:
+                print("No Warning! :)")
         elif result.status_code != 302:
             print("Unexpected Behaviour")
+            return(False)
             # TODO ERROR HANDLING
 
         submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT3_PATH)
@@ -888,11 +892,14 @@ class Client(MFPBase):
         )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
-            error = document.xpath("//*[@id='errorExplanation']/ul/li")
-            print(error)
+            try:
+                error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
+                print(error)
+            except:
+                print("No Error :)")
 
             # TODO HANDLE DUPLICATE
             # TODO HANDLE ALREADY EXISTS
-            return (False)
+            #return (False)
 
         return (True)
