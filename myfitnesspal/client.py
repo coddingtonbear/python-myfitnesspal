@@ -808,8 +808,8 @@ class Client(MFPBase):
                      fiber: float = "", monounsaturated_fat: float = "", sugar: float = "", trans_fat: str = float,
                      cholesterol: float = "", vitamin_a: float = "", calcium: float = "", vitamin_c: float = "",
                      iron: float = "",
-                     serving_size: str = "1 Serving", servingspercontainer: float = "1.0", ):
-        """Function to Submit new own Foods to MFP"""
+                     serving_size: str = "1 Serving", servingspercontainer: float = "1.0", sharepublic: int = 0 ):
+        """Function to Submit new Foods to MFP"""
 
         # TODO Test Food Dict
 
@@ -886,7 +886,7 @@ class Client(MFPBase):
                 "food_entry[meal_id]": "0",
                 "addtodiary": "no",
                 "preserve_exact_description_and_brand": "true",
-                "sharefood": "1",
+                "sharefood": "{}".format(sharepublic),
                 "continue": "Save"
             },
         )
