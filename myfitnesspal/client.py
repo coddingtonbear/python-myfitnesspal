@@ -796,11 +796,12 @@ class Client(MFPBase):
             client=self,
         )
 
-    ####### ADDED Function to Submit new Foods to MFP Dominic Schwarz <dominic.schwarz@dnic42.de> - 21.08.2021 #######
+    ### Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
+    ### Added function to submit new foods to MFP.
     SUBMIT_PATH = "food/submit"
-    SUBMIT2_PATH = "food/duplicate"
-    SUBMIT3_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
-    SUBMIT4_PATH = "food/new"
+    SUBMIT_DUPLICATE_PATH = "food/duplicate"
+    SUBMIT_NEW_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
+    SUBMIT_POST_PATH = "food/new"
 
     def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
                      sodium: float = "", potassium: float = "", saturated_fat: float = "",
@@ -808,11 +809,10 @@ class Client(MFPBase):
                      fiber: float = "", monounsaturated_fat: float = "", sugar: float = "", trans_fat: str = float,
                      cholesterol: float = "", vitamin_a: float = "", calcium: float = "", vitamin_c: float = "",
                      iron: float = "",
-                     serving_size: str = "1 Serving", servingspercontainer: float = "1.0", sharepublic: bool = False ):
-        """Function to Submit new Foods to MFP"""
+                     serving_size: str = "1 Serving", servingspercontainer: float = "1.0", sharepublic: bool = False):
+        """Function to Submit new foods / groceries to MFP"""
 
-        # TODO Test Food Dict
-        #Step 1 to get Authenticity Token
+        # Step 1 to get Authenticity Token
         submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         document = self._get_document_for_url(submit1_url)
@@ -821,8 +821,8 @@ class Client(MFPBase):
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
-        #Step to to submit Brand and Description --> Possible returns Duplicates Warning
-        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT2_PATH)
+        # Step to to submit Brand and Description --> Possible returns Duplicates Warning
+        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
         result = self.session.post(
             submit2_url,
             data={
@@ -834,79 +834,88 @@ class Client(MFPBase):
             },
         )
         if result.status_code == 200:
+            # Check if a warning exists and log warning
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
-            try:
+            if document.xpath("//*[@id='main']/p[1]/span"):
                 warning = document.xpath("//*[@id='main']/p[1]/span")[0].text
-                print(warning)
-                # TODO HANDLE DUPLICATE
-                # TODO HANDLE ALREADY EXISTS
-            except:
-                print("No Warning! :)")
+                logger.warning("My Fitness Pal responded: {}".format(warning))
         elif not result.ok:
-            raise MyfitnesspalRequestFailed(
-                "Unable to submit food to MyFitnessPal: "
+            logger.warning(
+                "Request Error - Unable to submit food to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
+            return None
 
-        #Step 3 - Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
-        submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT3_PATH)
+        # Step 3 - Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
+        submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_NEW_PATH)
         document = self._get_document_for_url(submit3_url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
+        # Step4 - Build Post Data and finally submit new Food with nutritional Details
+        data = {
+            "utf8": utf8_field,
+            "authenticity_token": authenticity_token,
+            "date": datetime.datetime.today().strftime("%Y-%m-%d"),
+            "food[brand]": brand,
+            "food[description]": description,
+            "weight[serving_size]": serving_size,
+            "servingspercontainer": "{}".format(servingspercontainer),
+            "nutritional_content[calories]": "{}".format(calories),
+            "nutritional_content[sodium]": "{}".format(sodium),
+            "nutritional_content[fat]": "{}".format(fat),
+            "nutritional_content[potassium]": "{}".format(potassium),
+            "nutritional_content[saturated_fat]": "{}".format(saturated_fat),
+            "nutritional_content[carbs]": "{}".format(carbs),
+            "nutritional_content[polyunsaturated_fat]": "{}".format(polyunsaturated_fat),
+            "nutritional_content[fiber]": "{}".format(fiber),
+            "nutritional_content[monounsaturated_fat]": "{}".format(monounsaturated_fat),
+            "nutritional_content[sugar]": "{}".format(sugar),
+            "nutritional_content[trans_fat]": "{}".format(trans_fat),
+            "nutritional_content[protein]": "{}".format(protein),
+            "nutritional_content[cholesterol]": "{}".format(cholesterol),
+            "nutritional_content[vitamin_a]": "{}".format(vitamin_a),
+            "nutritional_content[calcium]": "{}".format(calcium),
+            "nutritional_content[vitamin_c]": "{}".format(vitamin_c),
+            "nutritional_content[iron]": "{}".format(iron),
+            "food_entry[quantity]": "1.0",
+            "food_entry[meal_id]": "0",
+            "addtodiary": "no",
+            "preserve_exact_description_and_brand": "true",
+            "continue": "Save"
+        }
+        # Make entry public if requested, Hint: submit "sharefood": 0 also generates a public db entry, so only add
+        # "sharefood"" if really requested
+        if sharepublic:
+            data["sharefood"] = 1
 
-        #Step4 - Final submit new Food with Nutrional Details
-        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT4_PATH)
-        result = self.session.post(
-            submit4_url,
-            data={
-                "utf8": utf8_field,
-                "authenticity_token": authenticity_token,
-                "date": datetime.datetime.today().strftime("%Y-%m-%d"),
-                "food[brand]": brand,
-                "food[description]": description,
-                "weight[serving_size]": serving_size,
-                "servingspercontainer": "{}".format(servingspercontainer),
-                "nutritional_content[calories]": "{}".format(calories),
-                "nutritional_content[sodium]": "{}".format(sodium),
-                "nutritional_content[fat]": "{}".format(fat),
-                "nutritional_content[potassium]": "{}".format(potassium),
-                "nutritional_content[saturated_fat]": "{}".format(saturated_fat),
-                "nutritional_content[carbs]": "{}".format(carbs),
-                "nutritional_content[polyunsaturated_fat]": "{}".format(polyunsaturated_fat),
-                "nutritional_content[fiber]": "{}".format(fiber),
-                "nutritional_content[monounsaturated_fat]": "{}".format(monounsaturated_fat),
-                "nutritional_content[sugar]": "{}".format(sugar),
-                "nutritional_content[trans_fat]": "{}".format(trans_fat),
-                "nutritional_content[protein]": "{}".format(protein),
-                "nutritional_content[cholesterol]": "{}".format(cholesterol),
-                "nutritional_content[vitamin_a]": "{}".format(vitamin_a),
-                "nutritional_content[calcium]": "{}".format(calcium),
-                "nutritional_content[vitamin_c]": "{}".format(vitamin_c),
-                "nutritional_content[iron]": "{}".format(iron),
-                "food_entry[quantity]": "1.0",
-                "food_entry[meal_id]": "0",
-                "addtodiary": "no",
-                "preserve_exact_description_and_brand": "true",
-                "sharefood": "{}".format(int(sharepublic)),
-                "continue": "Save"
-            },
-        )
-
+        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_POST_PATH)
+        result = self.session.post(submit4_url, data, )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
             try:
-                error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
-                print(error)
-                # TODO HANDLE DUPLICATE
-                # TODO HANDLE ALREADY EXISTS
+                if not document.xpath(
+                        # If list is empty there should be no error, could be replaced with assert
+                        "//*[@id='errorExplanation']/ul/li"):
+                    return True
+                    # print("No Error :)")
+                    # Would like to return FoodItem, but seems that it take
+                    # to long until the submitted food is available in the DB
+                    # return self.get_food_search_results("{} {}".format(brand, description))[0]
+                else:  # Error occurred
+                    error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
+                    error = error.replace("Description ", "")
+                    raise MyfitnesspalRequestFailed(
+                        "Unable to submit food to MyFitnessPal: ".format(error)
+                    )
             except:
-                print("No Error :)")
+                logger.warning("Unable to submit food to MyFitnessPal: ".format(error))
+
         elif not result.ok:
-            raise MyfitnesspalRequestFailed(
-                "Unable to submit food to MyFitnessPal: "
+            logger.warning(
+                "Request Error - Unable to submit food to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
-
+            return None
