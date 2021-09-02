@@ -806,11 +806,11 @@ class Client(MFPBase):
     def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
                      sodium: float = "", potassium: float = "", saturated_fat: float = "",
                      polyunsaturated_fat: float = "",
-                     fiber: float = "", monounsaturated_fat: float = "", sugar: float = "", trans_fat: str = float,
+                     fiber: float = "", monounsaturated_fat: float = "", sugar: float = "", trans_fat: float = "",
                      cholesterol: float = "", vitamin_a: float = "", calcium: float = "", vitamin_c: float = "",
                      iron: float = "",
                      serving_size: str = "1 Serving", servingspercontainer: float = "1.0", sharepublic: bool = False):
-        """Function to Submit new foods / groceries to MFP"""
+        """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
 
         # Step 1 to get Authenticity Token
         submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
@@ -821,7 +821,7 @@ class Client(MFPBase):
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
-        # Step to to submit Brand and Description --> Possible returns Duplicates Warning
+        # Step to to submit brand and description --> Possible returns duplicates warning
         submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
         result = self.session.post(
             submit2_url,
@@ -906,12 +906,12 @@ class Client(MFPBase):
                     # return self.get_food_search_results("{} {}".format(brand, description))[0]
                 else:  # Error occurred
                     error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
-                    error = error.replace("Description ", "")
+                    error = error.replace("Description ", "") #For cosmetic reasons
                     raise MyfitnesspalRequestFailed(
-                        "Unable to submit food to MyFitnessPal: ".format(error)
+                        "Unable to submit food to MyFitnessPal: {}".format(error)
                     )
             except:
-                logger.warning("Unable to submit food to MyFitnessPal: ".format(error))
+                logger.warning("Unable to submit food to MyFitnessPal: {}".format(error))
 
         elif not result.ok:
             logger.warning(
