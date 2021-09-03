@@ -809,7 +809,7 @@ class Client(MFPBase):
                      fiber: float = "", monounsaturated_fat: float = "", sugar: float = "", trans_fat: float = "",
                      cholesterol: float = "", vitamin_a: float = "", calcium: float = "", vitamin_c: float = "",
                      iron: float = "",
-                     serving_size: str = "1 Serving", servingspercontainer: float = "1.0", sharepublic: bool = False):
+                     serving_size: str = "1 Serving", servingspercontainer: float = 1.0, sharepublic: bool = False):
         """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
 
         # Step 1 to get Authenticity Token
