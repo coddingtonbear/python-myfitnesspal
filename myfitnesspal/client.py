@@ -578,6 +578,9 @@ class Client(MFPBase):
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
 
+        # get the authenticity token for this edit
+        authenticity_token = document.xpath("(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)", smart_strings=False)[0]
+        
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
             raise ValueError(f"Measurement '{measurement}' does not exist.")
@@ -587,7 +590,7 @@ class Client(MFPBase):
 
         # setup a dict for the post
         data = {
-            "authenticity_token": self._authenticity_token,
+            "authenticity_token": authenticity_token,
             "measurement[display_value]": value,
             "type": measurement_ids.get(measurement),
             "measurement[entry_date(2i)]": date.month,
