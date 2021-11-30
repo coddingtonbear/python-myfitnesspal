@@ -104,7 +104,7 @@ day.totals
 #     'sugar': 103}
 ```
 
-Or, if you just want to see how many cups of water you've recorded, or the notes you've entered for a day:
+Or, if you just want to see how many milliliters of water you've recorded, or the notes you've entered for a day:
 
 ```python
 day.water

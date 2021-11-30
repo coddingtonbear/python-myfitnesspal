@@ -4,7 +4,7 @@ import datetime
 import logging
 import re
 from collections import OrderedDict
-from typing import Dict, List, Optional, overload
+from typing import Dict, List, Optional, Union, overload
 
 import lxml.html
 import requests
@@ -667,7 +667,7 @@ class Client(MFPBase):
         )
         return Note(result.json()["item"])
 
-    def _get_water(self, date: datetime.date) -> float:
+    def _get_water(self, date: datetime.date) -> Union[float, Volume]:
         result = self._get_request_for_url(
             parse.urljoin(
                 self.BASE_URL_SECURE,
@@ -676,10 +676,10 @@ class Client(MFPBase):
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))
         )
         value = result.json()["item"]["milliliters"]
-        cups = int(Volume(ml=value).us_cup)
-        if not self.unit_aware:
-            return cups
-        return Volume(us_cup=cups)
+        if self.unit_aware:
+            return Volume(ml=value)
+
+        return value
 
     def __str__(self) -> str:
         return f"MyFitnessPal Client for {self.effective_username}"
