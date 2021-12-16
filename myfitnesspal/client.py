@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+import json
 import logging
 import re
 from collections import OrderedDict
@@ -32,7 +33,9 @@ class Client(MFPBase):
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
-    LOGIN_PATH = "account/login"
+    LOGIN_FORM_PATH = "account/login"
+    LOGIN_JSON_PATH = "api/auth/callback/credentials"
+    CSRF_PATH = "api/auth/csrf"
     SEARCH_PATH = "food/search"
     ABBREVIATIONS = {
         "carbs": "carbohydrates",
@@ -99,33 +102,26 @@ class Client(MFPBase):
         return self.provided_username
 
     def _login(self):
-        login_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_PATH)
-        document = self._get_document_for_url(login_url)
-        authenticity_token = document.xpath(
-            "(//input[@name='authenticity_token']/@value)[1]"
-        )[0]
-        utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
+        csrf_url = parse.urljoin(self.BASE_URL_SECURE, self.CSRF_PATH)
+        csrf_token = self._get_json_for_url(csrf_url)['csrfToken']
+
+        login_json_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_JSON_PATH)
 
         result = self.session.post(
-            login_url,
+            login_json_url,
             data={
-                "utf8": utf8_field,
-                "authenticity_token": authenticity_token,
+                "csrfToken": csrf_token,
                 "username": self.effective_username,
                 "password": self.__password,
+                "redirect": False,
+                "json": True,
             },
         )
-        # result.content is bytes so we decode it ASSUMING utf8 (which may be a
-        # bad assumption?) PORTING_CHECK
-        content = result.content.decode("utf8")
-        if "Incorrect username or password" in content:
+        if "Incorrect username or password" in result.text:
             raise MyfitnesspalLoginError()
 
         self._auth_data = self._get_auth_data()
         self._user_metadata = self._get_user_metadata()
-
-        # authenticity token required for measurement set function.
-        self._authenticity_token = authenticity_token
 
     def _get_auth_data(self) -> types.AuthData:
         result = self._get_request_for_url(
@@ -225,6 +221,11 @@ class Client(MFPBase):
         content = self._get_content_for_url(url)
 
         return lxml.html.document_fromstring(content)
+
+    def _get_json_for_url(self, url):
+        content = self._get_content_for_url(url)
+
+        return json.loads(content)
 
     def _get_measurement(self, name: str, value: Optional[float]) -> MeasureBase:
         if not self.unit_aware:
@@ -502,7 +503,7 @@ class Client(MFPBase):
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
-        """ Returns measurements of a given name between two dates."""
+        """Returns measurements of a given name between two dates."""
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -565,7 +566,7 @@ class Client(MFPBase):
         value: float = None,
         date: Optional[datetime.date] = None,
     ):
-        """ Sets measurement for today's date."""
+        """Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
         if date is None:
@@ -577,6 +578,9 @@ class Client(MFPBase):
         # this is left in because we need to parse
         # the 'measurement' name to set the value.
         document = self._get_document_for_url(self._get_url_for_measurements())
+
+        # get authenticity token for this particular form.
+        authenticity_token = document.xpath("//form[@action='/measurements/new']/input[@name='authenticity_token']/@value")[0]
 
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
@@ -590,7 +594,7 @@ class Client(MFPBase):
 
         # setup a dict for the post
         data = {
-            "authenticity_token": self._authenticity_token,
+            "authenticity_token": authenticity_token,
             "measurement[display_value]": value,
             "type": measurement_ids.get(measurement),
             "measurement[entry_date(2i)]": date.month,
@@ -649,7 +653,7 @@ class Client(MFPBase):
         return ids
 
     def get_measurement_id_options(self) -> Dict[str, int]:
-        """ Returns list of measurement choices."""
+        """Returns list of measurement choices."""
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
 
