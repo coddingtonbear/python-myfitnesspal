@@ -117,7 +117,7 @@ class Client(MFPBase):
                 "json": True,
             },
         )
-        if "Incorrect username or password" in result.text:
+        if "error=CredentialsSignin" in result.url:
             raise MyfitnesspalLoginError()
 
         self._auth_data = self._get_auth_data()
