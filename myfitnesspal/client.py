@@ -35,7 +35,9 @@ class Client(MFPBase):
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
-    LOGIN_PATH = "account/login"
+    LOGIN_FORM_PATH = "account/login"
+    LOGIN_JSON_PATH = "api/auth/callback/credentials"
+    LOGIN_SESSION_PATH = "api/auth/session"
     SEARCH_PATH = "food/search"
     ABBREVIATIONS = {
         "carbs": "carbohydrates",
@@ -102,33 +104,40 @@ class Client(MFPBase):
         return self.provided_username
 
     def _login(self):
-        login_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_PATH)
-        document = self._get_document_for_url(login_url)
-        authenticity_token = document.xpath(
-            "(//input[@name='authenticity_token']/@value)[1]"
-        )[0]
-        utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
+        login_form_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_FORM_PATH)
+        login_json_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_JSON_PATH)
+        login_session_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_SESSION_PATH)
+        document = self._get_document_for_url(login_form_url)
+
+        csrf_token = self.session.cookies.get("__Host-next-auth.csrf-token")
 
         result = self.session.post(
-            login_url,
+            login_json_url,
             data={
-                "utf8": utf8_field,
-                "authenticity_token": authenticity_token,
+                "csrftoken": csrf_token,
                 "username": self.effective_username,
                 "password": self.__password,
+                "redirect": "false",
+                "json": "true",
             },
         )
-        # result.content is bytes so we decode it ASSUMING utf8 (which may be a
-        # bad assumption?) PORTING_CHECK
-        content = result.content.decode("utf8")
-        if "Incorrect username or password" in content:
+        if "Incorrect username or password" in result.text:
             raise MyfitnesspalLoginError()
 
-        self._auth_data = self._get_auth_data()
-        self._user_metadata = self._get_user_metadata()
+        result = self.session.get(
+            login_session_url,
+        )
+
+        # self._auth_data = self._get_auth_data()
+        # self._user_metadata = self._get_user_metadata()
+
+        # document = self._get_document_for_url(self.BASE_URL_SECURE)
+        # authenticity_token = document.xpath(
+        #     "(//input[@name='authenticity_token']/@value)[1]"
+        # )[0]
 
         # authenticity token required for measurement set function.
-        self._authenticity_token = authenticity_token
+        # self._authenticity_token = authenticity_token
 
     def _get_auth_data(self) -> types.AuthData:
         result = self._get_request_for_url(
