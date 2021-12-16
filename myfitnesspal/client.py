@@ -503,7 +503,7 @@ class Client(MFPBase):
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
-        """Returns measurements of a given name between two dates."""
+        """ Returns measurements of a given name between two dates."""
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -566,7 +566,7 @@ class Client(MFPBase):
         value: float = None,
         date: Optional[datetime.date] = None,
     ):
-        """Sets measurement for today's date."""
+        """ Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
         if date is None:
@@ -653,7 +653,7 @@ class Client(MFPBase):
         return ids
 
     def get_measurement_id_options(self) -> Dict[str, int]:
-        """Returns list of measurement choices."""
+        """ Returns list of measurement choices."""
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
 
