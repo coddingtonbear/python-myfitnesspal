@@ -23,9 +23,6 @@ def main(args=None):
     parser.add_argument("--debugger", action="store_true")
     args, extra = parser.parse_known_args()
 
-    # Set up a simple console logger
-    logging.basicConfig(level=args.loglevel)
-
     console = Console()
 
     if args.debugger:
@@ -35,6 +32,9 @@ def main(args=None):
         debugpy.listen(("0.0.0.0", 5678))
         debugpy.wait_for_client()
 
+    # If we use 'SUPER', we'll write out to a subdirectory all
+    # fetched output and some details about that output.
+    logging.addLevelName(5, "SUPER")
     logging.basicConfig(
         level=args.loglevel,
         format="%(message)s",

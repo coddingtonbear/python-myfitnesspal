@@ -90,7 +90,7 @@ def delete_password(args, *extra, **kwargs):
 @command(
     "Display MyFitnessPal data for a given date.",
 )
-def day(args, *extra, **kwargs):
+def day(base_args, *extra, **kwargs):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "username",

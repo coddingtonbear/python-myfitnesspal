@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import datetime
+import json
 import logging
+import mimetypes
+import os
 import re
 from collections import OrderedDict
 from typing import Dict, List, Optional, Union, overload
@@ -216,7 +219,58 @@ class Client(MFPBase):
             if self.user_id:
                 headers["mfp-user-id"] = self.user_id
 
-        return self.session.get(url, headers=headers, **kwargs)
+        result = self.session.get(url, headers=headers, **kwargs)
+
+        if logger.getEffectiveLevel() <= logging.getLevelName("SUPER"):
+            self._log_fetched_request(result)
+
+        return result
+
+    def _log_fetched_request(
+        self,
+        response: requests.Response,
+    ) -> None:
+        output_directory = "./debug_output/"
+        index_path = os.path.join(output_directory, "index.json")
+
+        os.makedirs(output_directory, exist_ok=True)
+        index_data = {}
+        if os.path.exists(index_path):
+            with open(index_path, "r") as inf:
+                index_data = json.load(inf)
+
+        mimetype = response.headers["Content-Type"]
+        if ";" in mimetype:
+            mimetype = mimetype.split(";", 1)[0].strip()
+
+        request_timestamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%S%f")
+        request_id = (
+            f"{request_timestamp}{mimetypes.guess_extension(mimetype) or '.txt'}"
+        )
+        response_path = os.path.join(
+            output_directory,
+            request_id,
+        )
+        with open(response_path, "wb") as outf:
+            outf.write(response.content)
+
+        index_data[request_id] = {
+            "timestamp": request_timestamp,
+            "request": {
+                "url": response.request.url,
+                "method": response.request.method,
+                "headers": dict(response.request.headers),
+            },
+            "response": {
+                "url": response.url,
+                "headers": dict(response.headers),
+                "status_code": response.status_code,
+                "encoding": response.encoding,
+            },
+        }
+
+        with open(index_path, "w") as index_outf:
+            json.dump(index_data, index_outf, sort_keys=True, indent=4)
 
     def _get_content_for_url(self, *args, **kwargs) -> str:
         return self._get_request_for_url(*args, **kwargs).content.decode("utf8")
@@ -502,7 +556,7 @@ class Client(MFPBase):
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
-        """ Returns measurements of a given name between two dates."""
+        """Returns measurements of a given name between two dates."""
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -565,7 +619,7 @@ class Client(MFPBase):
         value: float = None,
         date: Optional[datetime.date] = None,
     ):
-        """ Sets measurement for today's date."""
+        """Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
         if date is None:
@@ -649,7 +703,7 @@ class Client(MFPBase):
         return ids
 
     def get_measurement_id_options(self) -> Dict[str, int]:
-        """ Returns list of measurement choices."""
+        """Returns list of measurement choices."""
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
 
