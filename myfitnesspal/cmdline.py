@@ -1,5 +1,6 @@
 import argparse
 import logging
+import shutil
 import sys
 
 from rich.console import Console
@@ -41,6 +42,8 @@ def main(args=None):
         datefmt="[%X]",
         handlers=[RichHandler()],
     )
+    if logger.getEffectiveLevel() <= logging.getLevelName("SUPER"):
+        shutil.rmtree("./debug_output/")
 
     try:
         if args.command[0] in COMMANDS:
