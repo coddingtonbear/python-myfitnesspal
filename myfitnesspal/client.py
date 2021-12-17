@@ -103,7 +103,7 @@ class Client(MFPBase):
 
     def _login(self):
         csrf_url = parse.urljoin(self.BASE_URL_SECURE, self.CSRF_PATH)
-        csrf_token = self._get_json_for_url(csrf_url)['csrfToken']
+        csrf_token = self._get_json_for_url(csrf_url)["csrfToken"]
 
         login_json_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_JSON_PATH)
 
@@ -503,7 +503,7 @@ class Client(MFPBase):
     def get_measurements(
         self, measurement="Weight", lower_bound=None, upper_bound=None
     ) -> Dict[datetime.date, float]:
-        """ Returns measurements of a given name between two dates."""
+        """Returns measurements of a given name between two dates."""
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -566,7 +566,7 @@ class Client(MFPBase):
         value: float = None,
         date: Optional[datetime.date] = None,
     ):
-        """ Sets measurement for today's date."""
+        """Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
         if date is None:
@@ -580,7 +580,9 @@ class Client(MFPBase):
         document = self._get_document_for_url(self._get_url_for_measurements())
 
         # get authenticity token for this particular form.
-        authenticity_token = document.xpath("//form[@action='/measurements/new']/input[@name='authenticity_token']/@value")[0]
+        authenticity_token = document.xpath(
+            "//form[@action='/measurements/new']/input[@name='authenticity_token']/@value"
+        )[0]
 
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
@@ -653,7 +655,7 @@ class Client(MFPBase):
         return ids
 
     def get_measurement_id_options(self) -> Dict[str, int]:
-        """ Returns list of measurement choices."""
+        """Returns list of measurement choices."""
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
 
