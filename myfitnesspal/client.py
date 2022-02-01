@@ -588,7 +588,9 @@ class Client(MFPBase):
         measurement_ids = self._get_measurement_ids(document)
 
         # get the authenticity token for this edit
-        authenticity_token = document.xpath("(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)", smart_strings=False)[0]
+        authenticity_token = \
+            document.xpath("(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)",
+                           smart_strings=False)[0]
 
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
@@ -918,7 +920,7 @@ class Client(MFPBase):
                     # return self.get_food_search_results("{} {}".format(brand, description))[0]
                 else:  # Error occurred
                     error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
-                    error = error.replace("Description ", "") #For cosmetic reasons
+                    error = error.replace("Description ", "")  # For cosmetic reasons
                     raise MyfitnesspalRequestFailed(
                         "Unable to submit food to MyFitnessPal: {}".format(error)
                     )
@@ -931,3 +933,397 @@ class Client(MFPBase):
                 "status code: {status}".format(status=result.status_code)
             )
             return None
+
+    def set_new_goal(self, energy: float, energy_unit: str = "", carbohydrates: float = "", protein: float = "", fat: float = "",
+                     percent_carbohydrates: float = "", percent_protein: float = "", percent_fat: float = "",
+                     saturated_fat: float = "",
+                     polyunsaturated_fat: float = "",
+                     monounsaturated_fat: float = "",
+                     trans_fat: float = "",
+                     fiber: float = "",
+                     sugar: float = "",
+                     cholesterol: float = "",
+                     sodium: float = "",
+                     potassium: float = "",
+                     vitamin_a: float = "",
+                     vitamin_c: float = "",
+                     calcium: float = "",
+                     iron: float = "",
+                     assign_exercise_energy="nutrient_goal"):
+        """Function to update your nutrition goals. Function will return True if successful."""
+
+        #Get User Default Unit Preference
+        if energy_unit != "calories" and energy_unit != "kilojoules":
+            energy_unit = self.user_metadata['unit_preferences']['energy']
+
+        # Step 1 to get Authenticity Token and current values
+        submit1_url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
+        now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        document = self._get_document_for_url(submit1_url)
+        authenticity_token = document.xpath(
+            "(//input[@name='authenticity_token']/@value)[1]")
+
+        #Build  Header for API-Requests
+        auth_header = self.session.headers
+        auth_header['authorization'] = f"Bearer {self.access_token}"
+        auth_header['mfp-client-id'] = "mfp-main-js"
+        auth_header['mfp-user-id'] = f"{self.user_id}"
+
+
+        #Get Request
+        old_goals_document = self.session.get(f"https://api.myfitnesspal.com/v2/nutrient-goals?date={today}", headers=auth_header)
+        old_goals = json.loads(old_goals_document.text)
+
+
+        # Marcro Calculation
+        # If no macro goals were provided calculate them with percentage value
+        if carbohydrates == "" or protein == "" or fat == "" :
+            # If even no macro percentages values were provided calculate them from old values
+            if percent_carbohydrates == "" or percent_protein == "" or percent_fat == "" :
+                old_energy_value = old_goals['items'][0]['default_goal']['energy']['value']
+                old_energy_unit = old_goals['items'][0]['default_goal']['energy']['unit']
+                old_carbohydrates = old_goals['items'][0]['default_goal']['carbohydrates']
+                old_fat = old_goals['items'][0]['default_goal']['fat']
+                old_protein = old_goals['items'][0]['default_goal']['protein']
+
+                # If old and new values are in diffrent units then convert old value to new unit
+                if not old_energy_unit == energy_unit:
+                    if old_energy_unit == "kilojoules" and energy_unit == "calories":
+                        old_energy_value *= 0.2388
+                        old_energy_unit = "calories"
+                    elif old_energy_unit == "calories" and energy_unit == "kilojoules":
+                        old_energy_value *= 4.1868
+                        old_energy_unit = "kilojoules"
+                    else:
+                        raise ValueError
+
+                ####
+                carbohydrates = energy * old_carbohydrates / old_energy_value
+                protein = energy * old_protein / old_energy_value
+                fat = energy * old_fat / old_energy_value
+            #If percentage values were provided check
+            elif energy_unit == "calories":
+                carbohydrate = energy * percent_carbohydrates / 100 / 4
+                protein = energy * percent_protein / 100 / 4
+                fat = energy * percent_fat / 100 / 9
+            elif energy_unit == "kilojoules":
+                carbohydrate = energy * percent_carbohydrates / 100 / 17
+                protein = energy * percent_protein / 100 / 17
+                fat = energy * percent_fat / 100 / 37
+
+
+        #Build payload based on observed browser behaviour
+        #TODO Inser additional micro nurtitions
+        new_goals = {}
+        new_goals['item'] = old_goals['items'][0]
+
+        new_goals['item'].pop('valid_to', None)
+        new_goals['item'].pop('default_group_id', None)
+        new_goals['item'].pop('updated_at', None)
+        new_goals['item']['default_goal']['meal_goals'] = []
+        new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
+        new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
+        new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
+        new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
+        new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
+
+        #insert new values
+        new_goals['item']['valid_from'] = today
+
+        new_goals['item']['default_goal']['energy']['value'] = energy
+        new_goals['item']['default_goal']['energy']['unit'] = energy_unit
+        new_goals['item']['default_goal']['carbohydrates'] = carbohydrates
+        new_goals['item']['default_goal']['protein'] = protein
+        new_goals['item']['default_goal']['fat'] = fat
+
+        for i in new_goals['item']['daily_goals']:
+            """new_goals['item']['daily_goals'][i]['meal_goals'] = []
+            new_goals['item']['daily_goals'][i].pop('group_id', None)
+            new_goals['item']['daily_goals'][i].pop('exercise_carbohydrates_percentage', None)
+            new_goals['item']['daily_goals'][i].pop('exercise_fat_percentage', None)
+            new_goals['item']['daily_goals'][i].pop('exercise_protein_percentage', None)
+            new_goals['item']['daily_goals'][i].pop('exercise_saturated_fat_percentage', None)
+            new_goals['item']['daily_goals'][i].pop('exercise_sugar_percentage', None)"""
+            i['meal_goals'] = []
+            i.pop('group_id', None)
+            i.pop('exercise_carbohydrates_percentage', None)
+            i.pop('exercise_fat_percentage', None)
+            i.pop('exercise_protein_percentage', None)
+            i.pop('exercise_saturated_fat_percentage', None)
+            i.pop('exercise_sugar_percentage', None)
+
+            # insert new values
+            i['energy']['value'] = energy
+            i['energy']['unit'] = energy_unit
+            i['carbohydrates'] = carbohydrates
+            i['protein'] = protein
+            i['fat'] = fat
+
+
+
+
+        #Build Post-Request
+        #Post Request
+        result = self.session.post(f"https://api.myfitnesspal.com/v2/nutrient-goals", json.dumps(new_goals),
+                                   headers=auth_header)
+
+        #TODO Check Request Result
+        if result.status_code == 200:
+            return True
+        elif not result.ok:
+            logger.warning(
+                "Request Error - Unable to submit Goals to MyFitnessPal: "
+                "status code: {status}".format(status=result.status_code)
+            )
+            return None
+        else:
+            logger.error(
+                "Request Error - Unable to submit Goals to MyFitnessPal: "
+                "status code: {status}".format(status=result.status_code)
+            )
+            print(result)
+            return None
+
+
+    def get_recipes(self):
+
+        recipes_dict = {}
+
+        page_count= 1
+        next_page = True
+        while (next_page):
+            RECIPES_PATH = f"recipe_parser?page={page_count}&sort_order=recent"
+            recipes_url = parse.urljoin(self.BASE_URL_SECURE, RECIPES_PATH)
+            document = self._get_document_for_url(recipes_url)
+            recipes = document.xpath("//*[@id='main']/ul[1]/li") #get all items in the recipe list
+            for recipe_info in recipes:
+                recipe_path = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib["href"]
+                recipe_id = recipe_path.split("/")[-1]
+                recipe_title = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib["title"]
+                recipes_dict[recipe_id] = recipe_title
+
+            #Check for Pagination
+            pagination_links = document.xpath('//*[@id="main"]/ul[2]/a')
+            if(pagination_links):
+                if (page_count == 1): #If Pagination exists and it is page 1 there have to be a second, but only one href to the next (obviously none to the previous)
+                    page_count += 1
+                elif (len(pagination_links) > 1): #If there are two links, ont to the previous and one to the next
+                    page_count += 1
+                else:
+                    next_page = False #Only one link means it is the last page
+
+        print(recipes_dict.values())
+
+
+
+
+
+    """
+            data = {
+                "item": {
+                    "valid_from": "2022-01-20",
+                    "daily_goals": [
+                        {
+                            "day_of_week": "monday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        },
+                        {
+                            "day_of_week": "tuesday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        },
+                        {
+                            "day_of_week": "wednesday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        },
+                        {
+                            "day_of_week": "thursday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        },
+                        {
+                            "day_of_week": "friday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        },
+                        {
+                            "day_of_week": "saturday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        },
+                        {
+                            "day_of_week": "sunday",
+                            "energy": {
+                                "value": 2500,
+                                "unit": "calories"
+                            },
+                            "carbohydrates": 156,
+                            "protein": 313,
+                            "fat": 69,
+                            "saturated_fat": 26,
+                            "polyunsaturated_fat": 0,
+                            "monounsaturated_fat": 0,
+                            "trans_fat": 0,
+                            "fiber": 38,
+                            "sugar": 86,
+                            "cholesterol": 300,
+                            "sodium": 2300,
+                            "potassium": 3500,
+                            "vitamin_a": 100,
+                            "vitamin_c": 100,
+                            "calcium": 100,
+                            "iron": 100,
+                            "assign_exercise_energy": "nutrient_goal",
+                            "meal_goals": []
+                        }
+                    ],
+                    "default_goal": {
+                        "energy": {
+                            "value": 2500,
+                            "unit": "calories"
+                        },
+                        "carbohydrates": 156,
+                        "protein": 313,
+                        "fat": 69,
+                        "saturated_fat": 26,
+                        "polyunsaturated_fat": 0,
+                        "monounsaturated_fat": 0,
+                        "trans_fat": 0,
+                        "fiber": 38,
+                        "sugar": 86,
+                        "cholesterol": 300,
+                        "sodium": 2300,
+                        "potassium": 3500,
+                        "vitamin_a": 100,
+                        "vitamin_c": 100,
+                        "calcium": 100,
+                        "iron": 100,
+                        "assign_exercise_energy": "nutrient_goal",
+                        "meal_goals": []
+                    }
+                }
+            }
+    """
