@@ -1135,7 +1135,21 @@ class Client(MFPBase):
         return recipes_dict
 
 
+    def get_meals(self):
 
+        meals_dict = {}
+        MEALS_PATH = f"meal/mine"
+        meals_url = parse.urljoin(self.BASE_URL_SECURE, MEALS_PATH)
+        document = self._get_document_for_url(meals_url)
+        meals = document.xpath("//*[@id='matching']/li") #get all items in the recipe list
+        for meal in meals:
+            meal_path = meal.xpath("./a")[0].attrib["href"]
+            meal_id = meal_path.split("/")[-1].split("?")[0]
+            meal_title = meal.xpath("./a")[0].text
+            meals_dict[meal_id] = meal_title
+
+        print(meals_dict.values())
+        return meals_dict
 
 
     """
