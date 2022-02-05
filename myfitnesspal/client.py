@@ -934,7 +934,7 @@ class Client(MFPBase):
             )
             return None
 
-    def set_new_goal(self, energy: float, energy_unit: str = "", carbohydrates: float = "", protein: float = "", fat: float = "",
+    def set_new_goal(self, energy: float = "", energy_unit: str = "", carbohydrates: float = "", protein: float = "", fat: float = "",
                      percent_carbohydrates: float = "", percent_protein: float = "", percent_fat: float = "",
                      saturated_fat: float = "",
                      polyunsaturated_fat: float = "",
@@ -951,6 +951,8 @@ class Client(MFPBase):
                      iron: float = "",
                      assign_exercise_energy="nutrient_goal"):
         """Function to update your nutrition goals. Function will return True if successful."""
+        # FROM MFP JS:
+        #       var calculated_energy = 4 * parseFloat(this.get('carbGrams')) + 4 * parseFloat(this.get('proteinGrams')) + 9 * parseFloat(this.get('fatsGrams'));
 
         #Get User Default Unit Preference
         if energy_unit != "calories" and energy_unit != "kilojoules":
@@ -993,7 +995,12 @@ class Client(MFPBase):
                         old_energy_value *= 0.2388
                         old_energy_unit = "calories"
                     elif old_energy_unit == "calories" and energy_unit == "kilojoules":
-                        old_energy_value *= 4.1868
+                        """ FROM MFP JS
+                        if (energyUnit === 'kilojoules') {
+                            calories *= 4.184;
+                        }
+                        """
+                        old_energy_value *= 4.184
                         old_energy_unit = "kilojoules"
                     else:
                         raise ValueError
@@ -1003,14 +1010,25 @@ class Client(MFPBase):
                 protein = energy * old_protein / old_energy_value
                 fat = energy * old_fat / old_energy_value
             #If percentage values were provided check
-            elif energy_unit == "calories":
+            else:
                 carbohydrate = energy * percent_carbohydrates / 100 / 4
                 protein = energy * percent_protein / 100 / 4
                 fat = energy * percent_fat / 100 / 9
-            elif energy_unit == "kilojoules":
-                carbohydrate = energy * percent_carbohydrates / 100 / 17
-                protein = energy * percent_protein / 100 / 17
-                fat = energy * percent_fat / 100 / 37
+                if energy_unit == "kilojoules":
+                    carbohydrates = round(carbohydrates/4.184,2)
+                    protein = round(protein/4.184,2)
+                    fat = round(fat/4.184,2)
+        else:
+            macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
+            if energy_unit == "kilojoules":
+                macro_energy *= 4.184
+            #Compare energy values and set it correctly due to macros. Will also fix if no energy_value was provided.
+            if energy != macro_energy:
+                logger.warning("Provided energy value and calculated engery value from macros does not match! Will Override!")
+                energy = macro_energy
+            #TODO Calculate if no energy were provided
+            
+            pass
 
 
         #Build payload based on observed browser behaviour
@@ -1114,6 +1132,7 @@ class Client(MFPBase):
                     next_page = False #Only one link means it is the last page
 
         print(recipes_dict.values())
+        return recipes_dict
 
 
 
