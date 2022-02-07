@@ -812,10 +812,7 @@ class Client(MFPBase):
 
     ### Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
     ### Added function to submit new foods to MFP.
-    SUBMIT_PATH = "food/submit"
-    SUBMIT_DUPLICATE_PATH = "food/duplicate"
-    SUBMIT_NEW_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
-    SUBMIT_POST_PATH = "food/new"
+
 
     def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
                      sodium: float = "", potassium: float = "", saturated_fat: float = "",
@@ -825,6 +822,11 @@ class Client(MFPBase):
                      iron: float = "",
                      serving_size: str = "1 Serving", servingspercontainer: float = 1.0, sharepublic: bool = False):
         """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
+
+        SUBMIT_PATH = "food/submit"
+        SUBMIT_DUPLICATE_PATH = "food/duplicate"
+        SUBMIT_NEW_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
+        SUBMIT_POST_PATH = "food/new"
 
         # Step 1 to get Authenticity Token
         submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
@@ -1040,11 +1042,11 @@ class Client(MFPBase):
         new_goals['item'].pop('default_group_id', None)
         new_goals['item'].pop('updated_at', None)
         new_goals['item']['default_goal']['meal_goals'] = []
-        new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
-        new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
-        new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
-        new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
-        new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
+        #new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
+        #new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
+        #new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
+        #new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
+        #new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
 
         # insert new values
         new_goals['item']['valid_from'] = today
@@ -1065,11 +1067,11 @@ class Client(MFPBase):
             new_goals['item']['daily_goals'][i].pop('exercise_sugar_percentage', None)"""
             i['meal_goals'] = []
             i.pop('group_id', None)
-            i.pop('exercise_carbohydrates_percentage', None)
-            i.pop('exercise_fat_percentage', None)
-            i.pop('exercise_protein_percentage', None)
-            i.pop('exercise_saturated_fat_percentage', None)
-            i.pop('exercise_sugar_percentage', None)
+            #i.pop('exercise_carbohydrates_percentage', None)
+            #i.pop('exercise_fat_percentage', None)
+            #i.pop('exercise_protein_percentage', None)
+            #i.pop('exercise_saturated_fat_percentage', None)
+            #i.pop('exercise_sugar_percentage', None)
 
             # insert new values
             i['energy']['value'] = energy
