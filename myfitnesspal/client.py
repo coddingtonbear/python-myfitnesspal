@@ -825,22 +825,22 @@ class Client(MFPBase):
 
         SUBMIT_PATH = "food/submit"
         SUBMIT_DUPLICATE_PATH = "food/duplicate"
-        SUBMIT_NEW_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
+        SUBMIT_NEW_PATH = f"food/new?date={datetime.datetime.today().strftime('%Y-%m-%d')}&meal=0"
         SUBMIT_POST_PATH = "food/new"
 
-        # Step 1 to get Authenticity Token
-        submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
+        #get Authenticity Token
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        document = self._get_document_for_url(submit1_url)
+        document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
-        # Step to to submit brand and description --> Possible returns duplicates warning
-        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
+        # submit brand and description --> Possible returns duplicates warning
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
         result = self.session.post(
-            submit2_url,
+            url,
             data={
                 "utf8": utf8_field,
                 "authenticity_token": authenticity_token,
@@ -854,17 +854,16 @@ class Client(MFPBase):
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
             if document.xpath("//*[@id='main']/p[1]/span"):
                 warning = document.xpath("//*[@id='main']/p[1]/span")[0].text
-                logger.warning("My Fitness Pal responded: {}".format(warning))
+                logger.warning(f"My Fitness Pal responded: {warning}")
         elif not result.ok:
             logger.warning(
-                "Request Error - Unable to submit food to MyFitnessPal: "
-                "status code: {status}".format(status=result.status_code)
+                f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
             return None
 
-        # Step 3 - Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
-        submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_NEW_PATH)
-        document = self._get_document_for_url(submit3_url)
+        # Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_NEW_PATH)
+        document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
         )[0]
@@ -907,8 +906,8 @@ class Client(MFPBase):
         if sharepublic:
             data["sharefood"] = 1
 
-        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_POST_PATH)
-        result = self.session.post(submit4_url, data, )
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_POST_PATH)
+        result = self.session.post(url, data, )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
             try:
@@ -924,15 +923,14 @@ class Client(MFPBase):
                     error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
                     error = error.replace("Description ", "")  # For cosmetic reasons
                     raise MyfitnesspalRequestFailed(
-                        "Unable to submit food to MyFitnessPal: {}".format(error)
+                        f"Unable to submit food to MyFitnessPal: {error}"
                     )
             except:
-                logger.warning("Unable to submit food to MyFitnessPal: {}".format(error))
+                logger.warning(f"Unable to submit food to MyFitnessPal: {error}")
 
         elif not result.ok:
             logger.warning(
-                "Request Error - Unable to submit food to MyFitnessPal: "
-                "status code: {status}".format(status=result.status_code)
+                f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
             return None
 
@@ -961,23 +959,23 @@ class Client(MFPBase):
         if energy_unit != "calories" and energy_unit != "kilojoules":
             energy_unit = self.user_metadata['unit_preferences']['energy']
 
-        # Step 1 to get Authenticity Token and current values
-        submit1_url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
+        # Get authenticity token and current values
+        url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         today = datetime.datetime.now().strftime("%Y-%m-%d")
-        document = self._get_document_for_url(submit1_url)
+        document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]")
 
-        # Build  Header for API-Requests
+        # Build header for API-requests
         auth_header = self.session.headers
         auth_header['authorization'] = f"Bearer {self.access_token}"
         auth_header['mfp-client-id'] = "mfp-main-js"
         auth_header['mfp-user-id'] = f"{self.user_id}"
 
-        # Get Request
-        old_goals_document = self.session.get(f"https://api.myfitnesspal.com/v2/nutrient-goals?date={today}",
-                                              headers=auth_header)
+        # Get Request for old goal values
+        old_goals_url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals?date={today}")
+        old_goals_document = self.session.get(old_goals_url, headers=auth_header)
         old_goals = json.loads(old_goals_document.text)
 
         # Marcro Calculation
@@ -1029,12 +1027,9 @@ class Client(MFPBase):
                 logger.warning(
                     "Provided energy value and calculated engery value from macros does not match! Will Override!")
                 energy = macro_energy
-            # TODO Calculate if no energy were provided
-
-            pass
 
         # Build payload based on observed browser behaviour
-        # TODO Inser additional micro nurtitions
+        #TODO Insert additional micro nurtitions
         new_goals = {}
         new_goals['item'] = old_goals['items'][0]
 
@@ -1082,8 +1077,8 @@ class Client(MFPBase):
 
         # Build Post-Request
         # Post Request
-        result = self.session.post(f"https://api.myfitnesspal.com/v2/nutrient-goals", json.dumps(new_goals),
-                                   headers=auth_header)
+        url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals")
+        result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
 
         # TODO Check Request Result
         if result.status_code == 200:
@@ -1176,8 +1171,9 @@ class Client(MFPBase):
             " \n")
 
 
-        ####
+        #### add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
+        recipe_dict['tags'] = ["MyFitnessPal"]
         #print(json.dumps(recipe_dict))
         return recipe_dict
 
@@ -1215,7 +1211,7 @@ class Client(MFPBase):
         ingridients = document.xpath('//*[@id="meal-table"]/tbody/tr')
         for ingridient in ingridients:
             recipe_dict['recipeIngredient'].append(ingridient.xpath('./td[1]')[0].text)
-            """
+            """ #Unfotunately it is not forseen in the schema to have this information based on ingridients
             tmp = {}
             tmp['title'] = ingridient.xpath('./td[1]')[0].text
             tmp['nutrition'] = {}
@@ -1237,7 +1233,9 @@ class Client(MFPBase):
         recipe_dict['nutrition']['sugarContent'] = total.xpath('./td[7]')[0].text
         recipe_dict['nutrition']['sodiumContent'] = total.xpath('./td[6]')[0].text
 
+        #### add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
+        recipe_dict['tags'] = ["MyFitnessPal"]
         #print(json.dumps(recipe_dict))
 
         return recipe_dict
