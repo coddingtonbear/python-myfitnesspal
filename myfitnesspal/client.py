@@ -937,19 +937,21 @@ class Client(MFPBase):
     def set_new_goal(self, energy: float = "", energy_unit: str = "", carbohydrates: float = "", protein: float = "",
                      fat: float = "",
                      percent_carbohydrates: float = "", percent_protein: float = "", percent_fat: float = "",
-                     saturated_fat: float = "",
-                     polyunsaturated_fat: float = "",
-                     monounsaturated_fat: float = "",
-                     trans_fat: float = "",
-                     fiber: float = "",
-                     sugar: float = "",
-                     cholesterol: float = "",
-                     sodium: float = "",
-                     potassium: float = "",
-                     vitamin_a: float = "",
-                     vitamin_c: float = "",
-                     calcium: float = "",
-                     iron: float = "",
+
+                     # saturated_fat: float = "",
+                     # polyunsaturated_fat: float = "",
+                     # monounsaturated_fat: float = "",
+                     # trans_fat: float = "",
+                     # fiber: float = "",
+                     # sugar: float = "",
+                     # cholesterol: float = "",
+                     # sodium: float = "",
+                     # potassium: float = "",
+                     # vitamin_a: float = "",
+                     # vitamin_c: float = "",
+                     # calcium: float = "",
+                     # iron: float = "",
+
                      assign_exercise_energy="nutrient_goal"):
         """Function to update your nutrition goals. Function will return True if successful."""
         # FROM MFP JS:
@@ -963,9 +965,12 @@ class Client(MFPBase):
         url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         today = datetime.datetime.now().strftime("%Y-%m-%d")
-        document = self._get_document_for_url(url)
-        authenticity_token = document.xpath(
-            "(//input[@name='authenticity_token']/@value)[1]")
+
+        """
+        old_goals_url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals?date={today}")
+        #No Way implemented to send token by calling self._get_json_for_url
+        old_goals = self._get_json_for_url(old_goals_url)
+        """
 
         # Build header for API-requests
         auth_header = self.session.headers
@@ -1051,15 +1056,11 @@ class Client(MFPBase):
         new_goals['item']['default_goal']['carbohydrates'] = carbohydrates
         new_goals['item']['default_goal']['protein'] = protein
         new_goals['item']['default_goal']['fat'] = fat
+        #TODO Add micro nutritions
+
 
         for i in new_goals['item']['daily_goals']:
-            """new_goals['item']['daily_goals'][i]['meal_goals'] = []
-            new_goals['item']['daily_goals'][i].pop('group_id', None)
-            new_goals['item']['daily_goals'][i].pop('exercise_carbohydrates_percentage', None)
-            new_goals['item']['daily_goals'][i].pop('exercise_fat_percentage', None)
-            new_goals['item']['daily_goals'][i].pop('exercise_protein_percentage', None)
-            new_goals['item']['daily_goals'][i].pop('exercise_saturated_fat_percentage', None)
-            new_goals['item']['daily_goals'][i].pop('exercise_sugar_percentage', None)"""
+
             i['meal_goals'] = []
             i.pop('group_id', None)
             #i.pop('exercise_carbohydrates_percentage', None)
@@ -1074,6 +1075,7 @@ class Client(MFPBase):
             i['carbohydrates'] = carbohydrates
             i['protein'] = protein
             i['fat'] = fat
+            #TODO Add micro nutritions
 
         # Build Post-Request
         # Post Request
@@ -1124,8 +1126,13 @@ class Client(MFPBase):
                     page_count += 1
                 else:
                     next_page = False  # Only one link means it is the last page
+            else:
+                #Indicator for no recipes
+                next_page = False
+                if len(recipes_dict) == 0:
+                    return None
 
-        print(recipes_dict.values())
+        #print(recipes_dict.values())
         return recipes_dict
 
     def get_recipe(self, recipeid: int):
@@ -1136,39 +1143,43 @@ class Client(MFPBase):
 
         recipe_dict = {"@context": "https://schema.org", "@type": "Recipe", "author": self.effective_username}
         recipe_dict['org_url'] = recipe_url
-        recipe_dict['name'] = document.xpath('//*[@id="main"]/div[3]/div[2]/h1')[0].text
-        recipe_dict['recipeYield'] = document.xpath('//*[@id="recipe_servings"]')[0].text
+        try:
+            recipe_dict['name'] = document.xpath('//*[@id="main"]/div[3]/div[2]/h1')[0].text
+            recipe_dict['recipeYield'] = document.xpath('//*[@id="recipe_servings"]')[0].text
 
-        recipe_dict['recipeIngredient'] = []
-        ingridients = document.xpath('//*[@id="main"]/div[4]/div/*/li')
-        for ingridient in ingridients:
-            recipe_dict['recipeIngredient'].append(ingridient.text.strip(" \n"))
+            recipe_dict['recipeIngredient'] = []
+            ingridients = document.xpath('//*[@id="main"]/div[4]/div/*/li')
+            for ingridient in ingridients:
+                recipe_dict['recipeIngredient'].append(ingridient.text.strip(" \n"))
 
-        recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
-        recipe_dict['nutrition']['calories'] = document.xpath('//*[@id="main"]/div[3]/div[2]/div[2]/div')[0].text.strip(
-            " \n")
-        recipe_dict['nutrition']['carbohydrateContent'] = document.xpath('//*[@id="carbs"]/td[1]/span[2]')[
-            0].text.strip(
-            " \n")
-        recipe_dict['nutrition']['fiberContent'] = document.xpath('//*[@id="fiber"]/td[1]/span[2]')[0].text.strip(" \n")
-        recipe_dict['nutrition']['sugarContent'] = document.xpath('//*[@id="sugar"]/td[1]/span[2]')[0].text.strip(" \n")
-        recipe_dict['nutrition']['sodiumContent'] = document.xpath('//*[@id="sodium"]/td[1]/span[2]')[0].text.strip(" \n")
-        recipe_dict['nutrition']['proteinContent'] = document.xpath('//*[@id="protein"]/td[1]/span[2]')[0].text.strip(
-            " \n")
-        recipe_dict['nutrition']['fatContent'] = document.xpath('//*[@id="total_fat"]/td[1]/span[2]')[0].text.strip(
-            " \n")
-        recipe_dict['nutrition']['saturatedFatContent'] = document.xpath('//*[@id="saturated_fat"]/td[1]/span[2]')[
-            0].text.strip(" \n")
-        recipe_dict['nutrition']['monounsaturatedFatContent'] = \
-            document.xpath('//*[@id="monounsaturated_fat"]/td[1]/span[2]')[0].text.strip(" \n")
-        recipe_dict['nutrition']['polyunsaturatedFatContent'] = \
-            document.xpath('//*[@id="polyunsaturated_fat"]/td[1]/span[2]')[0].text.strip(" \n")
-        recipe_dict['nutrition']['unsaturatedFatContent'] = \
-            int(recipe_dict['nutrition']['polyunsaturatedFatContent']) + \
-            int(recipe_dict['nutrition']['monounsaturatedFatContent'])
-        recipe_dict['nutrition']['transFatContent'] = document.xpath('//*[@id="trans_fat"]/td[1]/span[2]')[
-            0].text.strip(
-            " \n")
+            recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
+            recipe_dict['nutrition']['calories'] = document.xpath('//*[@id="main"]/div[3]/div[2]/div[2]/div')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['carbohydrateContent'] = document.xpath('//*[@id="carbs"]/td[1]/span[2]')[
+                0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['fiberContent'] = document.xpath('//*[@id="fiber"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['sugarContent'] = document.xpath('//*[@id="sugar"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['sodiumContent'] = document.xpath('//*[@id="sodium"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['proteinContent'] = document.xpath('//*[@id="protein"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['fatContent'] = document.xpath('//*[@id="total_fat"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['saturatedFatContent'] = document.xpath('//*[@id="saturated_fat"]/td[1]/span[2]')[
+                0].text.strip(" \n")
+            recipe_dict['nutrition']['monounsaturatedFatContent'] = \
+                document.xpath('//*[@id="monounsaturated_fat"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['polyunsaturatedFatContent'] = \
+                document.xpath('//*[@id="polyunsaturated_fat"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['unsaturatedFatContent'] = \
+                int(recipe_dict['nutrition']['polyunsaturatedFatContent']) + \
+                int(recipe_dict['nutrition']['monounsaturatedFatContent'])
+            recipe_dict['nutrition']['transFatContent'] = document.xpath('//*[@id="trans_fat"]/td[1]/span[2]')[
+                0].text.strip(
+                " \n")
+        except:
+            logger.warning(f"Could not extract recipe information from {recipe_url}")
+            return None
 
 
         #### add some required tags to match schema
@@ -1186,11 +1197,16 @@ class Client(MFPBase):
 
 
         meals = document.xpath("//*[@id='matching']/li")  # get all items in the recipe list
-        for meal in meals:
-            meal_path = meal.xpath("./a")[0].attrib["href"]
-            meal_id = meal_path.split("/")[-1].split("?")[0]
-            meal_title = meal.xpath("./a")[0].text
-            meals_dict[meal_id] = meal_title
+        try:
+            for meal in meals:
+                meal_path = meal.xpath("./a")[0].attrib["href"]
+                meal_id = meal_path.split("/")[-1].split("?")[0]
+                meal_title = meal.xpath("./a")[0].text
+                meals_dict[meal_id] = meal_title
+        except:
+            logger.warning("Could not load meals.")
+            return None
+
 
         #print(meals_dict.values())
         return meals_dict
@@ -1207,31 +1223,38 @@ class Client(MFPBase):
         recipe_dict['name'] = meal_title
         recipe_dict['recipeYield'] = 1
         recipe_dict['recipeIngredient'] = []
+        try:
+            ingridients = document.xpath('//*[@id="meal-table"]/tbody/tr')
+            #No ingridents?
+            if len(ingridients) == 1 and ingridients[0].xpath('./td[1]')[0].text == '\xa0':
+                raise
+            else:
+                for ingridient in ingridients:
+                    recipe_dict['recipeIngredient'].append(ingridient.xpath('./td[1]')[0].text)
+                    """ #Unfotunately it is not forseen in the schema to have this information based on ingridients
+                    tmp = {}
+                    tmp['title'] = ingridient.xpath('./td[1]')[0].text
+                    tmp['nutrition'] = {}
+                    tmp['nutrition']['energy'] = ingridient.xpath('./td[2]')[0].text
+                    tmp['nutrition']['carbohydrates'] = ingridient.xpath('./td[3]')[0].text
+                    tmp['nutrition']['protein'] = ingridient.xpath('./td[5]')[0].text
+                    tmp['nutrition']['fat'] = ingridient.xpath('./td[4]')[0].text
+                    tmp['nutrition']['sugar'] = ingridient.xpath('./td[7]')[0].text
+                    tmp['nutrition']['sodium'] = ingridient.xpath('./td[6]')[0].text
+                    meal_dict['ingridients'].append(tmp)
+                    """
 
-        ingridients = document.xpath('//*[@id="meal-table"]/tbody/tr')
-        for ingridient in ingridients:
-            recipe_dict['recipeIngredient'].append(ingridient.xpath('./td[1]')[0].text)
-            """ #Unfotunately it is not forseen in the schema to have this information based on ingridients
-            tmp = {}
-            tmp['title'] = ingridient.xpath('./td[1]')[0].text
-            tmp['nutrition'] = {}
-            tmp['nutrition']['energy'] = ingridient.xpath('./td[2]')[0].text
-            tmp['nutrition']['carbohydrates'] = ingridient.xpath('./td[3]')[0].text
-            tmp['nutrition']['protein'] = ingridient.xpath('./td[5]')[0].text
-            tmp['nutrition']['fat'] = ingridient.xpath('./td[4]')[0].text
-            tmp['nutrition']['sugar'] = ingridient.xpath('./td[7]')[0].text
-            tmp['nutrition']['sodium'] = ingridient.xpath('./td[6]')[0].text
-            meal_dict['ingridients'].append(tmp)
-            """
-
-        total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
-        recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
-        recipe_dict['nutrition']['calories'] = total.xpath('./td[2]')[0].text
-        recipe_dict['nutrition']['carbohydrateContent'] = total.xpath('./td[3]')[0].text
-        recipe_dict['nutrition']['proteinContent'] = total.xpath('./td[5]')[0].text
-        recipe_dict['nutrition']['fatContent'] = total.xpath('./td[4]')[0].text
-        recipe_dict['nutrition']['sugarContent'] = total.xpath('./td[7]')[0].text
-        recipe_dict['nutrition']['sodiumContent'] = total.xpath('./td[6]')[0].text
+                total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
+                recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
+                recipe_dict['nutrition']['calories'] = total.xpath('./td[2]')[0].text
+                recipe_dict['nutrition']['carbohydrateContent'] = total.xpath('./td[3]')[0].text
+                recipe_dict['nutrition']['proteinContent'] = total.xpath('./td[5]')[0].text
+                recipe_dict['nutrition']['fatContent'] = total.xpath('./td[4]')[0].text
+                recipe_dict['nutrition']['sugarContent'] = total.xpath('./td[7]')[0].text
+                recipe_dict['nutrition']['sodiumContent'] = total.xpath('./td[6]')[0].text
+        except:
+            logger.warning(f"Could not extract meal information from {meal_url}")
+            return None
 
         #### add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
