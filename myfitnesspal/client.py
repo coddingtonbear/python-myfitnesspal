@@ -953,7 +953,7 @@ class Client(MFPBase):
                     raise MyfitnesspalRequestFailed(
                         f"Unable to submit food to MyFitnessPal: {error}"
                     )
-            except:
+            except Exception:
                 logger.warning(f"Unable to submit food to MyFitnessPal: {error}")
 
         elif not result.ok:
@@ -1251,7 +1251,7 @@ class Client(MFPBase):
             recipe_dict["nutrition"]["transFatContent"] = document.xpath(
                 '//*[@id="trans_fat"]/td[1]/span[2]'
             )[0].text.strip(" \n")
-        except:
+        except Exception:
             logger.warning(f"Could not extract recipe information from {recipe_url}")
             return None
 
@@ -1277,7 +1277,7 @@ class Client(MFPBase):
                 meal_id = meal_path.split("/")[-1].split("?")[0]
                 meal_title = meal.xpath("./a")[0].text
                 meals_dict[meal_id] = meal_title
-        except:
+        except Exception:
             logger.warning("Could not load meals.")
             return None
 
@@ -1342,7 +1342,7 @@ class Client(MFPBase):
                 recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[
                     0
                 ].text
-        except:
+        except Exception:
             logger.warning(f"Could not extract meal information from {meal_url}")
             return None
 
