@@ -810,8 +810,8 @@ class Client(MFPBase):
             client=self,
         )
 
-    ### Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
-    ### Added function to submit new foods to MFP.
+    # Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
+    # Added function to submit new foods to MFP.
 
     def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
                      sodium: float = "", potassium: float = "", saturated_fat: float = "",
@@ -828,8 +828,8 @@ class Client(MFPBase):
         SUBMIT_POST_PATH = "food/new"
 
         # get Authenticity Token
-        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
-        now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        url = parse.urljoin(self.BASE_URL_SECURE, SUBMIT_PATH)
+        # now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
@@ -837,7 +837,7 @@ class Client(MFPBase):
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
         # submit brand and description --> Possible returns duplicates warning
-        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
+        url = parse.urljoin(self.BASE_URL_SECURE, SUBMIT_DUPLICATE_PATH)
         result = self.session.post(
             url,
             data={
@@ -861,7 +861,7 @@ class Client(MFPBase):
             return None
 
         # Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
-        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_NEW_PATH)
+        url = parse.urljoin(self.BASE_URL_SECURE, SUBMIT_NEW_PATH)
         document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
@@ -905,7 +905,7 @@ class Client(MFPBase):
         if sharepublic:
             data["sharefood"] = 1
 
-        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_POST_PATH)
+        url = parse.urljoin(self.BASE_URL_SECURE, SUBMIT_POST_PATH)
         result = self.session.post(url, data, )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
@@ -962,7 +962,7 @@ class Client(MFPBase):
 
         # Get authenticity token and current values
         url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
-        now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        # now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         today = datetime.datetime.now().strftime("%Y-%m-%d")
 
         """
@@ -1015,7 +1015,7 @@ class Client(MFPBase):
                 fat = energy * old_fat / old_energy_value
             # If percentage values were provided check
             else:
-                carbohydrate = energy * percent_carbohydrates / 100 / 4
+                carbohydrates = energy * percent_carbohydrates / 100 / 4
                 protein = energy * percent_protein / 100 / 4
                 fat = energy * percent_fat / 100 / 9
                 if energy_unit == "kilojoules":
@@ -1076,7 +1076,7 @@ class Client(MFPBase):
 
         # Build Post-Request
         # Post Request
-        url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals")
+        url = parse.urljoin(self.BASE_API_URL, "v2/nutrient-goals")
         result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
 
         # TODO Check Request Result
@@ -1183,7 +1183,7 @@ class Client(MFPBase):
             logger.warning(f"Could not extract recipe information from {recipe_url}")
             return None
 
-        #### add some required tags to match schema
+        # add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
         recipe_dict['tags'] = ["MyFitnessPal"]
         # print(json.dumps(recipe_dict))
@@ -1192,7 +1192,7 @@ class Client(MFPBase):
     def get_meal_list(self):
         # TODO EXCEPTION HANDLING
         meals_dict = {}
-        MEALS_PATH = f"meal/mine"
+        MEALS_PATH = "meal/mine"
         meals_url = parse.urljoin(self.BASE_URL_SECURE, MEALS_PATH)
         document = self._get_document_for_url(meals_url)
 
@@ -1255,7 +1255,7 @@ class Client(MFPBase):
             logger.warning(f"Could not extract meal information from {meal_url}")
             return None
 
-        #### add some required tags to match schema
+        # add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
         recipe_dict['tags'] = ["MyFitnessPal"]
         # print(json.dumps(recipe_dict))
