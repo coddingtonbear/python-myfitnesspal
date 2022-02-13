@@ -813,7 +813,6 @@ class Client(MFPBase):
     ### Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
     ### Added function to submit new foods to MFP.
 
-
     def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
                      sodium: float = "", potassium: float = "", saturated_fat: float = "",
                      polyunsaturated_fat: float = "",
@@ -828,7 +827,7 @@ class Client(MFPBase):
         SUBMIT_NEW_PATH = f"food/new?date={datetime.datetime.today().strftime('%Y-%m-%d')}&meal=0"
         SUBMIT_POST_PATH = "food/new"
 
-        #get Authenticity Token
+        # get Authenticity Token
         url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         document = self._get_document_for_url(url)
@@ -1034,7 +1033,7 @@ class Client(MFPBase):
                 energy = macro_energy
 
         # Build payload based on observed browser behaviour
-        #TODO Insert additional micro nurtitions
+        # TODO Insert additional micro nurtitions
         new_goals = {}
         new_goals['item'] = old_goals['items'][0]
 
@@ -1042,11 +1041,11 @@ class Client(MFPBase):
         new_goals['item'].pop('default_group_id', None)
         new_goals['item'].pop('updated_at', None)
         new_goals['item']['default_goal']['meal_goals'] = []
-        #new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
-        #new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
-        #new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
-        #new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
-        #new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
 
         # insert new values
         new_goals['item']['valid_from'] = today
@@ -1056,18 +1055,16 @@ class Client(MFPBase):
         new_goals['item']['default_goal']['carbohydrates'] = carbohydrates
         new_goals['item']['default_goal']['protein'] = protein
         new_goals['item']['default_goal']['fat'] = fat
-        #TODO Add micro nutritions
-
+        # TODO Add micro nutritions
 
         for i in new_goals['item']['daily_goals']:
-
             i['meal_goals'] = []
             i.pop('group_id', None)
-            #i.pop('exercise_carbohydrates_percentage', None)
-            #i.pop('exercise_fat_percentage', None)
-            #i.pop('exercise_protein_percentage', None)
-            #i.pop('exercise_saturated_fat_percentage', None)
-            #i.pop('exercise_sugar_percentage', None)
+            # i.pop('exercise_carbohydrates_percentage', None)
+            # i.pop('exercise_fat_percentage', None)
+            # i.pop('exercise_protein_percentage', None)
+            # i.pop('exercise_saturated_fat_percentage', None)
+            # i.pop('exercise_sugar_percentage', None)
 
             # insert new values
             i['energy']['value'] = energy
@@ -1075,7 +1072,7 @@ class Client(MFPBase):
             i['carbohydrates'] = carbohydrates
             i['protein'] = protein
             i['fat'] = fat
-            #TODO Add micro nutritions
+            # TODO Add micro nutritions
 
         # Build Post-Request
         # Post Request
@@ -1127,12 +1124,12 @@ class Client(MFPBase):
                 else:
                     next_page = False  # Only one link means it is the last page
             else:
-                #Indicator for no recipes
+                # Indicator for no recipes
                 next_page = False
                 if len(recipes_dict) == 0:
                     return None
 
-        #print(recipes_dict.values())
+        # print(recipes_dict.values())
         return recipes_dict
 
     def get_recipe(self, recipeid: int):
@@ -1153,15 +1150,20 @@ class Client(MFPBase):
                 recipe_dict['recipeIngredient'].append(ingridient.text.strip(" \n"))
 
             recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
-            recipe_dict['nutrition']['calories'] = document.xpath('//*[@id="main"]/div[3]/div[2]/div[2]/div')[0].text.strip(
+            recipe_dict['nutrition']['calories'] = document.xpath('//*[@id="main"]/div[3]/div[2]/div[2]/div')[
+                0].text.strip(
                 " \n")
             recipe_dict['nutrition']['carbohydrateContent'] = document.xpath('//*[@id="carbs"]/td[1]/span[2]')[
                 0].text.strip(
                 " \n")
-            recipe_dict['nutrition']['fiberContent'] = document.xpath('//*[@id="fiber"]/td[1]/span[2]')[0].text.strip(" \n")
-            recipe_dict['nutrition']['sugarContent'] = document.xpath('//*[@id="sugar"]/td[1]/span[2]')[0].text.strip(" \n")
-            recipe_dict['nutrition']['sodiumContent'] = document.xpath('//*[@id="sodium"]/td[1]/span[2]')[0].text.strip(" \n")
-            recipe_dict['nutrition']['proteinContent'] = document.xpath('//*[@id="protein"]/td[1]/span[2]')[0].text.strip(
+            recipe_dict['nutrition']['fiberContent'] = document.xpath('//*[@id="fiber"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['sugarContent'] = document.xpath('//*[@id="sugar"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['sodiumContent'] = document.xpath('//*[@id="sodium"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['proteinContent'] = document.xpath('//*[@id="protein"]/td[1]/span[2]')[
+                0].text.strip(
                 " \n")
             recipe_dict['nutrition']['fatContent'] = document.xpath('//*[@id="total_fat"]/td[1]/span[2]')[0].text.strip(
                 " \n")
@@ -1181,11 +1183,10 @@ class Client(MFPBase):
             logger.warning(f"Could not extract recipe information from {recipe_url}")
             return None
 
-
         #### add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
         recipe_dict['tags'] = ["MyFitnessPal"]
-        #print(json.dumps(recipe_dict))
+        # print(json.dumps(recipe_dict))
         return recipe_dict
 
     def get_meal_list(self):
@@ -1194,7 +1195,6 @@ class Client(MFPBase):
         MEALS_PATH = f"meal/mine"
         meals_url = parse.urljoin(self.BASE_URL_SECURE, MEALS_PATH)
         document = self._get_document_for_url(meals_url)
-
 
         meals = document.xpath("//*[@id='matching']/li")  # get all items in the recipe list
         try:
@@ -1207,8 +1207,7 @@ class Client(MFPBase):
             logger.warning("Could not load meals.")
             return None
 
-
-        #print(meals_dict.values())
+        # print(meals_dict.values())
         return meals_dict
 
     def get_meal(self, mealid: int, meal_title: str):
@@ -1225,7 +1224,7 @@ class Client(MFPBase):
         recipe_dict['recipeIngredient'] = []
         try:
             ingridients = document.xpath('//*[@id="meal-table"]/tbody/tr')
-            #No ingridents?
+            # No ingridents?
             if len(ingridients) == 1 and ingridients[0].xpath('./td[1]')[0].text == '\xa0':
                 raise
             else:
@@ -1259,6 +1258,6 @@ class Client(MFPBase):
         #### add some required tags to match schema
         recipe_dict['recipe_instructions'] = []
         recipe_dict['tags'] = ["MyFitnessPal"]
-        #print(json.dumps(recipe_dict))
+        # print(json.dumps(recipe_dict))
 
         return recipe_dict
