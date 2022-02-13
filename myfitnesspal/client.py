@@ -588,7 +588,9 @@ class Client(MFPBase):
         measurement_ids = self._get_measurement_ids(document)
 
         # get the authenticity token for this edit
-        authenticity_token = document.xpath("(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)", smart_strings=False)[0]
+        authenticity_token = \
+            document.xpath("(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)",
+                           smart_strings=False)[0]
 
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
@@ -810,10 +812,6 @@ class Client(MFPBase):
 
     ### Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
     ### Added function to submit new foods to MFP.
-    SUBMIT_PATH = "food/submit"
-    SUBMIT_DUPLICATE_PATH = "food/duplicate"
-    SUBMIT_NEW_PATH = "food/new?date={}&meal=0".format(datetime.datetime.today().strftime("%Y-%m-%d"))
-    SUBMIT_POST_PATH = "food/new"
 
     def set_new_food(self, brand: str, description: str, calories: int, fat: float, carbs: float, protein: float,
                      sodium: float = "", potassium: float = "", saturated_fat: float = "",
@@ -824,19 +822,24 @@ class Client(MFPBase):
                      serving_size: str = "1 Serving", servingspercontainer: float = 1.0, sharepublic: bool = False):
         """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
 
-        # Step 1 to get Authenticity Token
-        submit1_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
+        SUBMIT_PATH = "food/submit"
+        SUBMIT_DUPLICATE_PATH = "food/duplicate"
+        SUBMIT_NEW_PATH = f"food/new?date={datetime.datetime.today().strftime('%Y-%m-%d')}&meal=0"
+        SUBMIT_POST_PATH = "food/new"
+
+        # get Authenticity Token
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_PATH)
         now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        document = self._get_document_for_url(submit1_url)
+        document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
         )[0]
         utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
-        # Step to to submit brand and description --> Possible returns duplicates warning
-        submit2_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
+        # submit brand and description --> Possible returns duplicates warning
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_DUPLICATE_PATH)
         result = self.session.post(
-            submit2_url,
+            url,
             data={
                 "utf8": utf8_field,
                 "authenticity_token": authenticity_token,
@@ -850,17 +853,16 @@ class Client(MFPBase):
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
             if document.xpath("//*[@id='main']/p[1]/span"):
                 warning = document.xpath("//*[@id='main']/p[1]/span")[0].text
-                logger.warning("My Fitness Pal responded: {}".format(warning))
+                logger.warning(f"My Fitness Pal responded: {warning}")
         elif not result.ok:
             logger.warning(
-                "Request Error - Unable to submit food to MyFitnessPal: "
-                "status code: {status}".format(status=result.status_code)
+                f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
             return None
 
-        # Step 3 - Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
-        submit3_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_NEW_PATH)
-        document = self._get_document_for_url(submit3_url)
+        # Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_NEW_PATH)
+        document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
         )[0]
@@ -903,8 +905,8 @@ class Client(MFPBase):
         if sharepublic:
             data["sharefood"] = 1
 
-        submit4_url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_POST_PATH)
-        result = self.session.post(submit4_url, data, )
+        url = parse.urljoin(self.BASE_URL_SECURE, self.SUBMIT_POST_PATH)
+        result = self.session.post(url, data, )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode('utf-8'))
             try:
@@ -918,16 +920,344 @@ class Client(MFPBase):
                     # return self.get_food_search_results("{} {}".format(brand, description))[0]
                 else:  # Error occurred
                     error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
-                    error = error.replace("Description ", "") #For cosmetic reasons
+                    error = error.replace("Description ", "")  # For cosmetic reasons
                     raise MyfitnesspalRequestFailed(
-                        "Unable to submit food to MyFitnessPal: {}".format(error)
+                        f"Unable to submit food to MyFitnessPal: {error}"
                     )
             except:
-                logger.warning("Unable to submit food to MyFitnessPal: {}".format(error))
+                logger.warning(f"Unable to submit food to MyFitnessPal: {error}")
 
         elif not result.ok:
             logger.warning(
-                "Request Error - Unable to submit food to MyFitnessPal: "
+                f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
+            )
+            return None
+
+    def set_new_goal(self, energy: float = "", energy_unit: str = "", carbohydrates: float = "", protein: float = "",
+                     fat: float = "",
+                     percent_carbohydrates: float = "", percent_protein: float = "", percent_fat: float = "",
+
+                     # saturated_fat: float = "",
+                     # polyunsaturated_fat: float = "",
+                     # monounsaturated_fat: float = "",
+                     # trans_fat: float = "",
+                     # fiber: float = "",
+                     # sugar: float = "",
+                     # cholesterol: float = "",
+                     # sodium: float = "",
+                     # potassium: float = "",
+                     # vitamin_a: float = "",
+                     # vitamin_c: float = "",
+                     # calcium: float = "",
+                     # iron: float = "",
+
+                     assign_exercise_energy="nutrient_goal"):
+        """Function to update your nutrition goals. Function will return True if successful."""
+        # FROM MFP JS:
+        #       var calculated_energy = 4 * parseFloat(this.get('carbGrams')) + 4 * parseFloat(this.get('proteinGrams')) + 9 * parseFloat(this.get('fatsGrams'));
+
+        # Get User Default Unit Preference
+        if energy_unit != "calories" and energy_unit != "kilojoules":
+            energy_unit = self.user_metadata['unit_preferences']['energy']
+
+        # Get authenticity token and current values
+        url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
+        now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        """
+        old_goals_url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals?date={today}")
+        #No Way implemented to send token by calling self._get_json_for_url
+        old_goals = self._get_json_for_url(old_goals_url)
+        """
+
+        # Build header for API-requests
+        auth_header = self.session.headers
+        auth_header['authorization'] = f"Bearer {self.access_token}"
+        auth_header['mfp-client-id'] = "mfp-main-js"
+        auth_header['mfp-user-id'] = f"{self.user_id}"
+
+        # Get Request for old goal values
+        old_goals_url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals?date={today}")
+        old_goals_document = self.session.get(old_goals_url, headers=auth_header)
+        old_goals = json.loads(old_goals_document.text)
+
+        # Marcro Calculation
+        # If no macro goals were provided calculate them with percentage value
+        if carbohydrates == "" or protein == "" or fat == "":
+            # If even no macro percentages values were provided calculate them from old values
+            if percent_carbohydrates == "" or percent_protein == "" or percent_fat == "":
+                old_energy_value = old_goals['items'][0]['default_goal']['energy']['value']
+                old_energy_unit = old_goals['items'][0]['default_goal']['energy']['unit']
+                old_carbohydrates = old_goals['items'][0]['default_goal']['carbohydrates']
+                old_fat = old_goals['items'][0]['default_goal']['fat']
+                old_protein = old_goals['items'][0]['default_goal']['protein']
+
+                # If old and new values are in diffrent units then convert old value to new unit
+                if not old_energy_unit == energy_unit:
+                    if old_energy_unit == "kilojoules" and energy_unit == "calories":
+                        old_energy_value *= 0.2388
+                        old_energy_unit = "calories"
+                    elif old_energy_unit == "calories" and energy_unit == "kilojoules":
+                        """ FROM MFP JS
+                        if (energyUnit === 'kilojoules') {
+                            calories *= 4.184;
+                        }
+                        """
+                        old_energy_value *= 4.184
+                        old_energy_unit = "kilojoules"
+                    else:
+                        raise ValueError
+
+                ####
+                carbohydrates = energy * old_carbohydrates / old_energy_value
+                protein = energy * old_protein / old_energy_value
+                fat = energy * old_fat / old_energy_value
+            # If percentage values were provided check
+            else:
+                carbohydrate = energy * percent_carbohydrates / 100 / 4
+                protein = energy * percent_protein / 100 / 4
+                fat = energy * percent_fat / 100 / 9
+                if energy_unit == "kilojoules":
+                    carbohydrates = round(carbohydrates / 4.184, 2)
+                    protein = round(protein / 4.184, 2)
+                    fat = round(fat / 4.184, 2)
+        else:
+            macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
+            if energy_unit == "kilojoules":
+                macro_energy *= 4.184
+            # Compare energy values and set it correctly due to macros. Will also fix if no energy_value was provided.
+            if energy != macro_energy:
+                logger.warning(
+                    "Provided energy value and calculated engery value from macros does not match! Will Override!")
+                energy = macro_energy
+
+        # Build payload based on observed browser behaviour
+        # TODO Insert additional micro nurtitions
+        new_goals = {}
+        new_goals['item'] = old_goals['items'][0]
+
+        new_goals['item'].pop('valid_to', None)
+        new_goals['item'].pop('default_group_id', None)
+        new_goals['item'].pop('updated_at', None)
+        new_goals['item']['default_goal']['meal_goals'] = []
+        # new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
+        # new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
+
+        # insert new values
+        new_goals['item']['valid_from'] = today
+
+        new_goals['item']['default_goal']['energy']['value'] = energy
+        new_goals['item']['default_goal']['energy']['unit'] = energy_unit
+        new_goals['item']['default_goal']['carbohydrates'] = carbohydrates
+        new_goals['item']['default_goal']['protein'] = protein
+        new_goals['item']['default_goal']['fat'] = fat
+        # TODO Add micro nutritions
+
+        for i in new_goals['item']['daily_goals']:
+            i['meal_goals'] = []
+            i.pop('group_id', None)
+            # i.pop('exercise_carbohydrates_percentage', None)
+            # i.pop('exercise_fat_percentage', None)
+            # i.pop('exercise_protein_percentage', None)
+            # i.pop('exercise_saturated_fat_percentage', None)
+            # i.pop('exercise_sugar_percentage', None)
+
+            # insert new values
+            i['energy']['value'] = energy
+            i['energy']['unit'] = energy_unit
+            i['carbohydrates'] = carbohydrates
+            i['protein'] = protein
+            i['fat'] = fat
+            # TODO Add micro nutritions
+
+        # Build Post-Request
+        # Post Request
+        url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals")
+        result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
+
+        # TODO Check Request Result
+        if result.status_code == 200:
+            return True
+        elif not result.ok:
+            logger.warning(
+                "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
             return None
+        else:
+            logger.error(
+                "Request Error - Unable to submit Goals to MyFitnessPal: "
+                "status code: {status}".format(status=result.status_code)
+            )
+            print(result)
+            return None
+
+    def get_recipe_list(self):
+        # TODO EXCEPTION HANDLING
+        recipes_dict = {}
+
+        page_count = 1
+        next_page = True
+        while (next_page):
+            RECIPES_PATH = f"recipe_parser?page={page_count}&sort_order=recent"
+            recipes_url = parse.urljoin(self.BASE_URL_SECURE, RECIPES_PATH)
+            document = self._get_document_for_url(recipes_url)
+            recipes = document.xpath("//*[@id='main']/ul[1]/li")  # get all items in the recipe list
+            for recipe_info in recipes:
+                recipe_path = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib["href"]
+                recipe_id = recipe_path.split("/")[-1]
+                recipe_title = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib["title"]
+                recipes_dict[recipe_id] = recipe_title
+
+            # Check for Pagination
+            pagination_links = document.xpath('//*[@id="main"]/ul[2]/a')
+            if (pagination_links):
+                if (
+                        page_count == 1):  # If Pagination exists and it is page 1 there have to be a second, but only one href to the next (obviously none to the previous)
+                    page_count += 1
+                elif (len(pagination_links) > 1):  # If there are two links, ont to the previous and one to the next
+                    page_count += 1
+                else:
+                    next_page = False  # Only one link means it is the last page
+            else:
+                # Indicator for no recipes
+                next_page = False
+                if len(recipes_dict) == 0:
+                    return None
+
+        # print(recipes_dict.values())
+        return recipes_dict
+
+    def get_recipe(self, recipeid: int):
+        # TODO EXCEPTION HANDLING
+        recipe_PATH = f"/recipe/view/{recipeid}"
+        recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_PATH)
+        document = self._get_document_for_url(recipe_url)
+
+        recipe_dict = {"@context": "https://schema.org", "@type": "Recipe", "author": self.effective_username}
+        recipe_dict['org_url'] = recipe_url
+        try:
+            recipe_dict['name'] = document.xpath('//*[@id="main"]/div[3]/div[2]/h1')[0].text
+            recipe_dict['recipeYield'] = document.xpath('//*[@id="recipe_servings"]')[0].text
+
+            recipe_dict['recipeIngredient'] = []
+            ingridients = document.xpath('//*[@id="main"]/div[4]/div/*/li')
+            for ingridient in ingridients:
+                recipe_dict['recipeIngredient'].append(ingridient.text.strip(" \n"))
+
+            recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
+            recipe_dict['nutrition']['calories'] = document.xpath('//*[@id="main"]/div[3]/div[2]/div[2]/div')[
+                0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['carbohydrateContent'] = document.xpath('//*[@id="carbs"]/td[1]/span[2]')[
+                0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['fiberContent'] = document.xpath('//*[@id="fiber"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['sugarContent'] = document.xpath('//*[@id="sugar"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['sodiumContent'] = document.xpath('//*[@id="sodium"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['proteinContent'] = document.xpath('//*[@id="protein"]/td[1]/span[2]')[
+                0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['fatContent'] = document.xpath('//*[@id="total_fat"]/td[1]/span[2]')[0].text.strip(
+                " \n")
+            recipe_dict['nutrition']['saturatedFatContent'] = document.xpath('//*[@id="saturated_fat"]/td[1]/span[2]')[
+                0].text.strip(" \n")
+            recipe_dict['nutrition']['monounsaturatedFatContent'] = \
+                document.xpath('//*[@id="monounsaturated_fat"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['polyunsaturatedFatContent'] = \
+                document.xpath('//*[@id="polyunsaturated_fat"]/td[1]/span[2]')[0].text.strip(" \n")
+            recipe_dict['nutrition']['unsaturatedFatContent'] = \
+                int(recipe_dict['nutrition']['polyunsaturatedFatContent']) + \
+                int(recipe_dict['nutrition']['monounsaturatedFatContent'])
+            recipe_dict['nutrition']['transFatContent'] = document.xpath('//*[@id="trans_fat"]/td[1]/span[2]')[
+                0].text.strip(
+                " \n")
+        except:
+            logger.warning(f"Could not extract recipe information from {recipe_url}")
+            return None
+
+        #### add some required tags to match schema
+        recipe_dict['recipe_instructions'] = []
+        recipe_dict['tags'] = ["MyFitnessPal"]
+        # print(json.dumps(recipe_dict))
+        return recipe_dict
+
+    def get_meal_list(self):
+        # TODO EXCEPTION HANDLING
+        meals_dict = {}
+        MEALS_PATH = f"meal/mine"
+        meals_url = parse.urljoin(self.BASE_URL_SECURE, MEALS_PATH)
+        document = self._get_document_for_url(meals_url)
+
+        meals = document.xpath("//*[@id='matching']/li")  # get all items in the recipe list
+        try:
+            for meal in meals:
+                meal_path = meal.xpath("./a")[0].attrib["href"]
+                meal_id = meal_path.split("/")[-1].split("?")[0]
+                meal_title = meal.xpath("./a")[0].text
+                meals_dict[meal_id] = meal_title
+        except:
+            logger.warning("Could not load meals.")
+            return None
+
+        # print(meals_dict.values())
+        return meals_dict
+
+    def get_meal(self, mealid: int, meal_title: str):
+        # TODO EXCEPTION HANDLING
+
+        MEAL_PATH = f"/meal/update_meal_ingredients/{mealid}"
+        meal_url = parse.urljoin(self.BASE_URL_SECURE, MEAL_PATH)
+        document = self._get_document_for_url(meal_url)
+
+        recipe_dict = {"@context": "https://schema.org", "@type": "Recipe", "author": self.effective_username}
+        recipe_dict['org_url'] = meal_url
+        recipe_dict['name'] = meal_title
+        recipe_dict['recipeYield'] = 1
+        recipe_dict['recipeIngredient'] = []
+        try:
+            ingridients = document.xpath('//*[@id="meal-table"]/tbody/tr')
+            # No ingridents?
+            if len(ingridients) == 1 and ingridients[0].xpath('./td[1]')[0].text == '\xa0':
+                raise
+            else:
+                for ingridient in ingridients:
+                    recipe_dict['recipeIngredient'].append(ingridient.xpath('./td[1]')[0].text)
+                    """ #Unfotunately it is not forseen in the schema to have this information based on ingridients
+                    tmp = {}
+                    tmp['title'] = ingridient.xpath('./td[1]')[0].text
+                    tmp['nutrition'] = {}
+                    tmp['nutrition']['energy'] = ingridient.xpath('./td[2]')[0].text
+                    tmp['nutrition']['carbohydrates'] = ingridient.xpath('./td[3]')[0].text
+                    tmp['nutrition']['protein'] = ingridient.xpath('./td[5]')[0].text
+                    tmp['nutrition']['fat'] = ingridient.xpath('./td[4]')[0].text
+                    tmp['nutrition']['sugar'] = ingridient.xpath('./td[7]')[0].text
+                    tmp['nutrition']['sodium'] = ingridient.xpath('./td[6]')[0].text
+                    meal_dict['ingridients'].append(tmp)
+                    """
+
+                total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
+                recipe_dict['nutrition'] = {"@type": "NutritionInformation"}
+                recipe_dict['nutrition']['calories'] = total.xpath('./td[2]')[0].text
+                recipe_dict['nutrition']['carbohydrateContent'] = total.xpath('./td[3]')[0].text
+                recipe_dict['nutrition']['proteinContent'] = total.xpath('./td[5]')[0].text
+                recipe_dict['nutrition']['fatContent'] = total.xpath('./td[4]')[0].text
+                recipe_dict['nutrition']['sugarContent'] = total.xpath('./td[7]')[0].text
+                recipe_dict['nutrition']['sodiumContent'] = total.xpath('./td[6]')[0].text
+        except:
+            logger.warning(f"Could not extract meal information from {meal_url}")
+            return None
+
+        #### add some required tags to match schema
+        recipe_dict['recipe_instructions'] = []
+        recipe_dict['tags'] = ["MyFitnessPal"]
+        # print(json.dumps(recipe_dict))
+
+        return recipe_dict
