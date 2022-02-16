@@ -848,9 +848,11 @@ class Client(MFPBase):
         )
         SUBMIT_POST_PATH = "food/new"
 
+        # save current date in local variable for reusing
+        date = datetime.datetime.today().strftime("%Y-%m-%d")
+
         # get Authenticity Token
         url = parse.urljoin(self.BASE_URL_SECURE, SUBMIT_PATH)
-        # now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         document = self._get_document_for_url(url)
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
@@ -864,7 +866,7 @@ class Client(MFPBase):
             data={
                 "utf8": utf8_field,
                 "authenticity_token": authenticity_token,
-                "date": datetime.datetime.today().strftime("%Y-%m-%d"),
+                "date": date,
                 "food[brand]": brand,
                 "food[description]": description,
             },
@@ -893,32 +895,28 @@ class Client(MFPBase):
         data = {
             "utf8": utf8_field,
             "authenticity_token": authenticity_token,
-            "date": datetime.datetime.today().strftime("%Y-%m-%d"),
+            "date": date,
             "food[brand]": brand,
             "food[description]": description,
             "weight[serving_size]": serving_size,
-            "servingspercontainer": "{}".format(servingspercontainer),
-            "nutritional_content[calories]": "{}".format(calories),
-            "nutritional_content[sodium]": "{}".format(sodium),
-            "nutritional_content[fat]": "{}".format(fat),
-            "nutritional_content[potassium]": "{}".format(potassium),
-            "nutritional_content[saturated_fat]": "{}".format(saturated_fat),
-            "nutritional_content[carbs]": "{}".format(carbs),
-            "nutritional_content[polyunsaturated_fat]": "{}".format(
-                polyunsaturated_fat
-            ),
-            "nutritional_content[fiber]": "{}".format(fiber),
-            "nutritional_content[monounsaturated_fat]": "{}".format(
-                monounsaturated_fat
-            ),
-            "nutritional_content[sugar]": "{}".format(sugar),
-            "nutritional_content[trans_fat]": "{}".format(trans_fat),
-            "nutritional_content[protein]": "{}".format(protein),
-            "nutritional_content[cholesterol]": "{}".format(cholesterol),
-            "nutritional_content[vitamin_a]": "{}".format(vitamin_a),
-            "nutritional_content[calcium]": "{}".format(calcium),
-            "nutritional_content[vitamin_c]": "{}".format(vitamin_c),
-            "nutritional_content[iron]": "{}".format(iron),
+            "servingspercontainer": f"{servingspercontainer}",
+            "nutritional_content[calories]": f"{calories}",
+            "nutritional_content[sodium]": f"{sodium}",
+            "nutritional_content[fat]": f"{fat}",
+            "nutritional_content[potassium]": f"{potassium}",
+            "nutritional_content[saturated_fat]": f"{saturated_fat}",
+            "nutritional_content[carbs]": f"{carbs}",
+            "nutritional_content[polyunsaturated_fat]": f"{polyunsaturated_fat}",
+            "nutritional_content[fiber]": f"{fiber}",
+            "nutritional_content[monounsaturated_fat]": f"{monounsaturated_fat}",
+            "nutritional_content[sugar]": f"{sugar}",
+            "nutritional_content[trans_fat]": f"{trans_fat}",
+            "nutritional_content[protein]": f"{protein}",
+            "nutritional_content[cholesterol]": f"{cholesterol}",
+            "nutritional_content[vitamin_a]": f"{vitamin_a}",
+            "nutritional_content[calcium]": f"{calcium}",
+            "nutritional_content[vitamin_c]": f"{vitamin_c}",
+            "nutritional_content[iron]": f"{iron}",
             "food_entry[quantity]": "1.0",
             "food_entry[meal_id]": "0",
             "addtodiary": "no",
@@ -964,27 +962,28 @@ class Client(MFPBase):
 
     def set_new_goal(
         self,
-        energy: float = "",
-        energy_unit: str = "",
-        carbohydrates: float = "",
-        protein: float = "",
-        fat: float = "",
-        percent_carbohydrates: float = "",
-        percent_protein: float = "",
-        percent_fat: float = "",
-        # saturated_fat: float = "",
-        # polyunsaturated_fat: float = "",
-        # monounsaturated_fat: float = "",
-        # trans_fat: float = "",
-        # fiber: float = "",
-        # sugar: float = "",
-        # cholesterol: float = "",
-        # sodium: float = "",
-        # potassium: float = "",
-        # vitamin_a: float = "",
-        # vitamin_c: float = "",
-        # calcium: float = "",
-        # iron: float = "",
+        energy: float = None,
+        energy_unit: str = None,
+        carbohydrates: float = None,
+        protein: float = None,
+        fat: float = None,
+        percent_carbohydrates: float = None,
+        percent_protein: float = None,
+        percent_fat: float = None,
+        # TODO Add micro nutritions
+        # saturated_fat: float = None,
+        # polyunsaturated_fat: float = None,
+        # monounsaturated_fat: float = None,
+        # trans_fat: float = None,
+        # fiber: float = None,
+        # sugar: float = None,
+        # cholesterol: float = None,
+        # sodium: float = None,
+        # potassium: float = None,
+        # vitamin_a: float = None,
+        # vitamin_c: float = None,
+        # calcium: float = None,
+        # iron: float = None,
         assign_exercise_energy="nutrient_goal",
     ):
         """Function to update your nutrition goals. Function will return True if successful."""
@@ -997,12 +996,12 @@ class Client(MFPBase):
 
         # Get authenticity token and current values
         url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
-        # now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         today = datetime.datetime.now().strftime("%Y-%m-%d")
 
         """
+        Will leave this here as reminder why we do not use self._get_json_for_url() at the moment.
+        # No Way implemented to send token by calling self._get_json_for_url
         old_goals_url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals?date={today}")
-        #No Way implemented to send token by calling self._get_json_for_url
         old_goals = self._get_json_for_url(old_goals_url)
         """
 
@@ -1021,54 +1020,65 @@ class Client(MFPBase):
 
         # Marcro Calculation
         # If no macro goals were provided calculate them with percentage value
-        if carbohydrates == "" or protein == "" or fat == "":
+        if carbohydrates is None or protein is None or fat is None:
             # If even no macro percentages values were provided calculate them from old values
             if (
-                percent_carbohydrates == ""
-                or percent_protein == ""
-                or percent_fat == ""
+                percent_carbohydrates is None
+                or percent_protein is None
+                or percent_fat is None
             ):
-                old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
-                    "value"
-                ]
-                old_energy_unit = old_goals["items"][0]["default_goal"]["energy"][
-                    "unit"
-                ]
-                old_carbohydrates = old_goals["items"][0]["default_goal"][
-                    "carbohydrates"
-                ]
-                old_fat = old_goals["items"][0]["default_goal"]["fat"]
-                old_protein = old_goals["items"][0]["default_goal"]["protein"]
+                if energy is None:
+                    logger.warning("No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information.")
+                    return False
+                else:
+                    old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
+                        "value"
+                    ]
+                    old_energy_unit = old_goals["items"][0]["default_goal"]["energy"][
+                        "unit"
+                    ]
+                    old_carbohydrates = old_goals["items"][0]["default_goal"][
+                        "carbohydrates"
+                    ]
+                    old_fat = old_goals["items"][0]["default_goal"]["fat"]
+                    old_protein = old_goals["items"][0]["default_goal"]["protein"]
 
-                # If old and new values are in diffrent units then convert old value to new unit
-                if not old_energy_unit == energy_unit:
-                    if old_energy_unit == "kilojoules" and energy_unit == "calories":
-                        old_energy_value *= 0.2388
-                        old_energy_unit = "calories"
-                    elif old_energy_unit == "calories" and energy_unit == "kilojoules":
-                        """FROM MFP JS
-                        if (energyUnit === 'kilojoules') {
-                            calories *= 4.184;
-                        }
-                        """
-                        old_energy_value *= 4.184
-                        old_energy_unit = "kilojoules"
-                    else:
-                        raise ValueError
+                    # If old and new values are in diffrent units then convert old value to new unit
+                    if not old_energy_unit == energy_unit:
+                        if old_energy_unit == "kilojoules" and energy_unit == "calories":
+                            old_energy_value *= 0.2388
+                            old_energy_unit = "calories"
+                        elif old_energy_unit == "calories" and energy_unit == "kilojoules":
+                            """FROM MFP JS
+                            if (energyUnit === 'kilojoules') {
+                                calories *= 4.184;
+                            }
+                            """
+                            old_energy_value *= 4.184
+                            old_energy_unit = "kilojoules"
+                        else:
+                            raise ValueError
 
-                ####
-                carbohydrates = energy * old_carbohydrates / old_energy_value
-                protein = energy * old_protein / old_energy_value
-                fat = energy * old_fat / old_energy_value
+                    carbohydrates = energy * old_carbohydrates / old_energy_value
+                    protein = energy * old_protein / old_energy_value
+                    fat = energy * old_fat / old_energy_value
             # If percentage values were provided check
             else:
-                carbohydrates = energy * percent_carbohydrates / 100.0 / 4
-                protein = energy * percent_protein / 100.0 / 4
-                fat = energy * percent_fat / 100.0 / 9
-                if energy_unit == "kilojoules":
-                    carbohydrates = round(carbohydrates / 4.184, 2)
-                    protein = round(protein / 4.184, 2)
-                    fat = round(fat / 4.184, 2)
+                if energy is None:
+                    logger.warning("No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information.")
+                    return False
+                else:
+                    if percent_carbohydrates + percent_protein + percent_fat == 100.0:
+                        carbohydrates = energy * percent_carbohydrates / 100.0 / 4
+                        protein = energy * percent_protein / 100.0 / 4
+                        fat = energy * percent_fat / 100.0 / 9
+                        if energy_unit == "kilojoules":
+                            carbohydrates = round(carbohydrates / 4.184, 2)
+                            protein = round(protein / 4.184, 2)
+                            fat = round(fat / 4.184, 2)
+                    else:
+                        logger.warning("Provided percentage values are not plausible - Not able to update goals.")
+                        return False
         else:
             macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
             if energy_unit == "kilojoules":
@@ -1084,16 +1094,10 @@ class Client(MFPBase):
         # TODO Insert additional micro nurtitions
         new_goals = {}
         new_goals["item"] = old_goals["items"][0]
-
         new_goals["item"].pop("valid_to", None)
         new_goals["item"].pop("default_group_id", None)
         new_goals["item"].pop("updated_at", None)
         new_goals["item"]["default_goal"]["meal_goals"] = []
-        # new_goals['item']['default_goal'].pop('exercise_carbohydrates_percentage', None)
-        # new_goals['item']['default_goal'].pop('exercise_fat_percentage', None)
-        # new_goals['item']['default_goal'].pop('exercise_protein_percentage', None)
-        # new_goals['item']['default_goal'].pop('exercise_saturated_fat_percentage', None)
-        # new_goals['item']['default_goal'].pop('exercise_sugar_percentage', None)
 
         # insert new values
         new_goals["item"]["valid_from"] = today
@@ -1129,22 +1133,22 @@ class Client(MFPBase):
                 "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
-            return None
+            return False
         else:
             logger.error(
                 "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
             print(result)
-            return None
+            return False
 
     def get_recipe_list(self):
         # TODO EXCEPTION HANDLING
         recipes_dict = {}
 
         page_count = 1
-        next_page = True
-        while next_page:
+        has_next_page = True
+        while has_next_page:
             RECIPES_PATH = f"recipe_parser?page={page_count}&sort_order=recent"
             recipes_url = parse.urljoin(self.BASE_URL_SECURE, RECIPES_PATH)
             document = self._get_document_for_url(recipes_url)
@@ -1173,18 +1177,16 @@ class Client(MFPBase):
                 ):  # If there are two links, ont to the previous and one to the next
                     page_count += 1
                 else:
-                    next_page = False  # Only one link means it is the last page
+                    has_next_page = False  # Only one link means it is the last page
             else:
                 # Indicator for no recipes
-                next_page = False
+                has_next_page = False
                 if len(recipes_dict) == 0:
                     return None
 
-        # print(recipes_dict.values())
         return recipes_dict
 
     def get_recipe(self, recipeid: int):
-        # TODO EXCEPTION HANDLING
         recipe_PATH = f"/recipe/view/{recipeid}"
         recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_PATH)
         document = self._get_document_for_url(recipe_url)
@@ -1204,9 +1206,9 @@ class Client(MFPBase):
             ].text
 
             recipe_dict["recipeIngredient"] = []
-            ingridients = document.xpath('//*[@id="main"]/div[4]/div/*/li')
-            for ingridient in ingridients:
-                recipe_dict["recipeIngredient"].append(ingridient.text.strip(" \n"))
+            ingredients = document.xpath('//*[@id="main"]/div[4]/div/*/li')
+            for ingredient in ingredients:
+                recipe_dict["recipeIngredient"].append(ingredient.text.strip(" \n"))
 
             recipe_dict["nutrition"] = {"@type": "NutritionInformation"}
             recipe_dict["nutrition"]["calories"] = document.xpath(
@@ -1252,11 +1254,9 @@ class Client(MFPBase):
         # add some required tags to match schema
         recipe_dict["recipe_instructions"] = []
         recipe_dict["tags"] = ["MyFitnessPal"]
-        # print(json.dumps(recipe_dict))
         return recipe_dict
 
     def get_meal_list(self):
-        # TODO EXCEPTION HANDLING
         meals_dict = {}
         MEALS_PATH = "meal/mine"
         meals_url = parse.urljoin(self.BASE_URL_SECURE, MEALS_PATH)
@@ -1275,11 +1275,9 @@ class Client(MFPBase):
             logger.warning("Could not load meals.")
             return None
 
-        # print(meals_dict.values())
         return meals_dict
 
     def get_meal(self, mealid: int, meal_title: str):
-        # TODO EXCEPTION HANDLING
 
         MEAL_PATH = f"/meal/update_meal_ingredients/{mealid}"
         meal_url = parse.urljoin(self.BASE_URL_SECURE, MEAL_PATH)
@@ -1295,29 +1293,29 @@ class Client(MFPBase):
         recipe_dict["recipeYield"] = 1
         recipe_dict["recipeIngredient"] = []
         try:
-            ingridients = document.xpath('//*[@id="meal-table"]/tbody/tr')
+            ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
             # No ingridents?
             if (
-                len(ingridients) == 1
-                and ingridients[0].xpath("./td[1]")[0].text == "\xa0"
+                len(ingredients) == 1
+                and ingredients[0].xpath("./td[1]")[0].text == "\xa0"
             ):
                 raise
             else:
-                for ingridient in ingridients:
+                for ingredient in ingredients:
                     recipe_dict["recipeIngredient"].append(
-                        ingridient.xpath("./td[1]")[0].text
+                        ingredient.xpath("./td[1]")[0].text
                     )
                     """ #Unfortunately the schema does not account for this information based on ingredients
                     tmp = {}
-                    tmp['title'] = ingridient.xpath('./td[1]')[0].text
+                    tmp['title'] = ingredient.xpath('./td[1]')[0].text
                     tmp['nutrition'] = {}
-                    tmp['nutrition']['energy'] = ingridient.xpath('./td[2]')[0].text
-                    tmp['nutrition']['carbohydrates'] = ingridient.xpath('./td[3]')[0].text
-                    tmp['nutrition']['protein'] = ingridient.xpath('./td[5]')[0].text
-                    tmp['nutrition']['fat'] = ingridient.xpath('./td[4]')[0].text
-                    tmp['nutrition']['sugar'] = ingridient.xpath('./td[7]')[0].text
-                    tmp['nutrition']['sodium'] = ingridient.xpath('./td[6]')[0].text
-                    meal_dict['ingridients'].append(tmp)
+                    tmp['nutrition']['energy'] = ingredient.xpath('./td[2]')[0].text
+                    tmp['nutrition']['carbohydrates'] = ingredient.xpath('./td[3]')[0].text
+                    tmp['nutrition']['protein'] = ingredient.xpath('./td[5]')[0].text
+                    tmp['nutrition']['fat'] = ingredient.xpath('./td[4]')[0].text
+                    tmp['nutrition']['sugar'] = ingredient.xpath('./td[7]')[0].text
+                    tmp['nutrition']['sodium'] = ingredient.xpath('./td[6]')[0].text
+                    meal_dict['ingredients'].append(tmp)
                     """
 
                 total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
@@ -1343,6 +1341,4 @@ class Client(MFPBase):
         # add some required tags to match schema
         recipe_dict["recipe_instructions"] = []
         recipe_dict["tags"] = ["MyFitnessPal"]
-        # print(json.dumps(recipe_dict))
-
         return recipe_dict

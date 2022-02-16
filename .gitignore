@@ -15,5 +15,3 @@ pip-selfcheck.json
 env/*
 .vscode/*
 .mypy_cache/*
-test_file.py
-/mfp_account.ini
