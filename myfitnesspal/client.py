@@ -1062,9 +1062,9 @@ class Client(MFPBase):
                 fat = energy * old_fat / old_energy_value
             # If percentage values were provided check
             else:
-                carbohydrates = energy * percent_carbohydrates / 100 / 4
-                protein = energy * percent_protein / 100 / 4
-                fat = energy * percent_fat / 100 / 9
+                carbohydrates = energy * percent_carbohydrates / 100.0 / 4
+                protein = energy * percent_protein / 100.0 / 4
+                fat = energy * percent_fat / 100.0 / 9
                 if energy_unit == "kilojoules":
                     carbohydrates = round(carbohydrates / 4.184, 2)
                     protein = round(protein / 4.184, 2)
