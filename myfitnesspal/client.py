@@ -1105,21 +1105,15 @@ class Client(MFPBase):
         new_goals["item"]["default_goal"]["fat"] = fat
         # TODO Add micro nutritions
 
-        for i in new_goals["item"]["daily_goals"]:
-            i["meal_goals"] = []
-            i.pop("group_id", None)
-            # i.pop('exercise_carbohydrates_percentage', None)
-            # i.pop('exercise_fat_percentage', None)
-            # i.pop('exercise_protein_percentage', None)
-            # i.pop('exercise_saturated_fat_percentage', None)
-            # i.pop('exercise_sugar_percentage', None)
+        for goal in new_goals["item"]["daily_goals"]:
+            goal["meal_goals"] = []
+            goal.pop("group_id", None)
 
-            # insert new values
-            i["energy"]["value"] = energy
-            i["energy"]["unit"] = energy_unit
-            i["carbohydrates"] = carbohydrates
-            i["protein"] = protein
-            i["fat"] = fat
+            goal["energy"]["value"] = energy
+            goal["energy"]["unit"] = energy_unit
+            goal["carbohydrates"] = carbohydrates
+            goal["protein"] = protein
+            goal["fat"] = fat
             # TODO Add micro nutritions
 
         # Build Post-Request
