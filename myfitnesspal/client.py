@@ -1313,7 +1313,7 @@ class Client(MFPBase):
                     recipe_dict["recipeIngredient"].append(
                         ingridient.xpath("./td[1]")[0].text
                     )
-                    """ #Unfotunately it is not forseen in the schema to have this information based on ingridients
+                    """ #Unfortunately the schema does not account for this information based on ingredients
                     tmp = {}
                     tmp['title'] = ingridient.xpath('./td[1]')[0].text
                     tmp['nutrition'] = {}
