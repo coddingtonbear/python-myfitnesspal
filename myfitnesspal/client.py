@@ -1076,7 +1076,7 @@ class Client(MFPBase):
             # Compare energy values and set it correctly due to macros. Will also fix if no energy_value was provided.
             if energy != macro_energy:
                 logger.warning(
-                    "Provided energy value and calculated engery value from macros does not match! Will Override!"
+                    "Provided energy value and calculated energy value from macros do not match! Will override!"
                 )
                 energy = macro_energy
 
