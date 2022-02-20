@@ -7,6 +7,8 @@ from . import types
 
 
 class Entry(MFPBase):
+    """Stores information about a single entry."""
+
     def __init__(self, name: str, nutrition: types.NutritionDict):
         self._name = name
         self._nutrition = nutrition
@@ -31,6 +33,7 @@ class Entry(MFPBase):
 
     @property
     def name(self) -> str:
+        """Name of the item."""
         return self._name.strip()
 
     @property
@@ -39,9 +42,11 @@ class Entry(MFPBase):
 
     @property
     def totals(self) -> types.NutritionDict:
+        """Totals for the item."""
         return self.nutrition_information
 
     def get_as_dict(self) -> types.MealEntry:
+        """Returns totals per-item as a dictionary."""
         return {
             "name": self.name,
             "nutrition_information": self.nutrition_information,
@@ -52,14 +57,17 @@ class Entry(MFPBase):
 
     @property
     def short_name(self) -> Optional[str]:
+        """Short name."""
         if self._short_name:
             return self._short_name.strip()
         return self._short_name
 
     @property
     def unit(self) -> Optional[str]:
+        """Unit."""
         return self._unit
 
     @property
     def quantity(self) -> Optional[str]:
+        """Quantity."""
         return self._quantity

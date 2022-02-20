@@ -1,0 +1,4 @@
+Client
+======
+
+.. autoclass:: myfitnesspal.Client
