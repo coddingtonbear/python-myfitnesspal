@@ -2,5 +2,11 @@ How-to Guides
 =============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
+
+   diary
+   friends_diary
+   exercises
+   measurements
+   food_search

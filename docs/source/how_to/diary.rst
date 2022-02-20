@@ -1,5 +1,5 @@
 Accessing your Diary
---------------------
+====================
 
 To access a single day’s information:
 
@@ -101,43 +101,43 @@ Hints
 
 Day objects act as dictionaries:
 
-```python
-day.keys()
-# >> ['Breakfast', 'Lunch', 'Dinner', 'Snack']
-lunch = day['Lunch']
-print lunch
-# >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>,
-#     <Injera - Ethiopian Flatbread, 18 " diameter {'sodium': 204, 'carbohydrates': 30, 'calories': 139, 'fat': 1, 'sugar': 0, 'protein': 5}>]
-```
+.. code:: python
+
+   day.keys()
+   # >> ['Breakfast', 'Lunch', 'Dinner', 'Snack']
+   lunch = day['Lunch']
+   print lunch
+   # >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>,
+   #     <Injera - Ethiopian Flatbread, 18 " diameter {'sodium': 204, 'carbohydrates': 30, 'calories': 139, 'fat': 1, 'sugar': 0, 'protein': 5}>]
 
 Meal objects act as lists:
 
-```python
-len(lunch)
-# >> 2
-miser_wat = lunch[0]
-print miser_wat
-# >> <Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>
-```
+.. code:: python
+
+   len(lunch)
+   # >> 2
+   miser_wat = lunch[0]
+   print miser_wat
+   # >> <Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': 508, 'carbohydrates': 76, 'calories': 346, 'fat': 2, 'sugar': 0, 'protein': 12}>
 
 and Entry objects act as dictionaries:
 
-```python
-print miser_wat['calories']
-# >> 346
-```
+.. code:: python
+
+   print miser_wat['calories']
+   # >> 346
 
 and, since the measurement units returned are not necessarily very intuitive,
 you can enable or disable unit awareness using the `unit_aware` keyword
 argument.
 
-```python
-client = myfitnesspal.Client('my_username', unit_aware=True)
-day = client.get_date(2013, 3, 2)
-lunch = day['lunch']
-print lunch
-# >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': Weight(mg=508), 'carbohydrates': Weight(g=76), 'calories': Energy(Calorie=346), 'fat': Weight(g=2), 'sugar': Weight(g=0), 'protein': Weight(g=12)}>,
-miser_wat = lunch[0]
-print miser_wat['calories']
-# >> Energy(Calorie=346)
-```
+.. code:: python
+
+   client = myfitnesspal.Client('my_username', unit_aware=True)
+   day = client.get_date(2013, 3, 2)
+   lunch = day['lunch']
+   print lunch
+   # >> [<Generic - Ethiopian - Miser Wat (Red Lentils), 2 cup {'sodium': Weight(mg=508), 'carbohydrates': Weight(g=76), 'calories': Energy(Calorie=346), 'fat': Weight(g=2), 'sugar': Weight(g=0), 'protein': Weight(g=12)}>,
+   miser_wat = lunch[0]
+   print miser_wat['calories']
+   # >> Energy(Calorie=346)

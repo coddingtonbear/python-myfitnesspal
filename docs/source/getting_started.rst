@@ -8,7 +8,7 @@ You can either install from pip::
 
   pip install myfitnesspal
 
-*or* checkout and install the source from the `github repository <https://github.com/coddingtonbear/python-myfitnesspal>`::
+*or* checkout and install the source from the `github repository <https://github.com/coddingtonbear/python-myfitnesspal>`_::
 
   git clone https://github.com/coddingtonbear/python-myfitnesspal.git
   cd python-myfitnesspal
@@ -28,5 +28,6 @@ You will immediately be asked for your password, and that password will be store
 
 Please note that all examples below *assume* you've stored your password in your system keyring like above, but you can also provide your password by providing your password as a keyword argument to the `myfitnesspal.Client` instance:
 
-.. code-block:: python
+.. code:: python
+
    client = myfitnesspal.Client('my_username', password='my_password')
