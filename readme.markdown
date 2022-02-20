@@ -6,6 +6,7 @@ Although MyFitnessPal [does have an API](https://www.myfitnesspal.com/api), it i
 only; this creates an unnecessary barrier between you and your data that
 can be overcome using this library.
 
-Having problems? [Issues live on github](https://github.com/coddingtonbear/python-myfitnesspal/issues).
-Have questions? [Ask your questions in our gitter room](https://gitter.im/coddingtonbear/python-myfitnesspal) or
+- Having problems? [Issues live on github](https://github.com/coddingtonbear/python-myfitnesspal/issues).
+- Have questions? [Ask your questions in our gitter room](https://gitter.im/coddingtonbear/python-myfitnesspal) or
 [start a discussion](https://github.com/coddingtonbear/python-myfitnesspal/discussions/).
+- Looking for docs? [Find them on RTD](https://python-myfitnesspal.readthedocs.io/).
