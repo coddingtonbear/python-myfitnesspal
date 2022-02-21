@@ -438,9 +438,9 @@ class TestClient(MFPTestCase):
                 "report_nutrition_net_calories.json"
             )
             actual_measurements = self.client.get_report(
-                report_name='Net Calories',
-                report_category='Nutrition',
-                lower_bound=datetime.date.today() - datetime.timedelta(days=4)
+                report_name="Net Calories",
+                report_category="Nutrition",
+                lower_bound=datetime.date.today() - datetime.timedelta(days=4),
             )
 
         # Dates are determined based on the assumption that the results will
