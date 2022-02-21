@@ -10,6 +10,8 @@ from .meal import Meal
 
 
 class Day(MFPBase):
+    """Stores meal entries for a particular day."""
+
     def __init__(
         self,
         date: datetime.date,
@@ -30,12 +32,14 @@ class Day(MFPBase):
         self._complete = complete
 
     def __getitem__(self, value: str) -> Meal:
+        """Returns a meal matching the provided name."""
         for meal in self._meals:
             if meal.name.lower() == value.lower():
                 return meal
         raise KeyError(f"No meal named '{value}' exists for this date")
 
     def keys(self) -> List[str]:
+        """Returns a list of meal names."""
         keys = []
         for meal in self.meals:
             keys.append(meal.name)
@@ -43,6 +47,7 @@ class Day(MFPBase):
 
     @property
     def meals(self) -> List[Meal]:
+        """Returns a list of meals."""
         return self._meals
 
     @property
@@ -51,6 +56,7 @@ class Day(MFPBase):
 
     @property
     def entries(self) -> Generator[Entry, None, None]:
+        """Yields all entries from all meals."""
         for meal in self._meals:
             yield from meal.entries
 
@@ -65,6 +71,7 @@ class Day(MFPBase):
 
     @property
     def goals(self) -> Dict[str, float]:
+        """Returns goals."""
         return self._goals
 
     @property
@@ -73,6 +80,7 @@ class Day(MFPBase):
 
     @property
     def notes(self) -> str:
+        """Returns notes."""
         if not self._notes:
             return ""
 
@@ -80,6 +88,7 @@ class Day(MFPBase):
 
     @property
     def water(self) -> float:
+        """Returns water."""
         if not self._water:
             return 0
 
@@ -87,12 +96,14 @@ class Day(MFPBase):
 
     @property
     def exercises(self) -> List[Exercise]:
+        """Returns list of exercises."""
         if not self._exercises:
             return []
 
         return self._exercises()
 
     def get_as_dict(self) -> Dict[str, List[types.MealEntry]]:
+        """Returns a mapping of meal names to the list of entries for that meal."""
         return {m.name: m.get_as_list() for m in self.meals}
 
     def _compute_totals(self) -> None:

@@ -5,7 +5,7 @@ import json
 import logging
 import re
 from collections import OrderedDict
-from typing import Dict, List, Optional, overload
+from typing import Dict, List, Optional, Union, overload
 
 import lxml.html
 import requests
@@ -30,10 +30,14 @@ BRITISH_UNIT_MATCHER = re.compile(r"(?:(?P<st>\d+) st)\W*(?:(?P<lbs>\d+) lb)?")
 
 
 class Client(MFPBase):
+    """Provides access to MyFitnessPal APIs"""
+
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
-    LOGIN_PATH = "account/login"
+    LOGIN_FORM_PATH = "account/login"
+    LOGIN_JSON_PATH = "api/auth/callback/credentials"
+    CSRF_PATH = "api/auth/csrf"
     SEARCH_PATH = "food/search"
     ABBREVIATIONS = {
         "carbs": "carbohydrates",
@@ -45,9 +49,18 @@ class Client(MFPBase):
         "protein": (Mass, "g"),
         "sodium": (Mass, "mg"),
         "sugar": (Mass, "g"),
+        "fiber": (Mass, "g"),
+        "potass.": (Mass, "mg"),
+        "kilojoules": (Energy, "kJ"),
     }
 
-    def __init__(self, username, password=None, login=True, unit_aware=False):
+    def __init__(
+        self,
+        username: str,
+        password: Optional[str] = None,
+        login: bool = True,
+        unit_aware: bool = False,
+    ):
         self.provided_username = username
         if password is None:
             password = get_password_from_keyring(username)
@@ -68,6 +81,7 @@ class Client(MFPBase):
 
     @property
     def user_id(self) -> Optional[types.MyfitnesspalUserId]:
+        """The user_id of the logged-in account."""
         if self._auth_data is None:
             return None
 
@@ -75,10 +89,12 @@ class Client(MFPBase):
 
     @property
     def user_metadata(self) -> Optional[types.UserMetadata]:
+        """Metadata about of the logged-in account."""
         return self._user_metadata
 
     @property
     def access_token(self) -> Optional[str]:
+        """The access token for the logged-in account."""
         if self._auth_data is None:
             return None
 
@@ -97,33 +113,26 @@ class Client(MFPBase):
         return self.provided_username
 
     def _login(self):
-        login_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_PATH)
-        document = self._get_document_for_url(login_url)
-        authenticity_token = document.xpath(
-            "(//input[@name='authenticity_token']/@value)[1]"
-        )[0]
-        utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
+        csrf_url = parse.urljoin(self.BASE_URL_SECURE, self.CSRF_PATH)
+        csrf_token = self._get_json_for_url(csrf_url)["csrfToken"]
+
+        login_json_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_JSON_PATH)
 
         result = self.session.post(
-            login_url,
+            login_json_url,
             data={
-                "utf8": utf8_field,
-                "authenticity_token": authenticity_token,
+                "csrfToken": csrf_token,
                 "username": self.effective_username,
                 "password": self.__password,
+                "redirect": False,
+                "json": True,
             },
         )
-        # result.content is bytes so we decode it ASSUMING utf8 (which may be a
-        # bad assumption?) PORTING_CHECK
-        content = result.content.decode("utf8")
-        if "Incorrect username or password" in content:
+        if "error=CredentialsSignin" in result.url:
             raise MyfitnesspalLoginError()
 
         self._auth_data = self._get_auth_data()
         self._user_metadata = self._get_user_metadata()
-
-        # authenticity token required for measurement set function.
-        self._authenticity_token = authenticity_token
 
     def _get_auth_data(self) -> types.AuthData:
         result = self._get_request_for_url(
@@ -460,6 +469,7 @@ class Client(MFPBase):
         ...
 
     def get_date(self, *args, **kwargs) -> Day:
+        """Returns your meal diary for a particular date"""
         if len(args) == 3:
             date = datetime.date(
                 int(args[0]),
@@ -503,9 +513,12 @@ class Client(MFPBase):
         return day
 
     def get_measurements(
-        self, measurement="Weight", lower_bound=None, upper_bound=None
+        self,
+        measurement="Weight",
+        lower_bound: Optional[datetime.date] = None,
+        upper_bound: Optional[datetime.date] = None,
     ) -> Dict[datetime.date, float]:
-        """ Returns measurements of a given name between two dates."""
+        """Returns measurements of a given name between two dates."""
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -567,8 +580,8 @@ class Client(MFPBase):
         measurement="Weight",
         value: float = None,
         date: Optional[datetime.date] = None,
-    ):
-        """ Sets measurement for today's date."""
+    ) -> None:
+        """Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
         if date is None:
@@ -580,6 +593,11 @@ class Client(MFPBase):
         # this is left in because we need to parse
         # the 'measurement' name to set the value.
         document = self._get_document_for_url(self._get_url_for_measurements())
+
+        # get authenticity token for this particular form.
+        authenticity_token = document.xpath(
+            "//form[@action='/measurements/new']/input[@name='authenticity_token']/@value"
+        )[0]
 
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
@@ -593,7 +611,7 @@ class Client(MFPBase):
 
         # setup a dict for the post
         data = {
-            "authenticity_token": self._authenticity_token,
+            "authenticity_token": authenticity_token,
             "measurement[display_value]": value,
             "type": measurement_ids.get(measurement),
             "measurement[entry_date(2i)]": date.month,
@@ -651,15 +669,6 @@ class Client(MFPBase):
 
         return ids
 
-    def get_measurement_id_options(self) -> Dict[str, int]:
-        """ Returns list of measurement choices."""
-        # get the URL for the main check in page
-        document = self._get_document_for_url(self._get_url_for_measurements())
-
-        # gather the IDs for all measurement types
-        measurement_ids = self._get_measurement_ids(document)
-        return measurement_ids
-
     def _get_notes(self, date: datetime.date) -> Note:
         result = self._get_request_for_url(
             parse.urljoin(
@@ -670,7 +679,7 @@ class Client(MFPBase):
         )
         return Note(result.json()["item"])
 
-    def _get_water(self, date: datetime.date) -> float:
+    def _get_water(self, date: datetime.date) -> Union[float, Volume]:
         result = self._get_request_for_url(
             parse.urljoin(
                 self.BASE_URL_SECURE,
@@ -679,15 +688,16 @@ class Client(MFPBase):
             + "?date={date}".format(date=date.strftime("%Y-%m-%d"))
         )
         value = result.json()["item"]["milliliters"]
-        if not self.unit_aware:
-            return value
+        if self.unit_aware:
+            return Volume(ml=value)
 
-        return Volume(ml=value)
+        return value
 
     def __str__(self) -> str:
         return f"MyFitnessPal Client for {self.effective_username}"
 
     def get_food_search_results(self, query: str) -> List[FoodItem]:
+        """Search for foods matching a specified query."""
         search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
         document = self._get_document_for_url(search_url)
         authenticity_token = document.xpath(
@@ -787,6 +797,7 @@ class Client(MFPBase):
         }
 
     def get_food_item_details(self, mfp_id: int) -> FoodItem:
+        """Get details about a specific food using its ID."""
         details = self._get_food_item_details(mfp_id)
 
         # returning food item's details
@@ -829,9 +840,7 @@ class Client(MFPBase):
         report = OrderedDict(self._get_report_data(json_data))
 
         if not report:
-            raise ValueError(
-                "Could not load any results for the given category & name"
-            )
+            raise ValueError("Could not load any results for the given category & name")
 
         # Remove entries that are not within the dates specified
         for date in list(report.keys()):
@@ -842,7 +851,7 @@ class Client(MFPBase):
 
     def _get_url_for_report(
         self, report_name: str, report_category: str, lower_bound: datetime.date
-    ):
+    ) -> str:
         delta = datetime.date.today() - lower_bound
         return (
             parse.urljoin(
@@ -852,8 +861,8 @@ class Client(MFPBase):
             + f"/{str(delta.days)}.json"
         )
 
-    def _get_report_data(self, json_data: dict):
-        report_data = {}
+    def _get_report_data(self, json_data: dict) -> Dict[datetime.date, float]:
+        report_data: Dict[datetime.date, float] = {}
 
         data = json_data.get("data")
 

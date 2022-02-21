@@ -8,11 +8,14 @@ from .entry import Entry
 
 
 class Meal(MFPBase):
+    """Stores information about a particular meal."""
+
     def __init__(self, name: str, entries: List[Entry]):
         self._name = name
         self._entries = entries
 
     def __getitem__(self, value: int) -> Entry:
+        """Returns a particular entry for thsi meal."""
         if not isinstance(value, int):
             raise ValueError("Index must be an integer")
         return self.entries[value]
@@ -22,14 +25,17 @@ class Meal(MFPBase):
 
     @property
     def entries(self) -> List[Entry]:
+        """Entries for this meal."""
         return self._entries
 
     @property
     def name(self) -> str:
+        """Name of this meal."""
         return self._name
 
     @property
     def totals(self) -> NutritionDict:
+        """Nutrition totals for all entries for this meal."""
         nutrition = {}
         for entry in self.entries:
             for k, v in entry.nutrition_information.items():

@@ -18,22 +18,27 @@ class FoodItemServing(MFPBase):
 
     @property
     def serving_id(self) -> str:
+        """Serving ID"""
         return self._serving_id
 
     @property
     def nutrition_multiplier(self) -> float:
+        """Nutrition Multiplier"""
         return self._nutrition_multiplier
 
     @property
     def value(self) -> float:
+        """Value"""
         return self._value
 
     @property
     def unit(self) -> str:
+        """Unit"""
         return self._unit
 
     @property
     def index(self) -> int:
+        """Index"""
         return self._index
 
     def __str__(self) -> str:

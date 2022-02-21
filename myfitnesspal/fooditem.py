@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 
 class FoodItem(MFPBase):
+    """Stores information about a particular food item."""
+
     def __init__(
         self,
         mfp_id: int,
@@ -50,6 +52,7 @@ class FoodItem(MFPBase):
 
     @property
     def details(self) -> FoodItemNutritionDict:
+        """Nutritional details."""
         self._load_nutrition_details()
         assert self._details is not None
 
@@ -57,22 +60,27 @@ class FoodItem(MFPBase):
 
     @property
     def mfp_id(self) -> int:
+        """Myfitnespal ID for this item."""
         return self._mfp_id
 
     @property
     def name(self) -> str:
+        """Name"""
         return self._name
 
     @property
     def brand(self) -> Optional[str]:
+        """Brand"""
         return self._brand
 
     @property
     def verified(self) -> bool:
+        """Verified?"""
         return self._verified
 
     @property
     def serving(self) -> Optional[str]:
+        """Serving"""
         self._load_nutrition_details()
 
         assert self._serving_sizes is not None
@@ -85,74 +93,92 @@ class FoodItem(MFPBase):
 
     @property
     def calories(self) -> float:
+        """Calories"""
         return self._calories
 
     @property
     def calcium(self) -> float:
+        """Calcium"""
         return self.details["calcium"]
 
     @property
     def carbohydrates(self) -> float:
+        """Carbohydrates"""
         return self.details["carbohydrates"]
 
     @property
     def cholesterol(self) -> float:
+        """Cholesterol"""
         return self.details["cholesterol"]
 
     @property
     def fat(self) -> float:
+        """Fat"""
         return self.details["fat"]
 
     @property
     def fiber(self) -> float:
+        """Fiber"""
         return self.details["fiber"]
 
     @property
     def iron(self) -> float:
+        """Iron"""
         return self.details["iron"]
 
     @property
     def monounsaturated_fat(self) -> float:
+        """Monounsaturated Fat"""
         return self.details["monounsaturated_fat"]
 
     @property
     def polyunsaturated_fat(self) -> float:
+        """Polyunsaturated Fat"""
         return self.details["polyunsaturated_fat"]
 
     @property
     def potassium(self) -> float:
+        """Potassium"""
         return self.details["potassium"]
 
     @property
     def protein(self) -> float:
+        """Protein"""
         return self.details["protein"]
 
     @property
     def saturated_fat(self) -> float:
+        """Saturated Fat"""
         return self.details["saturated_fat"]
 
     @property
     def sodium(self) -> float:
+        """Sodium"""
         return self.details["sodium"]
 
     @property
     def sugar(self) -> float:
+        """Sugar"""
         return self.details["sugar"]
 
     @property
     def trans_fat(self) -> float:
+        """Trans Fat"""
         return self.details["trans_fat"]
 
     @property
     def vitamin_a(self) -> float:
+        """Vitamin A"""
         return self.details["vitamin_a"]
 
     @property
     def vitamin_c(self) -> float:
+        """Vitamin C"""
         return self.details["vitamin_c"]
 
     @property
     def confirmations(self) -> int:
+        """Confirmations"""
         self._load_nutrition_details()
 
         assert self._confirmations is not None
@@ -161,6 +187,7 @@ class FoodItem(MFPBase):
 
     @property
     def servings(self) -> List[FoodItemServing]:
+        """Servings"""
         self._load_nutrition_details()
 
         assert self._serving_sizes is not None

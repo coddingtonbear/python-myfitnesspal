@@ -8,6 +8,8 @@ from .types import NoteDataDict
 
 
 class Note(str):
+    """Stores information about a note"""
+
     _note_data: Dict[str, str]
 
     def __new__(cls, note_data: NoteDataDict) -> Note:
@@ -18,10 +20,12 @@ class Note(str):
 
     @property
     def type(self) -> Optional[str]:
+        """Type"""
         return self._note_data.get("type", None)
 
     @property
     def date(self) -> Optional[datetime.date]:
+        """Date"""
         date_str = self._note_data.get("date")
 
         if not date_str:
@@ -33,4 +37,5 @@ class Note(str):
         ).date()
 
     def as_dict(self):
+        """Returns data as a dictionary."""
         return self._note_data
