@@ -1279,51 +1279,35 @@ class Client(MFPBase):
         recipe_dict["name"] = meal_title
         recipe_dict["recipeYield"] = 1
         recipe_dict["recipeIngredient"] = []
-        try:
-            ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
-            # No ingridents?
-            if (
-                len(ingredients) == 1
-                and ingredients[0].xpath("./td[1]")[0].text == "\xa0"
-            ):
-                raise
-            else:
-                for ingredient in ingredients:
-                    recipe_dict["recipeIngredient"].append(
-                        ingredient.xpath("./td[1]")[0].text
-                    )
-                    """ #Unfortunately the schema does not account for this information based on ingredients
-                    tmp = {}
-                    tmp['title'] = ingredient.xpath('./td[1]')[0].text
-                    tmp['nutrition'] = {}
-                    tmp['nutrition']['energy'] = ingredient.xpath('./td[2]')[0].text
-                    tmp['nutrition']['carbohydrates'] = ingredient.xpath('./td[3]')[0].text
-                    tmp['nutrition']['protein'] = ingredient.xpath('./td[5]')[0].text
-                    tmp['nutrition']['fat'] = ingredient.xpath('./td[4]')[0].text
-                    tmp['nutrition']['sugar'] = ingredient.xpath('./td[7]')[0].text
-                    tmp['nutrition']['sodium'] = ingredient.xpath('./td[6]')[0].text
-                    meal_dict['ingredients'].append(tmp)
-                    """
+        ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
+        # No ingredients?
+        if (
+            len(ingredients) == 1
+            and ingredients[0].xpath("./td[1]")[0].text == "\xa0"
+        ):
+            raise SomeKindOfException("No ingredients?")
+        else:
+            for ingredient in ingredients:
+                recipe_dict["recipeIngredient"].append(
+                    ingredient.xpath("./td[1]")[0].text
+                )
 
-                total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
-                recipe_dict["nutrition"] = {"@type": "NutritionInformation"}
-                recipe_dict["nutrition"]["calories"] = total.xpath("./td[2]")[0].text
-                recipe_dict["nutrition"]["carbohydrateContent"] = total.xpath(
-                    "./td[3]"
-                )[0].text
-                recipe_dict["nutrition"]["proteinContent"] = total.xpath("./td[5]")[
-                    0
-                ].text
-                recipe_dict["nutrition"]["fatContent"] = total.xpath("./td[4]")[0].text
-                recipe_dict["nutrition"]["sugarContent"] = total.xpath("./td[7]")[
-                    0
-                ].text
-                recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[
-                    0
-                ].text
-        except Exception:
-            logger.warning(f"Could not extract meal information from {meal_url}")
-            return None
+            total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
+            recipe_dict["nutrition"] = {"@type": "NutritionInformation"}
+            recipe_dict["nutrition"]["calories"] = total.xpath("./td[2]")[0].text
+            recipe_dict["nutrition"]["carbohydrateContent"] = total.xpath(
+                "./td[3]"
+            )[0].text
+            recipe_dict["nutrition"]["proteinContent"] = total.xpath("./td[5]")[
+                0
+            ].text
+            recipe_dict["nutrition"]["fatContent"] = total.xpath("./td[4]")[0].text
+            recipe_dict["nutrition"]["sugarContent"] = total.xpath("./td[7]")[
+                0
+            ].text
+            recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[
+                0
+            ].text
 
         # add some required tags to match schema
         recipe_dict["recipe_instructions"] = []
