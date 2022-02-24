@@ -947,7 +947,6 @@ class Client(MFPBase):
                     "//*[@id='errorExplanation']/ul/li"
                 ):
                     return True
-                    # print("No Error :)")
                     # Would like to return FoodItem, but seems that it take
                     # to long until the submitted food is available in the DB
                     # return self.get_food_search_results("{} {}".format(brand, description))[0]
