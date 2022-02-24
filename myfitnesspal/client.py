@@ -879,18 +879,16 @@ class Client(MFPBase):
                 "food[description]": description,
             },
         )
-        if result.status_code == 200:
-            # Check if a warning exists and log warning
-            document = lxml.html.document_fromstring(result.content.decode("utf-8"))
-            if document.xpath("//*[@id='main']/p[1]/span"):
-                warning = document.xpath("//*[@id='main']/p[1]/span")[0].text
-                logger.warning(f"My Fitness Pal responded: {warning}")
-        elif not result.ok:
-            logger.warning(
+        if not result.ok:
+           raise MyfitnesspalRequestFailed(
                 f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
-            return None
-
+            
+        # Check if a warning exists and log warning
+        document = lxml.html.document_fromstring(result.content.decode("utf-8"))
+        if document.xpath("//*[@id='main']/p[1]/span"):
+            warning = document.xpath("//*[@id='main']/p[1]/span")[0].text
+            logger.warning(f"My Fitness Pal responded: {warning}")
         # Passed Brand and Desc. Ready submit Form but needs new Authenticity Token
         url = parse.urljoin(self.BASE_URL_SECURE, SUBMIT_NEW_PATH)
         document = self._get_document_for_url(url)
