@@ -960,10 +960,9 @@ class Client(MFPBase):
                 logger.warning(f"Unable to submit food to MyFitnessPal: {error}")
 
         elif not result.ok:
-            logger.warning(
+            raise MyfitnesspalRequestFailed(
                 f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
-            return None
 
     def set_new_goal(
         self,
