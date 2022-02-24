@@ -30,6 +30,8 @@ BRITISH_UNIT_MATCHER = re.compile(r"(?:(?P<st>\d+) st)\W*(?:(?P<lbs>\d+) lb)?")
 
 
 class Client(MFPBase):
+    """Provides access to MyFitnessPal APIs"""
+
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
@@ -52,7 +54,13 @@ class Client(MFPBase):
         "kilojoules": (Energy, "kJ"),
     }
 
-    def __init__(self, username, password=None, login=True, unit_aware=False):
+    def __init__(
+        self,
+        username: str,
+        password: Optional[str] = None,
+        login: bool = True,
+        unit_aware: bool = False,
+    ):
         self.provided_username = username
         if password is None:
             password = get_password_from_keyring(username)
@@ -73,6 +81,7 @@ class Client(MFPBase):
 
     @property
     def user_id(self) -> Optional[types.MyfitnesspalUserId]:
+        """The user_id of the logged-in account."""
         if self._auth_data is None:
             return None
 
@@ -80,10 +89,12 @@ class Client(MFPBase):
 
     @property
     def user_metadata(self) -> Optional[types.UserMetadata]:
+        """Metadata about of the logged-in account."""
         return self._user_metadata
 
     @property
     def access_token(self) -> Optional[str]:
+        """The access token for the logged-in account."""
         if self._auth_data is None:
             return None
 
@@ -458,6 +469,7 @@ class Client(MFPBase):
         ...
 
     def get_date(self, *args, **kwargs) -> Day:
+        """Returns your meal diary for a particular date"""
         if len(args) == 3:
             date = datetime.date(
                 int(args[0]),
@@ -501,7 +513,10 @@ class Client(MFPBase):
         return day
 
     def get_measurements(
-        self, measurement="Weight", lower_bound=None, upper_bound=None
+        self,
+        measurement="Weight",
+        lower_bound: Optional[datetime.date] = None,
+        upper_bound: Optional[datetime.date] = None,
     ) -> Dict[datetime.date, float]:
         """Returns measurements of a given name between two dates."""
         if upper_bound is None:
@@ -565,7 +580,7 @@ class Client(MFPBase):
         measurement="Weight",
         value: float = None,
         date: Optional[datetime.date] = None,
-    ):
+    ) -> None:
         """Sets measurement for today's date."""
         if value is None:
             raise ValueError("Cannot update blank value.")
@@ -660,15 +675,6 @@ class Client(MFPBase):
 
         return ids
 
-    def get_measurement_id_options(self) -> Dict[str, int]:
-        """Returns list of measurement choices."""
-        # get the URL for the main check in page
-        document = self._get_document_for_url(self._get_url_for_measurements())
-
-        # gather the IDs for all measurement types
-        measurement_ids = self._get_measurement_ids(document)
-        return measurement_ids
-
     def _get_notes(self, date: datetime.date) -> Note:
         result = self._get_request_for_url(
             parse.urljoin(
@@ -697,6 +703,7 @@ class Client(MFPBase):
         return f"MyFitnessPal Client for {self.effective_username}"
 
     def get_food_search_results(self, query: str) -> List[FoodItem]:
+        """Search for foods matching a specified query."""
         search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
         document = self._get_document_for_url(search_url)
         authenticity_token = document.xpath(
@@ -796,6 +803,7 @@ class Client(MFPBase):
         }
 
     def get_food_item_details(self, mfp_id: int) -> FoodItem:
+        """Get details about a specific food using its ID."""
         details = self._get_food_item_details(mfp_id)
 
         # returning food item's details
