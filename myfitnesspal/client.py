@@ -1265,7 +1265,6 @@ class Client(MFPBase):
         return meals_dict
 
     def get_meal(self, mealid: int, meal_title: str):
-
         MEAL_PATH = f"/meal/update_meal_ingredients/{mealid}"
         meal_url = parse.urljoin(self.BASE_URL_SECURE, MEAL_PATH)
         document = self._get_document_for_url(meal_url)
