@@ -1117,21 +1117,11 @@ class Client(MFPBase):
         result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
 
         # TODO Check Request Result
-        if result.status_code == 200:
-            return True
-        elif not result.ok:
-            logger.warning(
+        if not result.ok:
+            raise SomeKindOfException(
                 "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
-            return False
-        else:
-            logger.error(
-                "Request Error - Unable to submit Goals to MyFitnessPal: "
-                "status code: {status}".format(status=result.status_code)
-            )
-            print(result)
-            return False
 
     def get_recipe_list(self):
         # TODO EXCEPTION HANDLING
