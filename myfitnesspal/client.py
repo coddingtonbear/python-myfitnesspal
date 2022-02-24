@@ -1019,7 +1019,7 @@ class Client(MFPBase):
                 or percent_fat is None
             ):
                 if energy is None:
-                    logger.warning("No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information.")
+                    raise ValueError("No energy value and no macro values provided! - Not able to update goals without a mandatory amount of information.")
                     return False
                 else:
                     old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
