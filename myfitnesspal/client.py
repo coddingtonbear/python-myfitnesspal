@@ -975,20 +975,6 @@ class Client(MFPBase):
         percent_carbohydrates: float = None,
         percent_protein: float = None,
         percent_fat: float = None,
-        # TODO Add micro nutritions
-        # saturated_fat: float = None,
-        # polyunsaturated_fat: float = None,
-        # monounsaturated_fat: float = None,
-        # trans_fat: float = None,
-        # fiber: float = None,
-        # sugar: float = None,
-        # cholesterol: float = None,
-        # sodium: float = None,
-        # potassium: float = None,
-        # vitamin_a: float = None,
-        # vitamin_c: float = None,
-        # calcium: float = None,
-        # iron: float = None,
         assign_exercise_energy="nutrient_goal",
     ):
         """Function to update your nutrition goals. Function will return True if successful."""
