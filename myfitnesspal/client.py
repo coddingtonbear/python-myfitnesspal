@@ -1178,8 +1178,8 @@ class Client(MFPBase):
         return recipes_dict
 
     def get_recipe(self, recipeid: int):
-        recipe_PATH = f"/recipe/view/{recipeid}"
-        recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_PATH)
+        recipe_path = f"/recipe/view/{recipeid}"
+        recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_path)
         document = self._get_document_for_url(recipe_url)
 
         recipe_dict = {
