@@ -846,7 +846,7 @@ class Client(MFPBase):
         serving_size: str = "1 Serving",
         servingspercontainer: float = 1.0,
         sharepublic: bool = False,
-    )-> bool:
+    ) -> bool:
         """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
 
         SUBMIT_PATH = "food/submit"
@@ -880,10 +880,10 @@ class Client(MFPBase):
             },
         )
         if not result.ok:
-           raise MyfitnesspalRequestFailed(
+            raise MyfitnesspalRequestFailed(
                 f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
-            
+
         # Check if a warning exists and log warning
         document = lxml.html.document_fromstring(result.content.decode("utf-8"))
         if document.xpath("//*[@id='main']/p[1]/span"):
@@ -943,20 +943,19 @@ class Client(MFPBase):
             document = lxml.html.document_fromstring(result.content.decode("utf-8"))
 
             if not document.xpath(
-                    # If list is empty there should be no error, could be replaced with assert
+                # If list is empty there should be no error, could be replaced with assert
                 "//*[@id='errorExplanation']/ul/li"
             ):
                 return True
-                    # Would like to return FoodItem, but seems that it take
-                    # to long until the submitted food is available in the DB
-                    # return self.get_food_search_results("{} {}".format(brand, description))[0]
+                # Would like to return FoodItem, but seems that it take
+                # to long until the submitted food is available in the DB
+                # return self.get_food_search_results("{} {}".format(brand, description))[0]
             else:  # Error occurred
                 error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
                 error = error.replace("Description ", "")  # For cosmetic reasons
                 raise MyfitnesspalRequestFailed(
-                        f"Unable to submit food to MyFitnessPal: {error}"
+                    f"Unable to submit food to MyFitnessPal: {error}"
                 )
-
 
         elif not result.ok:
             raise MyfitnesspalRequestFailed(
@@ -1017,7 +1016,9 @@ class Client(MFPBase):
                 or percent_fat is None
             ):
                 if energy is None:
-                    raise ValueError("No energy value and no macro values provided! - Not able to update goals without a mandatory amount of information.")
+                    raise ValueError(
+                        "No energy value and no macro values provided! - Not able to update goals without a mandatory amount of information."
+                    )
                     return False
                 else:
                     old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
@@ -1034,10 +1035,16 @@ class Client(MFPBase):
 
                     # If old and new values are in diffrent units then convert old value to new unit
                     if not old_energy_unit == energy_unit:
-                        if old_energy_unit == "kilojoules" and energy_unit == "calories":
+                        if (
+                            old_energy_unit == "kilojoules"
+                            and energy_unit == "calories"
+                        ):
                             old_energy_value *= 0.2388
                             old_energy_unit = "calories"
-                        elif old_energy_unit == "calories" and energy_unit == "kilojoules":
+                        elif (
+                            old_energy_unit == "calories"
+                            and energy_unit == "kilojoules"
+                        ):
                             """FROM MFP JS
                             if (energyUnit === 'kilojoules') {
                                 calories *= 4.184;
@@ -1054,7 +1061,9 @@ class Client(MFPBase):
             # If percentage values were provided check
             else:
                 if energy is None:
-                    raise ValueError("No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information.")
+                    raise ValueError(
+                        "No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information."
+                    )
                     return False
                 else:
                     if percent_carbohydrates + percent_protein + percent_fat == 100.0:
@@ -1066,7 +1075,9 @@ class Client(MFPBase):
                             protein = round(protein / 4.184, 2)
                             fat = round(fat / 4.184, 2)
                     else:
-                        raise ValueError("Provided percentage values are not plausible - Not able to update goals.")
+                        raise ValueError(
+                            "Provided percentage values are not plausible - Not able to update goals."
+                        )
                         return False
         else:
             macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
@@ -1096,7 +1107,6 @@ class Client(MFPBase):
         new_goals["item"]["default_goal"]["protein"] = protein
         new_goals["item"]["default_goal"]["fat"] = fat
 
-
         for goal in new_goals["item"]["daily_goals"]:
             goal["meal_goals"] = []
             goal.pop("group_id", None)
@@ -1106,7 +1116,6 @@ class Client(MFPBase):
             goal["carbohydrates"] = carbohydrates
             goal["protein"] = protein
             goal["fat"] = fat
-
 
         # Build Post-Request
         # Post Request
@@ -1175,9 +1184,7 @@ class Client(MFPBase):
             "author": self.effective_username,
         }
         recipe_dict["org_url"] = recipe_url
-        recipe_dict["name"] = document.xpath('//*[@id="main"]/div[3]/div[2]/h1')[
-            0
-        ].text
+        recipe_dict["name"] = document.xpath('//*[@id="main"]/div[3]/div[2]/h1')[0].text
         recipe_dict["recipeYield"] = document.xpath('//*[@id="recipe_servings"]')[
             0
         ].text
@@ -1230,7 +1237,7 @@ class Client(MFPBase):
         recipe_dict["tags"] = ["MyFitnessPal"]
         return recipe_dict
 
-    def get_meals(self)-> dict:
+    def get_meals(self) -> dict:
         """
         Returns a dictionary with all saved meals. Meal id will be used as dictionary key, meal titel as dictionary value.
         """
@@ -1272,10 +1279,7 @@ class Client(MFPBase):
         recipe_dict["recipeIngredient"] = []
         ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
         # No ingredients?
-        if (
-            len(ingredients) == 1
-            and ingredients[0].xpath("./td[1]")[0].text == "\xa0"
-        ):
+        if len(ingredients) == 1 and ingredients[0].xpath("./td[1]")[0].text == "\xa0":
             raise SomeKindOfException("No ingredients?")
         else:
             for ingredient in ingredients:
@@ -1286,19 +1290,13 @@ class Client(MFPBase):
             total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
             recipe_dict["nutrition"] = {"@type": "NutritionInformation"}
             recipe_dict["nutrition"]["calories"] = total.xpath("./td[2]")[0].text
-            recipe_dict["nutrition"]["carbohydrateContent"] = total.xpath(
-                "./td[3]"
-            )[0].text
-            recipe_dict["nutrition"]["proteinContent"] = total.xpath("./td[5]")[
+            recipe_dict["nutrition"]["carbohydrateContent"] = total.xpath("./td[3]")[
                 0
             ].text
+            recipe_dict["nutrition"]["proteinContent"] = total.xpath("./td[5]")[0].text
             recipe_dict["nutrition"]["fatContent"] = total.xpath("./td[4]")[0].text
-            recipe_dict["nutrition"]["sugarContent"] = total.xpath("./td[7]")[
-                0
-            ].text
-            recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[
-                0
-            ].text
+            recipe_dict["nutrition"]["sugarContent"] = total.xpath("./td[7]")[0].text
+            recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[0].text
 
         # add some required tags to match schema
         recipe_dict["recipe_instructions"] = []
