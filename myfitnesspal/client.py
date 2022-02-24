@@ -846,7 +846,7 @@ class Client(MFPBase):
         serving_size: str = "1 Serving",
         servingspercontainer: float = 1.0,
         sharepublic: bool = False,
-    ):
+    )-> bool:
         """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
 
         SUBMIT_PATH = "food/submit"
@@ -941,23 +941,22 @@ class Client(MFPBase):
         )
         if result.status_code == 200:
             document = lxml.html.document_fromstring(result.content.decode("utf-8"))
-            try:
-                if not document.xpath(
+
+            if not document.xpath(
                     # If list is empty there should be no error, could be replaced with assert
-                    "//*[@id='errorExplanation']/ul/li"
-                ):
-                    return True
+                "//*[@id='errorExplanation']/ul/li"
+            ):
+                return True
                     # Would like to return FoodItem, but seems that it take
                     # to long until the submitted food is available in the DB
                     # return self.get_food_search_results("{} {}".format(brand, description))[0]
-                else:  # Error occurred
-                    error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
-                    error = error.replace("Description ", "")  # For cosmetic reasons
-                    raise MyfitnesspalRequestFailed(
+            else:  # Error occurred
+                error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
+                error = error.replace("Description ", "")  # For cosmetic reasons
+                raise MyfitnesspalRequestFailed(
                         f"Unable to submit food to MyFitnessPal: {error}"
-                    )
-            except Exception:
-                logger.warning(f"Unable to submit food to MyFitnessPal: {error}")
+                )
+
 
         elif not result.ok:
             raise MyfitnesspalRequestFailed(
@@ -975,7 +974,7 @@ class Client(MFPBase):
         percent_protein: float = None,
         percent_fat: float = None,
         assign_exercise_energy="nutrient_goal",
-    ):
+    ) -> bool:
         """Function to update your nutrition goals. Function will return True if successful."""
         # FROM MFP JS:
         # var calculated_energy = 4 * parseFloat(this.get('carbGrams')) + 4 * parseFloat(this.get('proteinGrams')) + 9 * parseFloat(this.get('fatsGrams'));
@@ -1081,7 +1080,6 @@ class Client(MFPBase):
                 energy = macro_energy
 
         # Build payload based on observed browser behaviour
-        # TODO Insert additional micro nurtitions
         new_goals = {}
         new_goals["item"] = old_goals["items"][0]
         new_goals["item"].pop("valid_to", None)
@@ -1097,7 +1095,7 @@ class Client(MFPBase):
         new_goals["item"]["default_goal"]["carbohydrates"] = carbohydrates
         new_goals["item"]["default_goal"]["protein"] = protein
         new_goals["item"]["default_goal"]["fat"] = fat
-        # TODO Add micro nutritions
+
 
         for goal in new_goals["item"]["daily_goals"]:
             goal["meal_goals"] = []
@@ -1108,22 +1106,23 @@ class Client(MFPBase):
             goal["carbohydrates"] = carbohydrates
             goal["protein"] = protein
             goal["fat"] = fat
-            # TODO Add micro nutritions
+
 
         # Build Post-Request
         # Post Request
         url = parse.urljoin(self.BASE_API_URL, "v2/nutrient-goals")
         result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
 
-        # TODO Check Request Result
         if not result.ok:
             raise SomeKindOfException(
                 "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
 
-    def get_recipe_list(self):
-        # TODO EXCEPTION HANDLING
+    def get_recipes(self) -> dict:
+        """
+        Returns a dictionary with all saved recipes. Recipe ID will be used as dictionary key, recipe titel as dictionary value.
+        """
         recipes_dict = {}
 
         page_count = 1
@@ -1159,14 +1158,13 @@ class Client(MFPBase):
                 else:
                     has_next_page = False  # Only one link means it is the last page
             else:
-                # Indicator for no recipes
+                # Indicator for no recipes if len(recipes_dict) is 0 here
                 has_next_page = False
-                if len(recipes_dict) == 0:
-                    return None
 
         return recipes_dict
 
-    def get_recipe(self, recipeid: int):
+    def get_recipe(self, recipeid: int) -> dict:
+        """Takes recipe id and returns recipe details in a dict matching recipe schema from schema.org"""
         recipe_path = f"/recipe/view/{recipeid}"
         recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_path)
         document = self._get_document_for_url(recipe_url)
@@ -1232,10 +1230,13 @@ class Client(MFPBase):
         recipe_dict["tags"] = ["MyFitnessPal"]
         return recipe_dict
 
-    def get_meal_list(self):
+    def get_meals(self)-> dict:
+        """
+        Returns a dictionary with all saved meals. Meal id will be used as dictionary key, meal titel as dictionary value.
+        """
         meals_dict = {}
-        MEALS_PATH = "meal/mine"
-        meals_url = parse.urljoin(self.BASE_URL_SECURE, MEALS_PATH)
+        meals_path = "meal/mine"
+        meals_url = parse.urljoin(self.BASE_URL_SECURE, meals_path)
         document = self._get_document_for_url(meals_url)
 
         meals = document.xpath(
@@ -1253,9 +1254,11 @@ class Client(MFPBase):
 
         return meals_dict
 
-    def get_meal(self, mealid: int, meal_title: str):
-        MEAL_PATH = f"/meal/update_meal_ingredients/{mealid}"
-        meal_url = parse.urljoin(self.BASE_URL_SECURE, MEAL_PATH)
+    def get_meal(self, meal_id: int, meal_title: str) -> dict:
+        """Takes a meal id and title and returns meal details in a dict matching recipe schema from schema.org"""
+
+        meal_path = f"/meal/update_meal_ingredients/{meal_id}"
+        meal_url = parse.urljoin(self.BASE_URL_SECURE, meal_path)
         document = self._get_document_for_url(meal_url)
 
         recipe_dict = {
