@@ -1056,7 +1056,7 @@ class Client(MFPBase):
             # If percentage values were provided check
             else:
                 if energy is None:
-                    logger.warning("No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information.")
+                    raise ValueError("No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information.")
                     return False
                 else:
                     if percent_carbohydrates + percent_protein + percent_fat == 100.0:
