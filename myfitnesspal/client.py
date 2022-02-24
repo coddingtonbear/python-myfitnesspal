@@ -1068,7 +1068,7 @@ class Client(MFPBase):
                             protein = round(protein / 4.184, 2)
                             fat = round(fat / 4.184, 2)
                     else:
-                        logger.warning("Provided percentage values are not plausible - Not able to update goals.")
+                        raise ValueError("Provided percentage values are not plausible - Not able to update goals.")
                         return False
         else:
             macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
