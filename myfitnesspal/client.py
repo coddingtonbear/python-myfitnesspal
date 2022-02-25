@@ -1123,10 +1123,11 @@ class Client(MFPBase):
         result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
 
         if not result.ok:
-            raise SomeKindOfException(
+            raise MyfitnesspalRequestFailed(
                 "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
+        return True
 
     def get_recipes(self) -> dict:
         """
@@ -1177,6 +1178,7 @@ class Client(MFPBase):
         recipe_path = f"/recipe/view/{recipeid}"
         recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_path)
         document = self._get_document_for_url(recipe_url)
+        # TODO Check Response Raise if no rights
 
         recipe_dict = {
             "@context": "https://schema.org",
@@ -1256,8 +1258,8 @@ class Client(MFPBase):
                 meal_title = meal.xpath("./a")[0].text
                 meals_dict[meal_id] = meal_title
         except Exception:
-            logger.warning("Could not load meals.")
-            return None
+            # no meals available?
+            logger.warning("Could not extract meal.")
 
         return meals_dict
 
@@ -1280,7 +1282,7 @@ class Client(MFPBase):
         ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
         # No ingredients?
         if len(ingredients) == 1 and ingredients[0].xpath("./td[1]")[0].text == "\xa0":
-            raise SomeKindOfException("No ingredients?")
+            raise Exception("No ingredients?")
         else:
             for ingredient in ingredients:
                 recipe_dict["recipeIngredient"].append(
