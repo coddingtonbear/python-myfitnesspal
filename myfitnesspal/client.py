@@ -986,13 +986,6 @@ class Client(MFPBase):
         url = parse.urljoin(self.BASE_URL_SECURE, "account/my_goals")
         today = datetime.datetime.now().strftime("%Y-%m-%d")
 
-        """
-        Will leave this here as reminder why we do not use self._get_json_for_url() at the moment.
-        # No Way implemented to send token by calling self._get_json_for_url
-        old_goals_url = parse.urljoin(self.BASE_API_URL, f"v2/nutrient-goals?date={today}")
-        old_goals = self._get_json_for_url(old_goals_url)
-        """
-
         # Build header for API-requests
         auth_header = self.session.headers
         auth_header["authorization"] = f"Bearer {self.access_token}"
@@ -1053,7 +1046,9 @@ class Client(MFPBase):
                             old_energy_value *= 4.184
                             old_energy_unit = "kilojoules"
                         else:
-                            raise ValueError
+                            raise Exception(
+                                f"Unknown energy unit appeared: {old_energy_unit} - {energy_unit}"
+                            )
 
                     carbohydrates = energy * old_carbohydrates / old_energy_value
                     protein = energy * old_protein / old_energy_value
@@ -1064,7 +1059,6 @@ class Client(MFPBase):
                     raise ValueError(
                         "No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information."
                     )
-                    return False
                 else:
                     if percent_carbohydrates + percent_protein + percent_fat == 100.0:
                         carbohydrates = energy * percent_carbohydrates / 100.0 / 4
@@ -1078,7 +1072,6 @@ class Client(MFPBase):
                         raise ValueError(
                             "Provided percentage values are not plausible - Not able to update goals."
                         )
-                        return False
         else:
             macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
             if energy_unit == "kilojoules":
@@ -1129,7 +1122,7 @@ class Client(MFPBase):
             )
         return True
 
-    def get_recipes(self) -> dict:
+    def get_recipes(self) -> Dict[int, str]:
         """
         Returns a dictionary with all saved recipes. Recipe ID will be used as dictionary key, recipe titel as dictionary value.
         """
@@ -1239,7 +1232,7 @@ class Client(MFPBase):
         recipe_dict["tags"] = ["MyFitnessPal"]
         return recipe_dict
 
-    def get_meals(self) -> dict:
+    def get_meals(self) -> Dict[int, str]:
         """
         Returns a dictionary with all saved meals. Meal id will be used as dictionary key, meal titel as dictionary value.
         """
