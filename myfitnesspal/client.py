@@ -974,7 +974,23 @@ class Client(MFPBase):
         percent_fat: float = None,
         assign_exercise_energy="nutrient_goal",
     ) -> bool:
-        """Function to update your nutrition goals. Function will return True if successful."""
+        """Function to update your nutrition goals. Will return True if successful.
+
+        This Function will update your nutrition goals and is able to deal with multiple situations based on the passed arguments.
+        First matching situation will be applied and used to update the nutrition goals.
+
+        Passed arguments - Hints:
+        energy and all absolute macro values - Energy will be adjusted if calculated energy from macro values is higher than provided energy value.
+        absolute macro values - Energy value will be calculated with provided macro values.
+        energy and all percentage macro values - Energy will be adjusted and split into macros by provided percentage.
+        energy - Energy will be adjusted and split into macros by percentage as before.
+
+        Optional arguments:
+        energy_unit - Function is able to deal with calories and kilojoules. If not provided user preferences will be used.
+
+        Additional hints:
+        Values will be adjusted and rounded by MFP if no premium subscription is applied!
+        """
         # FROM MFP JS:
         # var calculated_energy = 4 * parseFloat(this.get('carbGrams')) + 4 * parseFloat(this.get('proteinGrams')) + 9 * parseFloat(this.get('fatsGrams'));
 
@@ -1012,7 +1028,6 @@ class Client(MFPBase):
                     raise ValueError(
                         "No energy value and no macro values provided! - Not able to update goals without a mandatory amount of information."
                     )
-                    return False
                 else:
                     old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
                         "value"
@@ -1077,7 +1092,7 @@ class Client(MFPBase):
             if energy_unit == "kilojoules":
                 macro_energy *= 4.184
             # Compare energy values and set it correctly due to macros. Will also fix if no energy_value was provided.
-            if energy != macro_energy:
+            if energy < macro_energy:
                 logger.warning(
                     "Provided energy value and calculated energy value from macros do not match! Will override!"
                 )
@@ -1110,8 +1125,7 @@ class Client(MFPBase):
             goal["protein"] = protein
             goal["fat"] = fat
 
-        # Build Post-Request
-        # Post Request
+        # Build request and post
         url = parse.urljoin(self.BASE_API_URL, "v2/nutrient-goals")
         result = self.session.post(url, json.dumps(new_goals), headers=auth_header)
 
@@ -1123,8 +1137,9 @@ class Client(MFPBase):
         return True
 
     def get_recipes(self) -> Dict[int, str]:
-        """
-        Returns a dictionary with all saved recipes. Recipe ID will be used as dictionary key, recipe titel as dictionary value.
+        """Returns a dictionary with all saved recipes.
+
+        Recipe ID will be used as dictionary key, recipe titel as dictionary value.
         """
         recipes_dict = {}
 
