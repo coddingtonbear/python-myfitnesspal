@@ -5,7 +5,7 @@ import json
 import logging
 import re
 from collections import OrderedDict
-from typing import Dict, List, Optional, Union, overload
+from typing import Any, Dict, List, Optional, Union, cast, overload
 
 import lxml.html
 import requests
@@ -819,9 +819,6 @@ class Client(MFPBase):
             client=self,
         )
 
-    # Dominic Schwarz (Dnic94) <dominic.schwarz@dnic42.de> - 25.08.2021 ###
-    # Added function to submit new foods to MFP.
-
     def set_new_food(
         self,
         brand: str,
@@ -830,23 +827,23 @@ class Client(MFPBase):
         fat: float,
         carbs: float,
         protein: float,
-        sodium: float = "",
-        potassium: float = "",
-        saturated_fat: float = "",
-        polyunsaturated_fat: float = "",
-        fiber: float = "",
-        monounsaturated_fat: float = "",
-        sugar: float = "",
-        trans_fat: float = "",
-        cholesterol: float = "",
-        vitamin_a: float = "",
-        calcium: float = "",
-        vitamin_c: float = "",
-        iron: float = "",
+        sodium: float = 0,
+        potassium: float = 0,
+        saturated_fat: float = 0,
+        polyunsaturated_fat: float = 0,
+        fiber: float = 0,
+        monounsaturated_fat: float = 0,
+        sugar: float = 0,
+        trans_fat: float = 0,
+        cholesterol: float = 0,
+        vitamin_a: float = 0,
+        calcium: float = 0,
+        vitamin_c: float = 0,
+        iron: float = 0,
         serving_size: str = "1 Serving",
         servingspercontainer: float = 1.0,
         sharepublic: bool = False,
-    ) -> bool:
+    ) -> None:
         """Function to submit new foods / groceries to the MyFitnessPal database. Function will return True if successful."""
 
         SUBMIT_PATH = "food/submit"
@@ -939,42 +936,39 @@ class Client(MFPBase):
             url,
             data,
         )
-        if result.status_code == 200:
-            document = lxml.html.document_fromstring(result.content.decode("utf-8"))
-
-            if not document.xpath(
-                # If list is empty there should be no error, could be replaced with assert
-                "//*[@id='errorExplanation']/ul/li"
-            ):
-                return True
-                # Would like to return FoodItem, but seems that it take
-                # to long until the submitted food is available in the DB
-                # return self.get_food_search_results("{} {}".format(brand, description))[0]
-            else:  # Error occurred
-                error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
-                error = error.replace("Description ", "")  # For cosmetic reasons
-                raise MyfitnesspalRequestFailed(
-                    f"Unable to submit food to MyFitnessPal: {error}"
-                )
-
-        elif not result.ok:
+        if not result.ok:
             raise MyfitnesspalRequestFailed(
                 f"Request Error - Unable to submit food to MyFitnessPal: status code: {result.status_code}"
             )
 
+        document = lxml.html.document_fromstring(result.content.decode("utf-8"))
+
+        if document.xpath(
+            # If list is empty there should be no error, could be replaced with assert
+            "//*[@id='errorExplanation']/ul/li"
+        ):
+            error = document.xpath("//*[@id='errorExplanation']/ul/li")[0].text
+            error = error.replace("Description ", "")  # For cosmetic reasons
+            raise MyfitnesspalRequestFailed(
+                f"Unable to submit food to MyFitnessPal: {error}"
+            )
+
+        # Would like to return FoodItem, but seems that it take
+        # to long until the submitted food is available in the DB
+        # return self.get_food_search_results("{} {}".format(brand, description))[0]
+
     def set_new_goal(
         self,
-        energy: float = None,
-        energy_unit: str = None,
+        energy: float,
+        energy_unit: str = "calories",
         carbohydrates: float = None,
         protein: float = None,
         fat: float = None,
         percent_carbohydrates: float = None,
         percent_protein: float = None,
         percent_fat: float = None,
-        assign_exercise_energy="nutrient_goal",
-    ) -> bool:
-        """Function to update your nutrition goals. Will return True if successful.
+    ) -> None:
+        """Updates your nutrition goals.
 
         This Function will update your nutrition goals and is able to deal with multiple situations based on the passed arguments.
         First matching situation will be applied and used to update the nutrition goals.
@@ -996,6 +990,7 @@ class Client(MFPBase):
 
         # Get User Default Unit Preference
         if energy_unit != "calories" and energy_unit != "kilojoules":
+            assert self.user_metadata
             energy_unit = self.user_metadata["unit_preferences"]["energy"]
 
         # Get authenticity token and current values
@@ -1024,69 +1019,56 @@ class Client(MFPBase):
                 or percent_protein is None
                 or percent_fat is None
             ):
-                if energy is None:
-                    raise ValueError(
-                        "No energy value and no macro values provided! - Not able to update goals without a mandatory amount of information."
-                    )
-                else:
-                    old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
-                        "value"
-                    ]
-                    old_energy_unit = old_goals["items"][0]["default_goal"]["energy"][
-                        "unit"
-                    ]
-                    old_carbohydrates = old_goals["items"][0]["default_goal"][
-                        "carbohydrates"
-                    ]
-                    old_fat = old_goals["items"][0]["default_goal"]["fat"]
-                    old_protein = old_goals["items"][0]["default_goal"]["protein"]
+                old_energy_value = old_goals["items"][0]["default_goal"]["energy"][
+                    "value"
+                ]
+                old_energy_unit = old_goals["items"][0]["default_goal"]["energy"][
+                    "unit"
+                ]
+                old_carbohydrates = old_goals["items"][0]["default_goal"][
+                    "carbohydrates"
+                ]
+                old_fat = old_goals["items"][0]["default_goal"]["fat"]
+                old_protein = old_goals["items"][0]["default_goal"]["protein"]
 
-                    # If old and new values are in diffrent units then convert old value to new unit
-                    if not old_energy_unit == energy_unit:
-                        if (
-                            old_energy_unit == "kilojoules"
-                            and energy_unit == "calories"
-                        ):
-                            old_energy_value *= 0.2388
-                            old_energy_unit = "calories"
-                        elif (
-                            old_energy_unit == "calories"
-                            and energy_unit == "kilojoules"
-                        ):
-                            """FROM MFP JS
-                            if (energyUnit === 'kilojoules') {
-                                calories *= 4.184;
-                            }
-                            """
-                            old_energy_value *= 4.184
-                            old_energy_unit = "kilojoules"
-                        else:
-                            raise Exception(
-                                f"Unknown energy unit appeared: {old_energy_unit} - {energy_unit}"
-                            )
+                # If old and new values are in diffrent units then convert old value to new unit
+                if not old_energy_unit == energy_unit:
+                    if old_energy_unit not in ["kilojoules", "calories"]:
+                        raise Exception(
+                            f"Unexpected energy unit in historical goals: {old_energy_unit}"
+                        )
+                    if energy_unit not in ["kilojoules", "calories"]:
+                        raise ValueError(
+                            f"Unexpected energy unit in goals: {energy_unit}"
+                        )
 
-                    carbohydrates = energy * old_carbohydrates / old_energy_value
-                    protein = energy * old_protein / old_energy_value
-                    fat = energy * old_fat / old_energy_value
+                    if old_energy_unit == "kilojoules" and energy_unit == "calories":
+                        old_energy_value *= 0.2388
+                        old_energy_unit = "calories"
+                    elif old_energy_unit == "calories" and energy_unit == "kilojoules":
+                        """FROM MFP JS
+                        if (energyUnit === 'kilojoules') {
+                            calories *= 4.184;
+                        }
+                        """
+                        old_energy_value *= 4.184
+                        old_energy_unit = "kilojoules"
+
+                carbohydrates = energy * old_carbohydrates / old_energy_value
+                protein = energy * old_protein / old_energy_value
+                fat = energy * old_fat / old_energy_value
             # If percentage values were provided check
             else:
-                if energy is None:
-                    raise ValueError(
-                        "No energy value and no macro values provided! - Not able to update goals without a mandotory amount of information."
-                    )
-                else:
-                    if percent_carbohydrates + percent_protein + percent_fat == 100.0:
-                        carbohydrates = energy * percent_carbohydrates / 100.0 / 4
-                        protein = energy * percent_protein / 100.0 / 4
-                        fat = energy * percent_fat / 100.0 / 9
-                        if energy_unit == "kilojoules":
-                            carbohydrates = round(carbohydrates / 4.184, 2)
-                            protein = round(protein / 4.184, 2)
-                            fat = round(fat / 4.184, 2)
-                    else:
-                        raise ValueError(
-                            "Provided percentage values are not plausible - Not able to update goals."
-                        )
+                if int(percent_carbohydrates + percent_protein + percent_fat) != 100:
+                    raise ValueError("Provided percentage values do not add to 100%.")
+
+                carbohydrates = energy * percent_carbohydrates / 100.0 / 4
+                protein = energy * percent_protein / 100.0 / 4
+                fat = energy * percent_fat / 100.0 / 9
+                if energy_unit == "kilojoules":
+                    carbohydrates = round(carbohydrates / 4.184, 2)
+                    protein = round(protein / 4.184, 2)
+                    fat = round(fat / 4.184, 2)
         else:
             macro_energy = carbohydrates * 4 + protein * 4 + fat * 9
             if energy_unit == "kilojoules":
@@ -1134,12 +1116,11 @@ class Client(MFPBase):
                 "Request Error - Unable to submit Goals to MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
             )
-        return True
 
     def get_recipes(self) -> Dict[int, str]:
         """Returns a dictionary with all saved recipes.
 
-        Recipe ID will be used as dictionary key, recipe titel as dictionary value.
+        Recipe ID will be used as dictionary key, recipe title as dictionary value.
         """
         recipes_dict = {}
 
@@ -1165,30 +1146,32 @@ class Client(MFPBase):
             # Check for Pagination
             pagination_links = document.xpath('//*[@id="main"]/ul[2]/a')
             if pagination_links:
-                if (
-                    page_count == 1
-                ):  # If Pagination exists and it is page 1 there have to be a second, but only one href to the next (obviously none to the previous)
+                if page_count == 1:
+                    # If Pagination exists and it is page 1 there have to be a second,
+                    # but only one href to the next (obviously none to the previous)
                     page_count += 1
-                elif (
-                    len(pagination_links) > 1
-                ):  # If there are two links, ont to the previous and one to the next
+                elif len(pagination_links) > 1:
+                    # If there are two links, ont to the previous and one to the next
                     page_count += 1
                 else:
-                    has_next_page = False  # Only one link means it is the last page
+                    # Only one link means it is the last page
+                    has_next_page = False
             else:
                 # Indicator for no recipes if len(recipes_dict) is 0 here
                 has_next_page = False
 
         return recipes_dict
 
-    def get_recipe(self, recipeid: int) -> dict:
-        """Takes recipe id and returns recipe details in a dict matching recipe schema from schema.org"""
+    def get_recipe(self, recipeid: int) -> types.Recipe:
+        """Returns recipe details in a dictionary.
+
+        See https://schema.org/Recipe for details regarding this schema.
+        """
         recipe_path = f"/recipe/view/{recipeid}"
         recipe_url = parse.urljoin(self.BASE_URL_SECURE, recipe_path)
         document = self._get_document_for_url(recipe_url)
-        # TODO Check Response Raise if no rights
 
-        recipe_dict = {
+        recipe_dict: Dict[str, Any] = {
             "@context": "https://schema.org",
             "@type": "Recipe",
             "author": self.effective_username,
@@ -1243,13 +1226,15 @@ class Client(MFPBase):
         )[0].text.strip(" \n")
 
         # add some required tags to match schema
-        recipe_dict["recipe_instructions"] = []
+        recipe_dict["recipeInstructions"] = ""
         recipe_dict["tags"] = ["MyFitnessPal"]
-        return recipe_dict
+        return cast(types.Recipe, recipe_dict)
 
     def get_meals(self) -> Dict[int, str]:
-        """
-        Returns a dictionary with all saved meals. Meal id will be used as dictionary key, meal titel as dictionary value.
+        """Returns a dictionary with all saved meals.
+
+        Key: Meal ID
+        Value: Meal Name
         """
         meals_dict = {}
         meals_path = "meal/mine"
@@ -1259,26 +1244,30 @@ class Client(MFPBase):
         meals = document.xpath(
             "//*[@id='matching']/li"
         )  # get all items in the recipe list
+        _idx: Optional[int] = None
         try:
-            for meal in meals:
+            for _idx, meal in enumerate(meals):
                 meal_path = meal.xpath("./a")[0].attrib["href"]
                 meal_id = meal_path.split("/")[-1].split("?")[0]
                 meal_title = meal.xpath("./a")[0].text
                 meals_dict[meal_id] = meal_title
         except Exception:
             # no meals available?
-            logger.warning("Could not extract meal.")
+            logger.warning(f"Could not extract meal at index {_idx}")
 
         return meals_dict
 
-    def get_meal(self, meal_id: int, meal_title: str) -> dict:
-        """Takes a meal id and title and returns meal details in a dict matching recipe schema from schema.org"""
+    def get_meal(self, meal_id: int, meal_title: str) -> types.Recipe:
+        """Returns meal details.
+
+        See https://schema.org/Recipe for details regarding this schema.
+        """
 
         meal_path = f"/meal/update_meal_ingredients/{meal_id}"
         meal_url = parse.urljoin(self.BASE_URL_SECURE, meal_path)
         document = self._get_document_for_url(meal_url)
 
-        recipe_dict = {
+        recipe_dict: Dict[str, Any] = {
             "@context": "https://schema.org",
             "@type": "Recipe",
             "author": self.effective_username,
@@ -1290,7 +1279,7 @@ class Client(MFPBase):
         ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
         # No ingredients?
         if len(ingredients) == 1 and ingredients[0].xpath("./td[1]")[0].text == "\xa0":
-            raise Exception("No ingredients?")
+            raise Exception("No ingredients found when fetching meal.")
         else:
             for ingredient in ingredients:
                 recipe_dict["recipeIngredient"].append(
@@ -1309,6 +1298,6 @@ class Client(MFPBase):
             recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[0].text
 
         # add some required tags to match schema
-        recipe_dict["recipe_instructions"] = []
+        recipe_dict["recipeInstructions"] = ""
         recipe_dict["tags"] = ["MyFitnessPal"]
-        return recipe_dict
+        return cast(types.Recipe, recipe_dict)

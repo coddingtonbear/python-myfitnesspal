@@ -180,3 +180,40 @@ class FoodItemDetailsResponse(TypedDict):
     calories: float
     confirmations: int
     serving_sizes: List[ServingSizeDict]
+
+
+NutritionInformation = TypedDict(
+    "NutritionInformation",
+    {
+        "@type": Literal["NutritionInformation"],
+        "calories": str,
+        "carbohydrateContent": str,
+        "fiberContent": str,
+        "sugarContent": str,
+        "sodiumContent": str,
+        "proteinContent": str,
+        "fatContent": str,
+        "saturatedFatContent": str,
+        "monunsaturatedFatContent": str,
+        "polyunsaturatedFatContent": str,
+        "unsaturatedFatContent": str,
+        "transFatContent": str,
+    },
+)
+
+
+Recipe = TypedDict(
+    "Recipe",
+    {
+        "@context": Literal["https://schema.org"],
+        "@type": Literal["Recipe"],
+        "author": str,
+        "org_url": str,
+        "name": str,
+        "recipeYield": str,
+        "recipeIngredient": List[str],
+        "nutrition": NutritionInformation,
+        "recipeInstructions": str,
+        "tags": List[str],
+    },
+)
