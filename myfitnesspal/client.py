@@ -964,7 +964,7 @@ class Client(MFPBase):
         carbohydrates: Optional[float] = None,
         protein: Optional[float] = None,
         fat: Optional[float] = None,
-        percent_carbohydrates: fOptional[float] = None,
+        percent_carbohydrates: Optional[float] = None,
         percent_protein: Optional[float] = None,
         percent_fat: Optional[float] = None,
     ) -> None:
