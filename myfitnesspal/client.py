@@ -439,10 +439,10 @@ class Client(MFPBase):
 
         return exercises
 
-    def _get_exercises(self, date: datetime.date):
+    def _get_exercises(self, date: datetime.date, username):
         # get the exercise URL
         document = self._get_document_for_url(
-            self._get_url_for_exercise(date, self.effective_username)
+            self._get_url_for_exercise(date, username)
         )
 
         # gather the exercise goals
@@ -470,6 +470,7 @@ class Client(MFPBase):
 
     def get_date(self, *args, **kwargs) -> Day:
         """Returns your meal diary for a particular date"""
+        username = kwargs.get("username", self.effective_username)
         if len(args) == 3:
             date = datetime.date(
                 int(args[0]),
@@ -486,7 +487,7 @@ class Client(MFPBase):
             )
         document = self._get_document_for_url(
             self._get_url_for_date(
-                date, kwargs.get("username", self.effective_username)
+                date, username
             )
         )
 
@@ -496,9 +497,9 @@ class Client(MFPBase):
 
         # Since this data requires an additional request, let's just
         # allow the day object to run the request if necessary.
-        notes = lambda: self._get_notes(date)  # noqa: E731
-        water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date)  # noqa: E731
+        notes = lambda: self._get_notes(date)  # noqa: E731 - Friends access not supported
+        water = lambda: self._get_water(date)  # noqa: E731 - Friends access not supported
+        exercises = lambda: self._get_exercises(date, username)  # noqa: E731
 
         day = Day(
             date=date,
