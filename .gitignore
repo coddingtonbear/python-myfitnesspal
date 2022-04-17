@@ -15,3 +15,5 @@ pip-selfcheck.json
 env/*
 .vscode/*
 .mypy_cache/*
+.idea/
+venv/

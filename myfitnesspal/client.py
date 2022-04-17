@@ -512,13 +512,7 @@ class Client(MFPBase):
 
         return day
 
-    def get_measurements(
-        self,
-        measurement="Weight",
-        lower_bound: Optional[datetime.date] = None,
-        upper_bound: Optional[datetime.date] = None,
-    ) -> Dict[datetime.date, float]:
-        """Returns measurements of a given name between two dates."""
+    def _upper_lower_bound_helper(self, lower_bound, upper_bound):
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -528,6 +522,16 @@ class Client(MFPBase):
         # just flip them around for them as a convenience
         if lower_bound > upper_bound:
             lower_bound, upper_bound = upper_bound, lower_bound
+        return upper_bound, lower_bound
+
+    def get_measurements(
+        self,
+        measurement="Weight",
+        lower_bound: Optional[datetime.date] = None,
+        upper_bound: Optional[datetime.date] = None,
+    ) -> Dict[datetime.date, float]:
+        """Returns measurements of a given name between two dates."""
+        upper_bound, lower_bound = self._upper_lower_bound_helper(lower_bound, upper_bound)
 
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
@@ -698,6 +702,69 @@ class Client(MFPBase):
             return Volume(ml=value)
 
         return value
+
+    def get_report(
+        self,
+        report_name: str = "Net Calories",
+        report_category: str = "Nutrition",
+        lower_bound: Optional[datetime.date] = None,
+        upper_bound: Optional[datetime.date] = None,
+        ) -> Dict[datetime.date, float]:
+        """
+        Returns report data of a given name and category between two dates.
+        """
+        upper_bound, lower_bound = self._upper_lower_bound_helper(lower_bound, upper_bound)
+
+        # Get the URL for the report
+        json_data = self._get_json_for_url(
+            self._get_url_for_report(report_name, report_category, lower_bound)
+        )
+
+        report = OrderedDict(self._get_report_data(json_data))
+
+        if not report:
+            raise ValueError("Could not load any results for the given category & name")
+
+        # Remove entries that are not within the dates specified
+        for date in list(report.keys()):
+            if not upper_bound >= date >= lower_bound:
+                del report[date]
+
+        return report
+
+    def _get_url_for_report(
+            self, report_name: str, report_category: str, lower_bound: datetime.date
+    ) -> str:
+        delta = datetime.date.today() - lower_bound
+        return (
+                parse.urljoin(
+                    self.BASE_URL_SECURE,
+                    "reports/results/" + report_category.lower() + "/" + report_name,
+                    )
+                + f"/{str(delta.days)}.json"
+        )
+
+    def _get_report_data(self, json_data: dict) -> Dict[datetime.date, float]:
+        report_data: Dict[datetime.date, float] = {}
+
+        data = json_data.get("data")
+
+        if not data:
+            return report_data
+
+        for index, entry in enumerate(json_data["data"]):
+            # Dates are returned without year.
+            # As the returned dates will always begin from the current day, the
+            # correct date can be determined using the entries index
+            date = (
+                datetime.datetime.today()
+                - datetime.timedelta(days=len(json_data["data"]))
+                + datetime.timedelta(days=index + 1)
+            )
+
+            report_data.update({date: entry["total"]})
+
+        return report_data
 
     def __str__(self) -> str:
         return f"MyFitnessPal Client for {self.effective_username}"
