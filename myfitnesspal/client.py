@@ -512,7 +512,7 @@ class Client(MFPBase):
 
         return day
 
-    def _upper_lower_bound_helper(self, lower_bound, upper_bound):
+    def _ensure_upper_lower_bound(self, lower_bound, upper_bound):
         if upper_bound is None:
             upper_bound = datetime.date.today()
         if lower_bound is None:
@@ -531,7 +531,9 @@ class Client(MFPBase):
         upper_bound: Optional[datetime.date] = None,
     ) -> Dict[datetime.date, float]:
         """Returns measurements of a given name between two dates."""
-        upper_bound, lower_bound = self._upper_lower_bound_helper(lower_bound, upper_bound)
+        upper_bound, lower_bound = self._ensure_upper_lower_bound(
+            lower_bound, upper_bound
+        )
 
         # get the URL for the main check in page
         document = self._get_document_for_url(self._get_url_for_measurements())
@@ -709,11 +711,13 @@ class Client(MFPBase):
         report_category: str = "Nutrition",
         lower_bound: Optional[datetime.date] = None,
         upper_bound: Optional[datetime.date] = None,
-        ) -> Dict[datetime.date, float]:
+    ) -> Dict[datetime.date, float]:
         """
         Returns report data of a given name and category between two dates.
         """
-        upper_bound, lower_bound = self._upper_lower_bound_helper(lower_bound, upper_bound)
+        upper_bound, lower_bound = self._ensure_upper_lower_bound(
+            lower_bound, upper_bound
+        )
 
         # Get the URL for the report
         json_data = self._get_json_for_url(
@@ -733,15 +737,15 @@ class Client(MFPBase):
         return report
 
     def _get_url_for_report(
-            self, report_name: str, report_category: str, lower_bound: datetime.date
+        self, report_name: str, report_category: str, lower_bound: datetime.date
     ) -> str:
         delta = datetime.date.today() - lower_bound
         return (
-                parse.urljoin(
-                    self.BASE_URL_SECURE,
-                    "reports/results/" + report_category.lower() + "/" + report_name,
-                    )
-                + f"/{str(delta.days)}.json"
+            parse.urljoin(
+                self.BASE_URL_SECURE,
+                "reports/results/" + report_category.lower() + "/" + report_name,
+            )
+            + f"/{str(delta.days)}.json"
         )
 
     def _get_report_data(self, json_data: dict) -> Dict[datetime.date, float]:
