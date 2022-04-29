@@ -10,3 +10,4 @@ How-to Guides
    exercises
    measurements
    food_search
+   reports
