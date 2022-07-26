@@ -252,7 +252,7 @@ class Client(MFPBase):
             )
         else:
             try:
-                str_value = re.sub(r"[^\d.]+", "", string)
+                str_value = re.sub(r"[^-\d.]+", "", string)
                 return float(str_value)
             except ValueError:
                 return 0
