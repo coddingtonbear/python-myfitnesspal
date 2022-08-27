@@ -15,7 +15,7 @@ jobs:
           python-version: 3.8
 
       - name: Install Python dependencies
-        run: pip install black==20.8b1 flake8==3.8.3
+        run: pip install black==22.6.0 flake8==5.0.4
 
       - name: Run linters
         uses: samuelmeuli/lint-action@v1.5.3
