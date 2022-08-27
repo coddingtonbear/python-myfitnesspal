@@ -14,6 +14,7 @@ Python Myfitnesspal
    how_to/index
    contributing
    api/index
+   upgrading
 
 Do you track your eating habits on `MyFitnessPal <https://www.myfitnesspal.com/>`_?  Have you ever wanted to analyze the information you're entering into MyFitnessPal programatically?  
 
