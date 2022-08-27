@@ -11,7 +11,7 @@ To get a list of cardiovascular exercises
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    day = client.get_date(2019, 3, 12)
 
@@ -38,7 +38,7 @@ To get a list of strength exercises
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    day = client.get_date(2019, 3, 12)
 

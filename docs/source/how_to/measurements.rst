@@ -7,7 +7,7 @@ To access measurements from the past 30 days:
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    weight = client.get_measurements('Weight')
    weight

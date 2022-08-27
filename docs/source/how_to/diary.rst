@@ -7,7 +7,7 @@ To access a single day’s information:
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    day = client.get_date(2013, 3, 2)
    day
@@ -133,7 +133,7 @@ argument.
 
 .. code:: python
 
-   client = myfitnesspal.Client('my_username', unit_aware=True)
+   client = myfitnesspal.Client(unit_aware=True)
    day = client.get_date(2013, 3, 2)
    lunch = day['lunch']
    print lunch
