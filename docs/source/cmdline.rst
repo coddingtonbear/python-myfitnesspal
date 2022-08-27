@@ -6,8 +6,8 @@ of integrating their MyFitnessPal data into another application,
 Python-MyFitnessPal does provide a command-line API with a single
 command described below.
 
-``day $USERNAME [$DATE]``
-~~~~~~~~~~~~~~~~~~~~~~~~~
+``day [$DATE]``
+~~~~~~~~~~~~~~~
 
 Display meals and totals for a given date. If no date is specified,
 totals will be printed for today.

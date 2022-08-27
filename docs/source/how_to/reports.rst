@@ -7,7 +7,7 @@ To access report data from the past 30 days:
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    client.get_report(report_name="Net Calories", report_category="Nutrition")
    # >> OrderedDict([(datetime.date(2015, 5, 14), 1701.0), (datetime.date(2015, 5, 13), 1732.8), (datetime.date(2015, 5,12), 1721.8),
