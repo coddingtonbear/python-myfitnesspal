@@ -9,8 +9,8 @@ on how you instantiate the ``myfitnesspal.Client`` object.
 For more information about why this change was necessary,
 see `Issue #144 <https://github.com/coddingtonbear/python-myfitnesspal/issues/144>`_.
 
-Version 1.x **(Obsolete)**
---------------------------
+Version 1.x (Obsolete)
+----------------------
 
 Before getting started,
 you would store a password in your system keyring
@@ -26,8 +26,8 @@ In your code, you would then instantiate your
 
    client = myfitnesspal.Client('myusername')
 
-Version 2.x **(Current)**
--------------------------
+Version 2.x (Current)
+---------------------
 
 Before getting started,
 now you should open a web browser on the same computer
