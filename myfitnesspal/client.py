@@ -5,8 +5,10 @@ import json
 import logging
 import re
 from collections import OrderedDict
+from http.cookiejar import CookieJar
 from typing import Any, Dict, List, Optional, Union, cast, overload
 
+import browser_cookie3
 import lxml.html
 import requests
 from measurement.base import MeasureBase
@@ -20,7 +22,6 @@ from .entry import Entry
 from .exceptions import MyfitnesspalLoginError, MyfitnesspalRequestFailed
 from .exercise import Exercise
 from .fooditem import FoodItem
-from .keyring_utils import get_password_from_keyring
 from .meal import Meal
 from .note import Note
 
@@ -32,6 +33,10 @@ BRITISH_UNIT_MATCHER = re.compile(r"(?:(?P<st>\d+) st)\W*(?:(?P<lbs>\d+) lb)?")
 class Client(MFPBase):
     """Provides access to MyFitnessPal APIs"""
 
+    COOKIE_DOMAINS = [
+        "myfitnesspal.com",
+        "www.myfitnesspal.com",
+    ]
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
@@ -56,19 +61,10 @@ class Client(MFPBase):
 
     def __init__(
         self,
-        username: str,
-        password: Optional[str] = None,
-        login: bool = True,
+        cookiejar: CookieJar = None,
         unit_aware: bool = False,
     ):
-        self.provided_username = username
-        if password is None:
-            password = get_password_from_keyring(username)
-        self.__password = password
         self.unit_aware = unit_aware
-
-        self._user_metadata: Optional[types.UserMetadata] = None
-        self._auth_data: Optional[types.AuthData] = None
 
         self.session = requests.Session()
         self.session.headers.update(
@@ -76,8 +72,16 @@ class Client(MFPBase):
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
             }
         )
-        if login:
-            self._login()
+        if cookiejar is not None:
+            self.session.cookies.update(cookiejar)
+        else:
+            for domain_name in self.COOKIE_DOMAINS:
+                self.session.cookies.update(
+                    browser_cookie3.load(domain_name=domain_name)
+                )
+
+        self._auth_data = self._get_auth_data()
+        self._user_metadata = self._get_user_metadata()
 
     @property
     def user_id(self) -> Optional[types.MyfitnesspalUserId]:
@@ -88,7 +92,7 @@ class Client(MFPBase):
         return self._auth_data["user_id"]
 
     @property
-    def user_metadata(self) -> Optional[types.UserMetadata]:
+    def user_metadata(self) -> types.UserMetadata:
         """Metadata about of the logged-in account."""
         return self._user_metadata
 
@@ -108,31 +112,7 @@ class Client(MFPBase):
         will fall back to the one provided if it is not.
 
         """
-        if self.user_metadata:
-            return self.user_metadata["username"]
-        return self.provided_username
-
-    def _login(self):
-        csrf_url = parse.urljoin(self.BASE_URL_SECURE, self.CSRF_PATH)
-        csrf_token = self._get_json_for_url(csrf_url)["csrfToken"]
-
-        login_json_url = parse.urljoin(self.BASE_URL_SECURE, self.LOGIN_JSON_PATH)
-
-        result = self.session.post(
-            login_json_url,
-            data={
-                "csrfToken": csrf_token,
-                "username": self.effective_username,
-                "password": self.__password,
-                "redirect": False,
-                "json": True,
-            },
-        )
-        if "error=CredentialsSignin" in result.url:
-            raise MyfitnesspalLoginError()
-
-        self._auth_data = self._get_auth_data()
-        self._user_metadata = self._get_user_metadata()
+        return self.user_metadata["username"]
 
     def _get_auth_data(self) -> types.AuthData:
         result = self._get_request_for_url(
@@ -142,6 +122,15 @@ class Client(MFPBase):
             raise MyfitnesspalRequestFailed(
                 "Unable to fetch authentication token from MyFitnessPal: "
                 "status code: {status}".format(status=result.status_code)
+            )
+
+        if not result.headers["Content-Type"].startswith("application/json"):
+            # That we didn't receive a JSON document for this request
+            # is the only obvious clear signal that we aren't logged-in.
+            raise MyfitnesspalLoginError(
+                "Could not access MyFitnessPal using the cookies provided "
+                "by your browser.  Are you sure you have logged in to "
+                "MyFitnessPal using a browser on this computer?"
             )
 
         return result.json()

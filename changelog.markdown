@@ -1,3 +1,7 @@
+# 2.0.0 (2022-08-26)
+
+* Now uses the [`browser_cookie3`](https://github.com/borisbabic/browser_cookie3) library for gathering log in credentials instead of logging in to MyFitnessPal directly.  This became necessary due to the recent addition of a hidden captcha in the log-in flow for MyFitnessPal; see [Issue #144](https://github.com/coddingtonbear/python-myfitnesspal/issues/144) for details.
+
 # 1.13 (2018-11-20)
 
 * Adds support for searching for food items and accessing their nutritional values.  Thanks @pydolan!

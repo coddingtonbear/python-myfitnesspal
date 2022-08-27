@@ -7,7 +7,7 @@ To search for items:
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    food_items = client.get_food_search_results("bacon cheeseburger")
    food_items
@@ -34,7 +34,7 @@ To get details for a particular food:
 
    import myfitnesspal
 
-   client = myfitnesspal.Client('my_username')
+   client = myfitnesspal.Client()
 
    item = client.get_food_item_details("89755756637885")
    item.servings

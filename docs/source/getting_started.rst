@@ -18,16 +18,23 @@ You can either install from pip::
 Authentication
 --------------
 
-It is a good security practice to not type out the passwords for any of your services (including MyFitnessPal) in either a source file or in the console in such a way that somebody else might be able to read them.  Toward that end, python-myfitnesspal allows you to use your system keyring.
+This library uses your local browser's MyFitnessPal cookies
+for interacting with MyFitnessPal via the `browser_cookie3 <https://github.com/borisbabic/browser_cookie3>`_ library. 
+To control which user account this library uses for interacting with MyFitnessPal,
+just log in to the appropriate account in your browser
+and,
+with a bit of luck,
+python-myfitnesspal should be able to find the authentication credentials needed.
 
-To store your MyFitnessPal password in the system keyring, run::
+By default, this library will look for cookies set for the ``www.myfitnesspal.com`` and ``myfitnesspal.com`` domains in all browsers supported by ``browser_cookie3``.  You can control which cookiejar is used by passing a ``http.cookiejar.CookieJar`` object via the constructor's `cookiejar` keyword parameter.  See `browser_cookie3's readme <https://github.com/borisbabic/browser_cookie3>`_ for details around how you might select a cookiejar from a particular browser.
 
-  myfitnesspal store-password my_username
+.. note::
 
-You will immediately be asked for your password, and that password will be stored in your system keyring for later interactions with MyFitnessPal.
+   Starting on August 25th, 2022, MyFitnessPal added
+   a hidden captcha to their login flow.
+   That change unfortunately prevents this library from logging-in directly,
+   and as of version 2.0 of python-myfitnesspal,
+   this library now relies on reading browser cookies directly
+   for gathering login credentials.
 
-Please note that all examples below *assume* you've stored your password in your system keyring like above, but you can also provide your password by providing your password as a keyword argument to the `myfitnesspal.Client` instance:
-
-.. code:: python
-
-   client = myfitnesspal.Client('my_username', password='my_password')
+   See `Issue #144 <https://github.com/coddingtonbear/python-myfitnesspal/issues/144>`_ for details and context.

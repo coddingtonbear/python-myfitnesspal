@@ -24,6 +24,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-      env:
-        MFP_INTEGRATION_TESTING_USERNAME: ${{ secrets.MFP_INTEGRATION_TESTING_USERNAME }}
-        MFP_INTEGRATION_TESTING_PASSWORD: ${{ secrets.MFP_INTEGRATION_TESTING_PASSWORD }}
