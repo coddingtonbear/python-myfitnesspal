@@ -1,11 +1,12 @@
 import copy
 import datetime
 from collections import OrderedDict
-from unittest.mock import patch
+from http.cookiejar import CookieJar
+from unittest.mock import DEFAULT, patch
 
 from measurement.measures import Energy, Weight
 
-from myfitnesspal import Client
+import myfitnesspal
 
 from .base import MFPTestCase
 
@@ -16,9 +17,14 @@ class TestClient(MFPTestCase):
         self.arbitrary_password = "beta"
         self.arbitrary_date1 = datetime.date(2015, 4, 20)
         self.arbitrary_date2 = datetime.date(2015, 4, 28)
-        self.client = Client(
-            self.arbitrary_username, self.arbitrary_password, login=False
-        )
+
+        with patch.multiple(
+            "myfitnesspal.Client", _get_auth_data=DEFAULT, _get_user_metadata=DEFAULT
+        ) as patches:
+            patches["_get_user_metadata"].return_value = {"username": ""}
+
+            self.client = myfitnesspal.Client(cookiejar=CookieJar())
+
         super().setUp()
 
     def test_get_measurement_ids(self):
