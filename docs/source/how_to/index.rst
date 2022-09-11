@@ -11,3 +11,4 @@ How-to Guides
    measurements
    food_search
    reports
+   use_with_wsl
