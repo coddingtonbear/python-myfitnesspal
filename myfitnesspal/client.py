@@ -748,13 +748,13 @@ class Client(MFPBase):
         if not data:
             return report_data
 
-        for index, entry in enumerate(json_data["data"]):
+        for index, entry in enumerate(data):
             # Dates are returned without year.
             # As the returned dates will always begin from the current day, the
-            # correct date can be determined using the entries index
+            # correct date can be determined using the entry's index
             date = (
-                datetime.datetime.today()
-                - datetime.timedelta(days=len(json_data["data"]))
+                datetime.date.today()
+                - datetime.timedelta(days=len(data))
                 + datetime.timedelta(days=index + 1)
             )
 
