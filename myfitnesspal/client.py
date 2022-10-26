@@ -704,6 +704,9 @@ class Client(MFPBase):
         """
         Returns report data of a given name and category between two dates.
         """
+        if (datetime.date.today()-lower_bound).days > 80:
+            logger.warning(f"Report API may not be able to look back this far. Some results may be incorrect.")
+
         upper_bound, lower_bound = self._ensure_upper_lower_bound(
             lower_bound, upper_bound
         )
@@ -748,13 +751,13 @@ class Client(MFPBase):
         if not data:
             return report_data
 
-        for index, entry in enumerate(json_data["data"]):
+        for index, entry in enumerate(data):
             # Dates are returned without year.
             # As the returned dates will always begin from the current day, the
-            # correct date can be determined using the entries index
+            # correct date can be determined using the entry's index
             date = (
-                datetime.datetime.today()
-                - datetime.timedelta(days=len(json_data["data"]))
+                datetime.date.today()
+                - datetime.timedelta(days=len(data))
                 + datetime.timedelta(days=index + 1)
             )
 

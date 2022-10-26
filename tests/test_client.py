@@ -438,31 +438,31 @@ class TestClient(MFPTestCase):
             True,
         )
 
-        def test_get_report(self):
-            with patch.object(self.client, "_get_json_for_url") as get_doc:
-                get_doc.return_value = self.get_json_data(
-                    "report_nutrition_net_calories.json"
-                )
-                actual_measurements = self.client.get_report(
-                    report_name="Net Calories",
-                    report_category="Nutrition",
-                    lower_bound=datetime.date.today() - datetime.timedelta(days=4),
-                )
-
-            # Dates are determined based on the assumption that the results will
-            # always start from the current day. Dates held in sample data file are
-            # therefore irrelevant for this test.
-
-            expected_measurements = OrderedDict(
-                sorted(
-                    [
-                        (datetime.date.today(), 425.0),
-                        (datetime.date.today() - datetime.timedelta(days=1), 1454.0),
-                        (datetime.date.today() - datetime.timedelta(days=2), 1451.0),
-                        (datetime.date.today() - datetime.timedelta(days=3), 1489.0),
-                        (datetime.date.today() - datetime.timedelta(days=4), 1390.0),
-                    ]
-                )
+    def test_get_report(self):
+        with patch.object(self.client, "_get_json_for_url") as get_doc:
+            get_doc.return_value = self.get_json_data(
+                "report_nutrition_net_calories.json"
+            )
+            actual_measurements = self.client.get_report(
+                report_name="Net Calories",
+                report_category="Nutrition",
+                lower_bound=datetime.date.today() - datetime.timedelta(days=4),
             )
 
-            self.assertEqual(expected_measurements, actual_measurements)
+        # Dates are determined based on the assumption that the results will
+        # always start from the current day. Dates held in sample data file are
+        # therefore irrelevant for this test.
+
+        expected_measurements = OrderedDict(
+            sorted(
+                [
+                    (datetime.date.today(), 425.0),
+                    (datetime.date.today() - datetime.timedelta(days=1), 1454.0),
+                    (datetime.date.today() - datetime.timedelta(days=2), 1451.0),
+                    (datetime.date.today() - datetime.timedelta(days=3), 1489.0),
+                    (datetime.date.today() - datetime.timedelta(days=4), 1390.0),
+                ]
+            )
+        )
+
+        self.assertEqual(expected_measurements, actual_measurements)
