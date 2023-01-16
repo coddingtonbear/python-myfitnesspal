@@ -704,8 +704,10 @@ class Client(MFPBase):
         """
         Returns report data of a given name and category between two dates.
         """
-        if (datetime.date.today()-lower_bound).days > 80:
-            logger.warning(f"Report API may not be able to look back this far. Some results may be incorrect.")
+        if lower_bound and ((datetime.date.today() - lower_bound).days > 80):
+            logger.warning(
+                "Report API may not be able to look back this far. Some results may be incorrect."
+            )
 
         upper_bound, lower_bound = self._ensure_upper_lower_bound(
             lower_bound, upper_bound
