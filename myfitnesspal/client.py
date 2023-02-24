@@ -179,12 +179,19 @@ class Client(MFPBase):
             return name
         return self.ABBREVIATIONS[name]
 
-    def _get_url_for_date(self, date: datetime.date, username: str) -> str:
-        date_str = date.strftime("%Y-%m-%d")
-        return (
-            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
-            + f"?date={date_str}"
-        )
+    def _get_url_for_date(self, date: datetime.date, username: str, friend_username=None) -> str:
+        if friend_username is not None:
+            date_str = date.strftime("%Y-%m-%d")
+            return (
+                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + friend_username)
+                + f"?date={date_str}"
+            )
+        else:
+            date_str = date.strftime("%Y-%m-%d")
+            return (
+                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
+                + f"?date={date_str}"
+            )
 
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
@@ -428,16 +435,23 @@ class Client(MFPBase):
 
         return exercises
 
-    def _get_exercises(self, date: datetime.date):
-        # get the exercise URL
-        document = self._get_document_for_url(
-            self._get_url_for_exercise(date, self.effective_username)
-        )
-
-        # gather the exercise goals
-        exercise = self._get_exercise(document)
-
-        return exercise
+    def _get_exercises(self, date: datetime.date, friend_username=None):
+        if friend_username is not None:
+            # get the exercise URL
+            document = self._get_document_for_url(
+                self._get_url_for_exercise(date, friend_username)
+            )
+            # gather the exercise goals
+            exercise = self._get_exercise(document)
+            return exercise
+        else:
+            # get the exercise URL
+            document = self._get_document_for_url(
+                self._get_url_for_exercise(date, self.effective_username)
+            )
+            # gather the exercise goals
+            exercise = self._get_exercise(document)
+            return exercise
 
     def _extract_value(self, element):
         if len(element.getchildren()) == 0:
@@ -475,7 +489,7 @@ class Client(MFPBase):
             )
         document = self._get_document_for_url(
             self._get_url_for_date(
-                date, kwargs.get("username", self.effective_username)
+                date, kwargs.get("username", self.effective_username), kwargs.get("friend_username")
             )
         )
 
@@ -485,21 +499,33 @@ class Client(MFPBase):
 
         # Since this data requires an additional request, let's just
         # allow the day object to run the request if necessary.
-        notes = lambda: self._get_notes(date)  # noqa: E731
-        water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date)  # noqa: E731
+        if 'friend_username' not in kwargs: notes = lambda: self._get_notes(date)  # noqa: E731
+        if 'friend_username' not in kwargs: water = lambda: self._get_water(date)  # noqa: E731
+        if 'friend_username' not in kwargs:
+            exercises = lambda: self._get_exercises(date)  # noqa: E731
+        elif 'friend_username' in kwargs:
+            exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
 
-        day = Day(
-            date=date,
-            meals=meals,
-            goals=goals,
-            notes=notes,
-            water=water,
-            exercises=exercises,
-            complete=complete,
-        )
-
-        return day
+        if 'friend_username' not in kwargs:
+            day = Day(
+                date=date,
+                meals=meals,
+                goals=goals,
+                notes=notes,
+                water=water,
+                exercises=exercises,
+                complete=complete,
+            )
+            return day
+        elif 'friend_username' in kwargs:
+            day = Day(
+                date=date,
+                meals=meals,
+                goals=goals,
+                exercises=exercises,
+                complete=complete,
+            )
+            return day
 
     def _ensure_upper_lower_bound(self, lower_bound, upper_bound):
         if upper_bound is None:
