@@ -492,6 +492,8 @@ class Client(MFPBase):
                 date, kwargs.get("username", self.effective_username), kwargs.get("friend_username")
             )
         )
+        if "diary is locked with a key" in document.text_content():
+            raise Exception("Error: diary is locked with a key") 
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
