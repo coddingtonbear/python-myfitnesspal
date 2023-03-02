@@ -147,6 +147,10 @@ class Client(MFPBase):
             "system_data",
             "profiles",
             "step_sources",
+            "privacy_preferences",
+            "social_preferences",
+            "app_preferences",
+            "partner_only_fields",
         ]
         query_string = parse.urlencode(
             [
