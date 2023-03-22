@@ -185,15 +185,12 @@ class Client(MFPBase):
 
     def _get_url_for_date(self, date: datetime.date, username: str, friend_username=None) -> str:
         if friend_username is not None:
-            date_str = date.strftime("%Y-%m-%d")
-            return (
-                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + friend_username)
-                + f"?date={date_str}"
-            )
+            name = friend_username
         else:
-            date_str = date.strftime("%Y-%m-%d")
-            return (
-                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
+            name = username
+        date_str = date.strftime("%Y-%m-%d")
+        return (
+                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + name)
                 + f"?date={date_str}"
             )
 
