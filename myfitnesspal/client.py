@@ -497,8 +497,8 @@ class Client(MFPBase):
 
         # Since this data requires an additional request, let's just
         # allow the day object to run the request if necessary.
-        if 'friend_username' not in kwargs: notes = lambda: self._get_notes(date)  # noqa: E731
-        if 'friend_username' not in kwargs: water = lambda: self._get_water(date)  # noqa: E731
+        notes = lambda: self._get_notes(date)  # noqa: E731
+        water = lambda: self._get_water(date)  # noqa: E731
         if 'friend_username' not in kwargs:
             exercises = lambda: self._get_exercises(date)  # noqa: E731
         elif 'friend_username' in kwargs:
