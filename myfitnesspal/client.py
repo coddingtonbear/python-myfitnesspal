@@ -489,7 +489,9 @@ class Client(MFPBase):
             )
         )
         if "diary is locked with a key" in document.text_content():
-            raise Exception("Error: diary is locked with a key") 
+            raise Exception("Error: diary is locked with a key")
+        if kwargs.get("friend_username") is not None and "user maintains a private diary" in document.text_content():
+            raise Exception(f"Error: Friend {kwargs.get('friend_username')}'s diary is private.")
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
