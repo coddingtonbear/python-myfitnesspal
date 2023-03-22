@@ -511,8 +511,7 @@ class Client(MFPBase):
                 exercises=exercises,
                 complete=complete,
             )
-            return day
-        elif 'friend_username' in kwargs:
+        else:
             day = Day(
                 date=date,
                 meals=meals,
@@ -520,7 +519,7 @@ class Client(MFPBase):
                 exercises=exercises,
                 complete=complete,
             )
-            return day
+        return day
 
     def _ensure_upper_lower_bound(self, lower_bound, upper_bound):
         if upper_bound is None:
