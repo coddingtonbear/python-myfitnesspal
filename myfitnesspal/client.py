@@ -499,10 +499,7 @@ class Client(MFPBase):
         # allow the day object to run the request if necessary.
         notes = lambda: self._get_notes(date)  # noqa: E731
         water = lambda: self._get_water(date)  # noqa: E731
-        if 'friend_username' not in kwargs:
-            exercises = lambda: self._get_exercises(date)  # noqa: E731
-        elif 'friend_username' in kwargs:
-            exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
+        exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
 
         if 'friend_username' not in kwargs:
             day = Day(
