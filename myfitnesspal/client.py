@@ -438,21 +438,16 @@ class Client(MFPBase):
 
     def _get_exercises(self, date: datetime.date, friend_username=None):
         if friend_username is not None:
-            # get the exercise URL
-            document = self._get_document_for_url(
-                self._get_url_for_exercise(date, friend_username)
-            )
-            # gather the exercise goals
-            exercise = self._get_exercise(document)
-            return exercise
+            name = friend_username
         else:
-            # get the exercise URL
-            document = self._get_document_for_url(
-                self._get_url_for_exercise(date, self.effective_username)
-            )
-            # gather the exercise goals
-            exercise = self._get_exercise(document)
-            return exercise
+            name = self.effective_username
+        # get the exercise URL
+        document = self._get_document_for_url(
+            self._get_url_for_exercise(date, name)
+        )
+        # gather the exercise goals
+        exercise = self._get_exercise(document)
+        return exercise
 
     def _extract_value(self, element):
         if len(element.getchildren()) == 0:
