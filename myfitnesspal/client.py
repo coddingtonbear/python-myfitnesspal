@@ -147,6 +147,10 @@ class Client(MFPBase):
             "system_data",
             "profiles",
             "step_sources",
+            "privacy_preferences",
+            "social_preferences",
+            "app_preferences",
+            "partner_only_fields",
         ]
         query_string = parse.urlencode(
             [
@@ -179,12 +183,16 @@ class Client(MFPBase):
             return name
         return self.ABBREVIATIONS[name]
 
-    def _get_url_for_date(self, date: datetime.date, username: str) -> str:
+    def _get_url_for_date(self, date: datetime.date, username: str, friend_username=None) -> str:
+        if friend_username is not None:
+            name = friend_username
+        else:
+            name = username
         date_str = date.strftime("%Y-%m-%d")
         return (
-            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + username)
-            + f"?date={date_str}"
-        )
+                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + name)
+                + f"?date={date_str}"
+            )
 
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
@@ -428,15 +436,17 @@ class Client(MFPBase):
 
         return exercises
 
-    def _get_exercises(self, date: datetime.date):
+    def _get_exercises(self, date: datetime.date, friend_username=None):
+        if friend_username is not None:
+            name = friend_username
+        else:
+            name = self.effective_username
         # get the exercise URL
         document = self._get_document_for_url(
-            self._get_url_for_exercise(date, self.effective_username)
+            self._get_url_for_exercise(date, name)
         )
-
         # gather the exercise goals
         exercise = self._get_exercise(document)
-
         return exercise
 
     def _extract_value(self, element):
@@ -475,9 +485,13 @@ class Client(MFPBase):
             )
         document = self._get_document_for_url(
             self._get_url_for_date(
-                date, kwargs.get("username", self.effective_username)
+                date, kwargs.get("username", self.effective_username), kwargs.get("friend_username")
             )
         )
+        if "diary is locked with a key" in document.text_content():
+            raise Exception("Error: diary is locked with a key")
+        if kwargs.get("friend_username") is not None and "user maintains a private diary" in document.text_content():
+            raise Exception(f"Error: Friend {kwargs.get('friend_username')}'s diary is private.")
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
@@ -487,18 +501,26 @@ class Client(MFPBase):
         # allow the day object to run the request if necessary.
         notes = lambda: self._get_notes(date)  # noqa: E731
         water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date)  # noqa: E731
+        exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
 
-        day = Day(
-            date=date,
-            meals=meals,
-            goals=goals,
-            notes=notes,
-            water=water,
-            exercises=exercises,
-            complete=complete,
-        )
-
+        if 'friend_username' not in kwargs:
+            day = Day(
+                date=date,
+                meals=meals,
+                goals=goals,
+                notes=notes,
+                water=water,
+                exercises=exercises,
+                complete=complete,
+            )
+        else:
+            day = Day(
+                date=date,
+                meals=meals,
+                goals=goals,
+                exercises=exercises,
+                complete=complete,
+            )
         return day
 
     def _ensure_upper_lower_bound(self, lower_bound, upper_bound):

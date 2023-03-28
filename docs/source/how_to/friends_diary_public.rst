@@ -1,7 +1,7 @@
 Accessing a Friend’s Diary
 ==========================
 
-If a friend has their diary visibility set to public, you can grab their
+If a friend has their diary visibility set to "Public", you can grab their
 diary entries:
 
 .. code:: python
