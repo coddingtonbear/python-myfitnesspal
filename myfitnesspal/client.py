@@ -186,10 +186,11 @@ class Client(MFPBase):
             + f"?date={date_str}"
         )
 
-    def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
+    def _get_url_for_measurements(self, page: int = 1, measurement_name: str = "") -> str:
         return (
             parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
-            + f"?page={page}&type={measurement_id}"
+            + "?"
+            + parse.urlencode({'page': page, "type": measurement_name})
         )
 
     def _get_request_for_url(
@@ -543,7 +544,7 @@ class Client(MFPBase):
         while True:
             # retrieve the HTML from MyFitnessPal
             document = self._get_document_for_url(
-                self._get_url_for_measurements(page, measurement_id)
+                self._get_url_for_measurements(page, measurement)
             )
 
             # parse the HTML for measurement entries and add to dictionary
@@ -631,42 +632,37 @@ class Client(MFPBase):
             )
 
     def _get_measurements(self, document):
-        # find the tr element for each measurement entry on the page
-        trs = document.xpath("//table[contains(@class,'check-in')]/tbody/tr")
+        measurements = []
 
-        measurements = OrderedDict()
+        for next_data in document.xpath("//script[@id='__NEXT_DATA__']"):
+            for q in json.loads(next_data.text)['props']['pageProps']['dehydratedState']['queries']:
+                if 'measurements' in q['queryKey']:
+                    if 'items' in q['state']['data']:
+                        measurements += q['state']['data']['items']
 
-        # create a dictionary out of the date and value of each entry
-        for entry in trs:
-
-            # ensure there are measurement entries on the page
-            if len(entry) == 1:
-                return measurements
-            else:
-                measurements[entry[1].text] = entry[2].text
-
-        temp_measurements = OrderedDict()
+        measurements_dict = OrderedDict()
 
         # converts the date to a datetime object and the value to a float
-        for date in measurements:
-            temp_measurements[
-                datetime.datetime.strptime(date, "%m/%d/%Y").date()
-            ] = self._get_numeric(measurements[date])
+        for entry in measurements:
+            date = datetime.datetime.strptime(entry['date'], "%Y-%m-%d").date()
+            if 'unit' in entry:
+                value = f"{entry['value']} {entry['unit']}"
+            else:
+                value = f"{entry['value']}"
+            measurements_dict[date] = self._get_numeric(value)
 
-        measurements = temp_measurements
-
-        return measurements
+        return measurements_dict
 
     def _get_measurement_ids(self, document) -> Dict[str, int]:
-
-        # find the option element for all of the measurement choices
-        options = document.xpath("//select[@id='type']/option")
-
         ids = {}
-
-        # create a dictionary out of the text and value of each choice
-        for option in options:
-            ids[option.text] = int(option.attrib.get("value"))
+        for next_data in document.xpath("//script[@id='__NEXT_DATA__']"):
+            for q in json.loads(next_data.text)['props']['pageProps']['dehydratedState']['queries']:
+                if 'measurementTypes' in q['queryKey']:
+                    for m in q['state']['data']:
+                        ids[m['description']] = m['id']
+                if 'measurements' in q['queryKey']:
+                    if q['queryKey'][1] not in ids:
+                        ids[q['queryKey'][1]] = ''
 
         return ids
 
