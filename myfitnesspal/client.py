@@ -190,9 +190,9 @@ class Client(MFPBase):
             name = username
         date_str = date.strftime("%Y-%m-%d")
         return (
-                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + name)
-                + f"?date={date_str}"
-            )
+            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + name)
+            + f"?date={date_str}"
+        )
 
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
