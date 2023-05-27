@@ -835,15 +835,18 @@ class Client(MFPBase):
                 if item_div.xpath(".//div[@class='verified verified-list-icon']")
                 else False
             )
-            nutr_info = (
-                item_div.xpath(".//p[@class='search-nutritional-info']")[0]
-                .text.strip()
-                .split(",")
-            )
+            calories = None
             brand = ""
-            if len(nutr_info) >= 3:
-                brand = " ".join(nutr_info[0:-2]).strip()
-            calories = float(nutr_info[-1].replace("calories", "").strip())
+            nutr_info_xpath = item_div.xpath(".//p[@class='search-nutritional-info']")
+            if nutr_info_xpath:
+                nutr_info = (
+                    nutr_info_xpath[0]
+                    .text.strip()
+                    .split(",")
+                )
+                if len(nutr_info) >= 3:
+                    brand = " ".join(nutr_info[0:-2]).strip()
+                calories = float(nutr_info[-1].replace("calories", "").strip())
             items.append(
                 FoodItem(mfp_id, mfp_name, brand, verif, calories, client=self)
             )
