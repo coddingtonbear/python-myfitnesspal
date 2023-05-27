@@ -183,7 +183,9 @@ class Client(MFPBase):
             return name
         return self.ABBREVIATIONS[name]
 
-    def _get_url_for_date(self, date: datetime.date, username: str, friend_username=None) -> str:
+    def _get_url_for_date(
+        self, date: datetime.date, username: str, friend_username=None
+    ) -> str:
         if friend_username is not None:
             name = friend_username
         else:
@@ -442,9 +444,7 @@ class Client(MFPBase):
         else:
             name = self.effective_username
         # get the exercise URL
-        document = self._get_document_for_url(
-            self._get_url_for_exercise(date, name)
-        )
+        document = self._get_document_for_url(self._get_url_for_exercise(date, name))
         # gather the exercise goals
         exercise = self._get_exercise(document)
         return exercise
@@ -485,13 +485,20 @@ class Client(MFPBase):
             )
         document = self._get_document_for_url(
             self._get_url_for_date(
-                date, kwargs.get("username", self.effective_username), kwargs.get("friend_username")
+                date,
+                kwargs.get("username", self.effective_username),
+                kwargs.get("friend_username"),
             )
         )
         if "diary is locked with a key" in document.text_content():
             raise Exception("Error: diary is locked with a key")
-        if kwargs.get("friend_username") is not None and "user maintains a private diary" in document.text_content():
-            raise Exception(f"Error: Friend {kwargs.get('friend_username')}'s diary is private.")
+        if (
+            kwargs.get("friend_username") is not None
+            and "user maintains a private diary" in document.text_content()
+        ):
+            raise Exception(
+                f"Error: Friend {kwargs.get('friend_username')}'s diary is private."
+            )
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
@@ -501,9 +508,11 @@ class Client(MFPBase):
         # allow the day object to run the request if necessary.
         notes = lambda: self._get_notes(date)  # noqa: E731
         water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
+        exercises = lambda: self._get_exercises(
+            date, kwargs.get("friend_username")
+        )  # noqa: E731
 
-        if 'friend_username' not in kwargs:
+        if "friend_username" not in kwargs:
             day = Day(
                 date=date,
                 meals=meals,
@@ -839,11 +848,7 @@ class Client(MFPBase):
             brand = ""
             nutr_info_xpath = item_div.xpath(".//p[@class='search-nutritional-info']")
             if nutr_info_xpath:
-                nutr_info = (
-                    nutr_info_xpath[0]
-                    .text.strip()
-                    .split(",")
-                )
+                nutr_info = nutr_info_xpath[0].text.strip().split(",")
                 if len(nutr_info) >= 3:
                     brand = " ".join(nutr_info[0:-2]).strip()
                 calories = float(nutr_info[-1].replace("calories", "").strip())
