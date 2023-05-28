@@ -483,17 +483,18 @@ class Client(MFPBase):
                 "or three integers representing year, month, and day "
                 "respectively."
             )
+        friend_username = kwargs.get("friend_username")
         document = self._get_document_for_url(
             self._get_url_for_date(
                 date,
                 kwargs.get("username", self.effective_username),
-                kwargs.get("friend_username"),
+                friend_username,
             )
         )
         if "diary is locked with a key" in document.text_content():
             raise Exception("Error: diary is locked with a key")
         if (
-            kwargs.get("friend_username") is not None
+            friend_username is not None
             and "user maintains a private diary" in document.text_content()
         ):
             raise Exception(
@@ -508,7 +509,7 @@ class Client(MFPBase):
         # allow the day object to run the request if necessary.
         notes = lambda: self._get_notes(date)  # noqa: E731
         water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
+        exercises = lambda: self._get_exercises(date, friend_username)  # noqa: E731
 
         if "friend_username" not in kwargs:
             day = Day(
