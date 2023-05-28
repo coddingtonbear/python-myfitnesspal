@@ -15,8 +15,8 @@ class TestClient(MFPTestCase):
     def setUp(self):
         self.arbitrary_username = "alpha"
         self.arbitrary_password = "beta"
-        self.arbitrary_date1 = datetime.date(2015, 4, 20)
-        self.arbitrary_date2 = datetime.date(2015, 4, 28)
+        self.arbitrary_date1 = datetime.date(2022, 1, 10)
+        self.arbitrary_date2 = datetime.date(2022, 1, 9)
 
         with patch.multiple(
             "myfitnesspal.Client", _get_auth_data=DEFAULT, _get_user_metadata=DEFAULT
@@ -32,13 +32,10 @@ class TestClient(MFPTestCase):
         actual_ids = self.client._get_measurement_ids(document)
 
         expected_ids = {
-            "Weight": 1,
-            "Body Fat": 91955886,
-            "Butt": 92738807,
-            "Bicep": 92738811,
-            "Quad": 92738815,
-            "Mid Section": 92738819,
-            "Shoulders": 92738861,
+            'Hips': '278869596622717',
+            'Neck': '278869604978685',
+            'Waist': '278319840808829',
+            'Weight': ''
         }
 
         self.assertEqual(
@@ -58,24 +55,17 @@ class TestClient(MFPTestCase):
     def test_get_measurements(self):
         with patch.object(self.client, "_get_document_for_url") as get_doc:
             get_doc.return_value = self.get_html_document("measurements.html")
+            get_doc.called
             actual_measurements = self.client.get_measurements(
-                "Body Fat",
+                "Weight",
                 self.arbitrary_date1,
                 self.arbitrary_date2,
             )
 
-        expected_measurements = OrderedDict(
-            [
-                (datetime.date(2015, 4, 28), 19.2),
-                (datetime.date(2015, 4, 27), 19.2),
-                (datetime.date(2015, 4, 26), 19.0),
-                (datetime.date(2015, 4, 25), 18.7),
-                (datetime.date(2015, 4, 23), 18.7),
-                (datetime.date(2015, 4, 22), 18.4),
-                (datetime.date(2015, 4, 21), 18.9),
-                (datetime.date(2015, 4, 20), 19.1),
-            ]
-        )
+        expected_measurements = OrderedDict([
+            (datetime.date(2022, 1, 10), 155.0),
+            (datetime.date(2022, 1, 9), 156.0)
+        ])
 
         self.assertEqual(
             expected_measurements,

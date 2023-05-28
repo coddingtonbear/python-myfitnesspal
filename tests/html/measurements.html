@@ -1,979 +1,4236 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="lang-en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"24ade29801","applicationID":"4152250","transactionName":"dA5YQkBeD1tcFx0MBFYSQ0RXXAZZTRYdBAVeFQ==","queueTime":0,"applicationTime":162,"ttGuid":"","agentToken":null,"agent":"js-agent.newrelic.com/nr-632.min.js"}</script>
-<script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQACVVNADAIFVlNXBw=="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o?o:e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({QJf3ax:[function(t,e){function n(t){function e(e,n,a){t&&t(e,n,a),a||(a={});for(var c=s(e),f=c.length,u=i(a,o,r),d=0;f>d;d++)c[d].apply(u,n);return u}function a(t,e){f[t]=s(t).concat(e)}function s(t){return f[t]||[]}function c(){return n(e)}var f={};return{on:a,emit:e,create:c,listeners:s,_events:f}}function r(){return{}}var o="nr@context",i=t("gos");e.exports=n()},{gos:"7eSDFh"}],ee:[function(t,e){e.exports=t("QJf3ax")},{}],3:[function(t){function e(t){try{i.console&&console.log(t)}catch(e){}}var n,r=t("ee"),o=t(1),i={};try{n=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(i.console=!0,-1!==n.indexOf("dev")&&(i.dev=!0),-1!==n.indexOf("nr_dev")&&(i.nrDev=!0))}catch(a){}i.nrDev&&r.on("internal-error",function(t){e(t.stack)}),i.dev&&r.on("fn-err",function(t,n,r){e(r.stack)}),i.dev&&(e("NR AGENT IN DEVELOPMENT MODE"),e("flags: "+o(i,function(t){return t}).join(", ")))},{1:23,ee:"QJf3ax"}],4:[function(t){function e(t,e,n,i,s){try{c?c-=1:r("err",[s||new UncaughtException(t,e,n)])}catch(f){try{r("ierr",[f,(new Date).getTime(),!0])}catch(u){}}return"function"==typeof a?a.apply(this,o(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function n(t){r("err",[t,(new Date).getTime()])}var r=t("handle"),o=t(6),i=t("ee"),a=window.onerror,s=!1,c=0;t("loader").features.err=!0,t(5),window.onerror=e;try{throw new Error}catch(f){"stack"in f&&(t(1),t(2),"addEventListener"in window&&t(3),window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)&&t(4),s=!0)}i.on("fn-start",function(){s&&(c+=1)}),i.on("fn-err",function(t,e,r){s&&(this.thrown=!0,n(r))}),i.on("fn-end",function(){s&&!this.thrown&&c>0&&(c-=1)}),i.on("internal-error",function(t){r("ierr",[t,(new Date).getTime(),!0])})},{1:10,2:9,3:7,4:11,5:3,6:24,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],5:[function(t){t("loader").features.ins=!0},{loader:"G9z0Bl"}],6:[function(t){function e(){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var n=t("ee"),r=t("handle"),o=t(1),i=t(2);t("loader").features.stn=!0,t(3),n.on("fn-start",function(t){var e=t[0];e instanceof Event&&(this.bstStart=Date.now())}),n.on("fn-end",function(t,e){var n=t[0];n instanceof Event&&r("bst",[n,e,this.bstStart,Date.now()])}),o.on("fn-start",function(t,e,n){this.bstStart=Date.now(),this.bstType=n}),o.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),this.bstType])}),i.on("fn-start",function(){this.bstStart=Date.now()}),i.on("fn-end",function(t,e){r("bstTimer",[e,this.bstStart,Date.now(),"requestAnimationFrame"])}),n.on("pushState-start",function(){this.time=Date.now(),this.startPath=location.pathname+location.hash}),n.on("pushState-end",function(){r("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),"addEventListener"in window.performance&&(window.performance.addEventListener("webkitresourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.webkitClearResourceTimings()},!1),window.performance.addEventListener("resourcetimingbufferfull",function(){r("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.clearResourceTimings()},!1)),document.addEventListener("scroll",e,!1),document.addEventListener("keypress",e,!1),document.addEventListener("click",e,!1)}},{1:10,2:9,3:8,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],7:[function(t,e){function n(t){i.inPlace(t,["addEventListener","removeEventListener"],"-",r)}function r(t){return t[1]}var o=(t(1),t("ee").create()),i=t(2)(o),a=t("gos");if(e.exports=o,n(window),"getPrototypeOf"in Object){for(var s=document;s&&!s.hasOwnProperty("addEventListener");)s=Object.getPrototypeOf(s);s&&n(s);for(var c=XMLHttpRequest.prototype;c&&!c.hasOwnProperty("addEventListener");)c=Object.getPrototypeOf(c);c&&n(c)}else XMLHttpRequest.prototype.hasOwnProperty("addEventListener")&&n(XMLHttpRequest.prototype);o.on("addEventListener-start",function(t){if(t[1]){var e=t[1];"function"==typeof e?this.wrapped=t[1]=a(e,"nr@wrapped",function(){return i(e,"fn-",null,e.name||"anonymous")}):"function"==typeof e.handleEvent&&i.inPlace(e,["handleEvent"],"fn-")}}),o.on("removeEventListener-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{1:24,2:25,ee:"QJf3ax",gos:"7eSDFh"}],8:[function(t,e){var n=(t(2),t("ee").create()),r=t(1)(n);e.exports=n,r.inPlace(window.history,["pushState"],"-")},{1:25,2:24,ee:"QJf3ax"}],9:[function(t,e){var n=(t(2),t("ee").create()),r=t(1)(n);e.exports=n,r.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),n.on("raf-start",function(t){t[0]=r(t[0],"fn-")})},{1:25,2:24,ee:"QJf3ax"}],10:[function(t,e){function n(t,e,n){t[0]=o(t[0],"fn-",null,n)}var r=(t(2),t("ee").create()),o=t(1)(r);e.exports=r,o.inPlace(window,["setTimeout","setInterval","setImmediate"],"setTimer-"),r.on("setTimer-start",n)},{1:25,2:24,ee:"QJf3ax"}],11:[function(t,e){function n(){f.inPlace(this,p,"fn-")}function r(t,e){f.inPlace(e,["onreadystatechange"],"fn-")}function o(t,e){return e}function i(t,e){for(var n in t)e[n]=t[n];return e}var a=t("ee").create(),s=t(1),c=t(2),f=c(a),u=c(s),d=window.XMLHttpRequest,p=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"];e.exports=a,window.XMLHttpRequest=function(t){var e=new d(t);try{a.emit("new-xhr",[],e),u.inPlace(e,["addEventListener","removeEventListener"],"-",o),e.addEventListener("readystatechange",n,!1)}catch(r){try{a.emit("internal-error",[r])}catch(i){}}return e},i(d,XMLHttpRequest),XMLHttpRequest.prototype=d.prototype,f.inPlace(XMLHttpRequest.prototype,["open","send"],"-xhr-",o),a.on("send-xhr-start",r),a.on("open-xhr-start",r)},{1:7,2:25,ee:"QJf3ax"}],12:[function(t){function e(t){var e=this.params,r=this.metrics;if(!this.ended){this.ended=!0;for(var i=0;c>i;i++)t.removeEventListener(s[i],this.listener,!1);if(!e.aborted){if(r.duration=(new Date).getTime()-this.startTime,4===t.readyState){e.status=t.status;var a=t.responseType,f="arraybuffer"===a||"blob"===a||"json"===a?t.response:t.responseText,u=n(f);if(u&&(r.rxSize=u),this.sameOrigin){var d=t.getResponseHeader("X-NewRelic-App-Data");d&&(e.cat=d.split(", ").pop())}}else e.status=0;r.cbTime=this.cbTime,o("xhr",[e,r,this.startTime])}}}function n(t){if("string"==typeof t&&t.length)return t.length;if("object"!=typeof t)return void 0;if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if("undefined"!=typeof FormData&&t instanceof FormData)return void 0;try{return JSON.stringify(t).length}catch(e){return void 0}}function r(t,e){var n=i(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}if(window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent)){t("loader").features.xhr=!0;var o=t("handle"),i=t(2),a=t("ee"),s=["load","error","abort","timeout"],c=s.length,f=t(1);t(4),t(3),a.on("new-xhr",function(){this.totalCbs=0,this.called=0,this.cbTime=0,this.end=e,this.ended=!1,this.xhrGuids={}}),a.on("open-xhr-start",function(t){this.params={method:t[0]},r(this,t[1]),this.metrics={}}),a.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),a.on("send-xhr-start",function(t,e){var r=this.metrics,o=t[0],i=this;if(r&&o){var f=n(o);f&&(r.txSize=f)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(i.params.aborted=!0),("load"!==t.type||i.called===i.totalCbs&&(i.onloadCalled||"function"!=typeof e.onload))&&i.end(e)}catch(n){try{a.emit("internal-error",[n])}catch(r){}}};for(var u=0;c>u;u++)e.addEventListener(s[u],this.listener,!1)}),a.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),a.on("xhr-load-added",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),a.on("xhr-load-removed",function(t,e){var n=""+f(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),a.on("addEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-added",[t[1],t[2]],e)}),a.on("removeEventListener-end",function(t,e){e instanceof XMLHttpRequest&&"load"===t[0]&&a.emit("xhr-load-removed",[t[1],t[2]],e)}),a.on("fn-start",function(t,e,n){e instanceof XMLHttpRequest&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),a.on("fn-end",function(t,e){this.xhrCbStart&&a.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}},{1:"XL7HBI",2:13,3:11,4:7,ee:"QJf3ax",handle:"D5DuLP",loader:"G9z0Bl"}],13:[function(t,e){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");return!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname),r.sameOrigin=!e.hostname||e.hostname===document.domain&&e.port===n.port&&e.protocol===n.protocol,r}},{}],14:[function(t,e){function n(t){return function(){r(t,[(new Date).getTime()].concat(i(arguments)))}}var r=t("handle"),o=t(1),i=t(2);"undefined"==typeof window.newrelic&&(newrelic=window.NREUM);var a=["setPageViewName","addPageAction","setCustomAttribute","finished","addToTrace","inlineHit","noticeError"];o(a,function(t,e){window.NREUM[e]=n("api-"+e)}),e.exports=window.NREUM},{1:23,2:24,handle:"D5DuLP"}],"7eSDFh":[function(t,e){function n(t,e,n){if(r.call(t,e))return t[e];var o=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:o,writable:!0,enumerable:!1}),o}catch(i){}return t[e]=o,o}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],gos:[function(t,e){e.exports=t("7eSDFh")},{}],handle:[function(t,e){e.exports=t("D5DuLP")},{}],D5DuLP:[function(t,e){function n(t,e,n){return r.listeners(t).length?r.emit(t,e,n):(o[t]||(o[t]=[]),void o[t].push(e))}var r=t("ee").create(),o={};e.exports=n,n.ee=r,r.q=o},{ee:"QJf3ax"}],id:[function(t,e){e.exports=t("XL7HBI")},{}],XL7HBI:[function(t,e){function n(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:i(t,o,function(){return r++})}var r=1,o="nr@id",i=t("gos");e.exports=n},{gos:"7eSDFh"}],G9z0Bl:[function(t,e){function n(){var t=p.info=NREUM.info,e=f.getElementsByTagName("script")[0];if(t&&t.licenseKey&&t.applicationID&&e){s(d,function(e,n){e in t||(t[e]=n)});var n="https"===u.split(":")[0]||t.sslForHttp;p.proto=n?"https://":"http://",a("mark",["onload",i()]);var r=f.createElement("script");r.src=p.proto+t.agent,e.parentNode.insertBefore(r,e)}}function r(){"complete"===f.readyState&&o()}function o(){a("mark",["domContent",i()])}function i(){return(new Date).getTime()}var a=t("handle"),s=t(1),c=(t(2),window),f=c.document,u=(""+location).split("?")[0],d={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-632.min.js"},p=e.exports={offset:i(),origin:u,features:{}};f.addEventListener?(f.addEventListener("DOMContentLoaded",o,!1),c.addEventListener("load",n,!1)):(f.attachEvent("onreadystatechange",r),c.attachEvent("onload",n)),a("mark",["firstbyte",i()])},{1:23,2:14,handle:"D5DuLP"}],loader:[function(t,e){e.exports=t("G9z0Bl")},{}],23:[function(t,e){function n(t,e){var n=[],o="",i=0;for(o in t)r.call(t,o)&&(n[i]=e(o,t[o]),i+=1);return n}var r=Object.prototype.hasOwnProperty;e.exports=n},{}],24:[function(t,e){function n(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=n},{}],25:[function(t,e){function n(t){return!(t&&"function"==typeof t&&t.apply&&!t[i])}var r=t("ee"),o=t(1),i="nr@wrapper",a=Object.prototype.hasOwnProperty;e.exports=function(t){function e(t,e,r,a){function nrWrapper(){var n,i,s,f;try{i=this,n=o(arguments),s=r&&r(n,i)||{}}catch(d){u([d,"",[n,i,a],s])}c(e+"start",[n,i,a],s);try{return f=t.apply(i,n)}catch(p){throw c(e+"err",[n,i,p],s),p}finally{c(e+"end",[n,i,f],s)}}return n(t)?t:(e||(e=""),nrWrapper[i]=!0,f(t,nrWrapper),nrWrapper)}function s(t,r,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<r.length;c++)s=r[c],a=t[s],n(a)||(t[s]=e(a,f?s+o:o,i,s))}function c(e,n,r){try{t.emit(e,n,r)}catch(o){u([o,e,n,r])}}function f(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){u([r])}for(var o in t)a.call(t,o)&&(e[o]=t[o]);return e}function u(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=r),e.inPlace=s,e.flag=i,e}},{1:24,ee:"QJf3ax"}]},{},["G9z0Bl",4,12,6,5]);</script>
-  <script type="text/javascript">
-//<![CDATA[
-var AUTH_TOKEN = "IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=";
-//]]>
-</script>
+  <meta charSet="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="release-version" content="v4.29.10"/>
+  <title>Free Calorie Counter, Diet &amp; Exercise Journal | MyFitnessPal</title>
+  <meta name="robots" content="index,follow"/>
+  <meta name="googlebot" content="index,follow"/>
+  <meta name="description"
+        content="Free online calorie counter and diet plan. Lose weight by tracking your caloric intake quickly and easily. Find nutrition facts for over 2,000,000 foods."/>
+  <link rel="alternate" hrefLang="en" href="https://www.myfitnesspal.com/measurements/edit"/>
+  <link rel="alternate" hrefLang="es" href="https://www.myfitnesspal.com/es/measurements/edit"/>
+  <link rel="alternate" hrefLang="da" href="https://www.myfitnesspal.com/da/measurements/edit"/>
+  <link rel="alternate" hrefLang="de" href="https://www.myfitnesspal.com/de/measurements/edit"/>
+  <link rel="alternate" hrefLang="fr" href="https://www.myfitnesspal.com/fr/measurements/edit"/>
+  <link rel="alternate" hrefLang="it" href="https://www.myfitnesspal.com/it/measurements/edit"/>
+  <link rel="alternate" hrefLang="ja" href="https://www.myfitnesspal.com/ja/measurements/edit"/>
+  <link rel="alternate" hrefLang="ko" href="https://www.myfitnesspal.com/ko/measurements/edit"/>
+  <link rel="alternate" hrefLang="nb" href="https://www.myfitnesspal.com/nb/measurements/edit"/>
+  <link rel="alternate" hrefLang="nl" href="https://www.myfitnesspal.com/nl/measurements/edit"/>
+  <link rel="alternate" hrefLang="pt" href="https://www.myfitnesspal.com/pt/measurements/edit"/>
+  <link rel="alternate" hrefLang="sv" href="https://www.myfitnesspal.com/sv/measurements/edit"/>
+  <link rel="alternate" hrefLang="pl" href="https://www.myfitnesspal.com/pl/measurements/edit"/>
+  <link rel="alternate" hrefLang="id" href="https://www.myfitnesspal.com/id/measurements/edit"/>
+  <link rel="alternate" hrefLang="tl" href="https://www.myfitnesspal.com/tl/measurements/edit"/>
+  <link rel="alternate" hrefLang="ru" href="https://www.myfitnesspal.com/ru/measurements/edit"/>
+  <link rel="alternate" hrefLang="ms" href="https://www.myfitnesspal.com/ms/measurements/edit"/>
+  <link rel="alternate" hrefLang="tr" href="https://www.myfitnesspal.com/tr/measurements/edit"/>
+  <link rel="alternate" hrefLang="zh-CN" href="https://www.myfitnesspal.com/zh-CN/measurements/edit"/>
+  <link rel="alternate" hrefLang="zh-TW" href="https://www.myfitnesspal.com/zh-TW/measurements/edit"/>
+  <link rel="alternate" hrefLang="x-default" href="https://www.myfitnesspal.com/measurements/edit"/>
+  <meta property="fb:app_id" content="186796388009496"/>
+  <meta property="og:description"
+        content="Free online calorie counter and diet plan. Lose weight by tracking your caloric intake quickly and easily. Find nutrition facts for over 2,000,000 foods."/>
+  <link rel="canonical" href="https://www.myfitnesspal.com/measurements/edit"/>
+  <meta name="next-head-count" content="31"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png?v=1"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png?v=1"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png?v=1"/>
+  <link rel="manifest" href="/favicons/site.webmanifest?v=1"/>
+  <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg?v=1" color="#0066EE"/>
+  <link rel="shortcut icon" href="/favicons/favicon.ico?v=1"/>
+  <meta name="msapplication-TileColor" content="#0066EE"/>
+  <meta name="msapplication-config" content="/favicons/browserconfig.xml"/>
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="preconnect" href="https://web-assets.myfitnesspal.com" crossorigin="anonymous"/>
+  <link rel="preconnect" href="https://web-main-assets.myfitnesspal.com" crossorigin="anonymous"/>
+  <link rel="preconnect" href="https://www.googletagmanager.com"/>
+  <link rel="preconnect" href="https://www.google-analytics.com"/>
+  <link rel="preconnect" href="https://www.google.com"/>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin="anonymous"/>
+  <link rel="preconnect" href="https://connect.facebook.net"/>
+  <link rel="preconnect" href="https://cdn.segment.com"/>
+  <link rel="preconnect" href="https://api.segment.com"/>
+  <link rel="preconnect" href="https://consent.truste.com"/>
+  <link rel="preconnect" href="https://consent.trustarc.com"/>
+  <link rel="stylesheet preload" href="https://web-assets.myfitnesspal.com/fonts/inter.css" as="style"/>
+  <link rel="preconnect" href="https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js"/>
+  <noscript data-n-css=""></noscript>
+  <script defer="" nomodule=""
+          src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/webpack-53cc7a3284d63db8.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/framework-19fa3454641a47fe.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/main-0d7c2a5862f1152e.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/pages/_app-69a4f5f649624a4a.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/6949-187e6cb4dee5e3ee.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/1054-3335909d7fe42560.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/939-454ef638f44d6962.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/4231-8dfe6d01f7e073f7.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/8402-a86a8ef1c39b783e.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/8114-218bcb170c28e2be.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/9648-18c3333ad7815b42.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/3115-84bb1fd65a333500.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/9072-0f67299ffd484f68.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/chunks/pages/measurements/edit-381df4ac0ff7faa9.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/-8KTogw5joIltT8V_riTv/_buildManifest.js"
+          defer=""></script>
+  <script src="https://web-main-assets.myfitnesspal.com/_next/static/-8KTogw5joIltT8V_riTv/_ssgManifest.js"
+          defer=""></script>
+  <style data-emotion="css-global 0"></style>
+  <style data-emotion="css-global 1ezccej">html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+  }
 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
 
-  <title>Free Calorie Counter, Diet &amp; Exercise Journal | MyFitnessPal.com</title>
+  strong, b {
+    font-weight: 700;
+  }
 
-  <meta name="description" content="Free online calorie counter and diet plan. Lose weight by tracking your caloric intake quickly and easily.  Find nutrition facts for over 2,000,000 foods." />
-  <meta name="keywords" content="calorie counter, free diet journal, weight loss program, nutrition facts, online calorie counter, free diet plan, weight loss online, free calorie counter" />
-  <meta content="authenticity_token" name="csrf-param" />
-<meta content="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" name="csrf-token" />
-  <meta name="verify-v1" content="jKS1fjb9pK13luol4O+VFWO0OwEYaK4au88j0aRpQTM=" />
+  body {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    background-color: #fff;
+  }
 
+  @media print {
+    body {
+      background-color: #fff;
+    }
+  }
 
-  <script type="text/javascript">
-    document.documentElement.className += " js-enabled";
-  </script>
+  body::backdrop {
+    background-color: #fff;
+  }</style>
+  <style data-emotion="css-global 1prfaxn">@-webkit-keyframes mui-auto-fill {
+                                             from {
+                                               display: block;
+                                             }
+                                           }
 
-    <link href="http://d34yn14tavczy0.cloudfront.net/assets/sass/application-ee21d18aff36a7fb86edf7018aeb9003.css" media="screen" rel="stylesheet" type="text/css" />
+  @keyframes mui-auto-fill {
+    from {
+      display: block;
+    }
+  }
 
+  @-webkit-keyframes mui-auto-fill-cancel {
+    from {
+      display: block;
+    }
+  }
 
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-  <!--[if IE 7]>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css">
-  <![endif]-->
-  <link href="http://d34yn14tavczy0.cloudfront.net/stylesheets/font-mfizz/font-mfizz.css" media="all" rel="stylesheet" type="text/css" />
+  @keyframes mui-auto-fill-cancel {
+    from {
+      display: block;
+    }
+  }</style>
+  <style data-emotion="css 14r34si 12upb36 18rmlqv 1szvam0 1dtb50s 387imp 1ilyui9 70qvj9 33xw1o l8mh5g l1q6s7 em1ki2 ces7xl 1ojncnw 1tu9u55 5n5pbd v5ffhk jaojud 15ro776 181v63d 1k8z5lp 1u624ed eg6my0 1d3bbye 1wxaqej 10z0jsg 1i8enoe uom0n6 1ncw7et 1sw7z84 1uf8628 1l4w6pd nv096v 1r4x83q ayg8bw 1ll4pru 15vukob cklv5a u1qavy 1yjo05o 1fo2ctb qiwgdb 1k3x8v3 1636szt igs3ac ihdtdm vn3pre 1xaekgw 1dkxxa2 1r5u1m4 undvtx 1uvydh2 106dmsz bhjfez 1lcdag7 j7qwjs toc561 1gx856s slyssw vubbuv yjsfm1 d3ax0z 6yv9cb 1lcwblq xfwyuh thmg0s 1xw0tlx of5k7r 1lmzkt3 gi16lv jbx9iz 1fm1kzp vdp4z1 c3a3yt tuxzvu riw271 l5c1s3 1xhj18k jw36s5 ivh79w o1pith wqo1dr 1p199g4 g0t3np pskig2 r54vba 5cm1aq 1b47e06 1hanubv rmorx9 3suqjk 1y5nj7e">.css-14r34si {
+    background-color: #FFFFFF;
+  }
 
-  
+  .css-12upb36 {
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.87);
+    -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    position: static;
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.87);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.0884);
+    background-color: #FFFFFF;
+    color: #000000;
+    top: 0;
+  }
 
+  .css-18rmlqv {
+    width: 100%;
+    margin-left: auto;
+    box-sizing: border-box;
+    margin-right: auto;
+    display: block;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 
-  <script>
-var MFP = (function (parent) {
-  parent.URL = (function () {
-    var me = {};
-    me.currentLocale = "en";
-    me.baseUrl = "http://www.myfitnesspal.com/";
-    me.httpsBaseUrl = "https://www.myfitnesspal.com/";
-    me.topLevelDomain = "com";
-    me.defaultLocale = "en";
-    me.getUrlPath = function(path) {
-      //if (me.topLevelDomain == me.currentLocale) {
-      if (me.defaultLocale == me.currentLocale) {
-        return (path[0] == '/' ? path.substring(1) : path);
-      } else {
-        return '/' + me.currentLocale + path;
+  @media (min-width: 992px) {
+    .css-18rmlqv {
+      max-width: 992px;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-18rmlqv {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  @media (min-width: 0px) {
+    .css-18rmlqv {
+      padding: 0px;
+    }
+  }
+
+  .css-1szvam0 {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 56px;
+  }
+
+  @media (min-width: 0px) {
+    @media (orientation: landscape) {
+      .css-1szvam0 {
+        min-height: 48px;
       }
     }
-    me.getUrlAbsolute = function(path) {
-      return me.baseUrl + (path[0] == '/' ? path.substring(1) : path);
+  }
+
+  @media (min-width: 576px) {
+    .css-1szvam0 {
+      min-height: 64px;
     }
-    me.getHttpsUrlAbsolute = function(path) {
-      if (false) {
-        return me.getUrlAbsolute(path);
-      } else {
-        return me.httpsBaseUrl + (path[0] == '/' ? path.substring(1) : path);
+  }
+
+  @media (min-width: 0px) {
+    .css-1szvam0 {
+      min-height: 75px;
+    }
+  }
+
+  .css-1dtb50s {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    margin-left: 18px;
+  }
+
+  .css-387imp {
+    display: block;
+    width: 100%;
+    margin-top: 0px;
+    height: auto;
+    max-width: 200px;
+    color: #0066EE;
+  }
+
+  .css-1ilyui9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+  }
+
+  .css-70qvj9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+
+  .css-33xw1o {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+    padding-left: 4px;
+    padding-right: 8px;
+    border-right: 1px solid #e6e6e6;
+  }
+
+  .css-l8mh5g {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    padding-left: 2px;
+    padding-right: 0px;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .css-l8mh5g:hover {
+    cursor: pointer;
+    color: #1943CF;
+  }
+
+  .css-l1q6s7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding-left: 8px;
+  }
+
+  .css-em1ki2 {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    height: 18px;
+  }
+
+  .css-ces7xl {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-size: 18px;
+    fill: grey;
+  }
+
+  .css-1ojncnw {
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    line-height: 14px;
+    font-size: 12px;
+    margin: 5px;
+    background-color: #f44;
+    color: #FFFFFF;
+  }
+
+  .css-1tu9u55 {
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    line-height: 14px;
+    font-size: 12px;
+    margin: 5px;
+    background-color: #e6e6e6;
+    color: #999;
+  }
+
+  .css-5n5pbd {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    padding-left: 0px;
+    padding-right: 8px;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+  }
+
+  .css-5n5pbd:hover {
+    cursor: pointer;
+    color: #1943CF;
+  }
+
+  .css-v5ffhk {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-right: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+  }
+
+  .css-jaojud {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-left: 4px;
+  }
+
+  .css-15ro776 {
+    margin-right: 4px;
+  }
+
+  .css-181v63d {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+  }
+
+  .css-1k8z5lp {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+  }
+
+  .css-1u624ed {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+    color: #0066EE;
+    cursor: pointer;
+  }
+
+  .css-1u624ed :hover {
+    color: #FDDA1C;
+  }
+
+  .css-eg6my0 {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 56px;
+    background-color: #0066EE;
+    padding: 0;
+  }
+
+  @media (min-width: 0px) {
+    @media (orientation: landscape) {
+      .css-eg6my0 {
+        min-height: 48px;
       }
     }
-    return me;
-  }());
-  return parent;
-})(MFP || {});
-</script>
+  }
 
-  <script>
-var MFP = (function (parent) {
-  parent.DEBUG = false;
-  parent.DEVELOPMENT = false;
+  @media (min-width: 576px) {
+    .css-eg6my0 {
+      min-height: 64px;
+    }
+  }
 
-  return parent;
-})(MFP || {});
-</script>
+  @media (min-width: 0px) {
+    .css-eg6my0 {
+      min-height: 45px;
+    }
+  }
 
-    <script>
-var MFP = (function (parent) {
-  parent.User = (function () {
-    var me = {};
+  .css-1d3bbye {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100%;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
 
-    return me;
-  }());
+  .css-1wxaqej {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
 
-  return parent;
-})(MFP || {});
-</script>
+  .css-10z0jsg {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    background-color: #00548b;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    font-weight: 700;
+    height: 45px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 0 18px;
+    color: white;
+    font-size: 13px;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 
+  .css-10z0jsg:hover {
+    background-color: #00548b;
+  }
 
-  <script src="http://d34yn14tavczy0.cloudfront.net/assets/application-306b4b74256402c58c869f9e62c1f6d6.js" type="text/javascript"></script>
+  .css-1i8enoe {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    background-color: #0066EE;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    font-weight: 700;
+    height: 45px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 0 18px;
+    color: white;
+    font-size: 13px;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 
+  .css-1i8enoe:hover {
+    background-color: #00548b;
+  }
 
+  .css-uom0n6 {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    min-height: 56px;
+    background-color: #00548b;
+  }
 
-  <script type="text/javascript">
-var MFP = (function (parent) {
-  parent.LOCALYTICS_APP_ID = '3bbc12e7d80cd33573b100c-a988997e-d550-11e3-9a45-005cf8cbabd8';
-  return parent;
-}(MFP || {}));
-</script>
-<script type="text/javascript" src="//web.localytics.com/latest/localytics.min.js"></script>
-<script type="text/javascript" src="/assets/mfp_localytics.js"></script>
+  @media (min-width: 576px) {
+    .css-uom0n6 {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
 
-    <script type="text/javascript">
-    var googletag = googletag || {};
-    googletag.cmd = googletag.cmd || [];
-    (function() {
-     var gads = document.createElement('script');
-     gads.async = true; gads.type = 'text/javascript';
-     gads.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.googletagservices.com/tag/js/gpt.js';
-     var node = document.getElementsByTagName('script')[0];
-       node.parentNode.insertBefore(gads, node);
-    })();
-  </script>
+  @media (min-width: 0px) {
+    @media (orientation: landscape) {
+      .css-uom0n6 {
+        min-height: 48px;
+      }
+    }
+  }
 
+  @media (min-width: 576px) {
+    .css-uom0n6 {
+      min-height: 64px;
+    }
+  }
 
-    <script type="text/javascript">
-      googletag.cmd.push(function() {
-          googletag.defineUnit('/1033141/ca-pub-8033683427063754/other_728x90', [728,90], 'ad_other_728x90').
-            addService(googletag.pubads());
-            googletag.pubads().setTargeting('dkw','nma');
-            googletag.pubads().setTargeting('oex','wdl');
+  @media (min-width: 0px) {
+    .css-uom0n6 {
+      min-height: 45px;
+      padding: 0px;
+    }
+  }
 
+  .css-1ncw7et {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    background-color: #00548b;
+    color: white;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    font-size: 13px;
+    height: 45px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 0 18px;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    font-weight: 400;
+  }
 
-        googletag.enableServices();
-        
-      });
-    </script>
+  .css-1sw7z84 {
+    margin: 0;
+    color: #0066EE;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    background-color: #00548b;
+    color: white;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    font-size: 13px;
+    height: 45px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 0 18px;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    font-weight: 800;
+  }
 
+  .css-1uf8628 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 70vh;
+  }
 
-<script type="text/javascript">
-  var aax_src='1092';
-  var url = encodeURIComponent(document.location);
-  try { url = encodeURIComponent("" + window.top.location); } catch(e) {}
-  document.write("<scr"+"ipt src='//aax-us-east.amazon-adsystem.com/e/dtb/bid?src=" + aax_src + "&u="+url+"&cb=" + Math.round(Math.random()*10000000) + "'></scr"+"ipt>");
-  document.close();
-</script>
+  @media (min-width: 0px) {
+    .css-1uf8628 {
+      padding-top: 0px;
+      padding-bottom: 0px;
+    }
+  }
 
-  
+  @media (min-width: 768px) {
+    .css-1uf8628 {
+      padding-top: 20px;
+      padding-bottom: 48px;
+    }
+  }
 
+  .css-1l4w6pd {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
 
-  <script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-94924-2']);
-  
-  _gaq.push(['_setVar', 'member']);
-  if(typeof(_vis_opt_GA_track) == "function") { _vis_opt_GA_track(); }
+  .css-nv096v {
+    width: 728px;
+    height: 90px;
+    background-color: #E0E0E0;
+    overflow: hidden;
+  }
 
-  _gaq.push(['_setCustomVar', 1, 'status', 'logged_in', 1]);
+  .css-1r4x83q {
+    width: 100%;
+    margin-left: auto;
+    box-sizing: border-box;
+    margin-right: auto;
+    display: block;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 20px;
+    margin-top: 32px;
+  }
 
-  _gaq.push(['_setDomainName’, ‘auto']);
+  @media (min-width: 576px) {
+    .css-1r4x83q {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
 
-  _gaq.push(['_trackPageview']);
+  @media (min-width: 992px) {
+    .css-1r4x83q {
+      max-width: 992px;
+    }
+  }
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+  @media (min-width: 576px) {
+    .css-1r4x83q {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
 
+  .css-ayg8bw {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+  }
 
-  <link rel="canonical" href="http://www.myfitnesspal.com/measurements/edit?page=1&amp;type=91955886">
+  @media (min-width: 576px) {
+    .css-ayg8bw {
+      -webkit-flex-basis: 100%;
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 100%;
+    }
+  }
 
+  @media (min-width: 768px) {
+    .css-ayg8bw {
+      -webkit-flex-basis: 100%;
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 100%;
+    }
+  }
 
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.com.br/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="pt" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.com/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="en" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.cn/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="zh-Hans" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.de/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="de" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.es/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="es" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.fr/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="fr" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.com.hk/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="zh-Hant" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.it/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="it" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.jp/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="ja" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.co.kr/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="ko" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.com.mx/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="es" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.nl/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="nl" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.se/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="sv" />
-  <link rel="alternate" 
-  href="http://www.myfitnesspal.com.tw/measurements/edit?page=1&amp;type=91955886" 
-  hreflang="zh-Hant" />
+  @media (min-width: 992px) {
+    .css-ayg8bw {
+      -webkit-flex-basis: 100%;
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 100%;
+    }
+  }
 
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/de/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="de-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/es/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="es-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/fr/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="fr-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/pt/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="pt-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/it/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="it-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/nb/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="nb-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/nl/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="nl-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/ru/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="ru-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/sv/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="sv-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/da/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="da-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/ko/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="ko-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/ja/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="ja-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/zh-CN/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="zh-Hans-US" />
-    <link rel="alternate" 
-          href="http://www.myfitnesspal.com/zh-TW/measurements/edit?page=1&amp;type=91955886" 
-          hreflang="zh-Hant-US" />
+  @media (min-width: 1200px) {
+    .css-ayg8bw {
+      -webkit-flex-basis: 100%;
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 100%;
+    }
+  }
 
+  @media (min-width: 1920px) {
+    .css-ayg8bw {
+      -webkit-flex-basis: 100%;
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 100%;
+    }
+  }
 
+  .css-1ll4pru {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    letter-spacing: 0px;
+    margin-bottom: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #000000;
+  }
 
+  .css-15vukob {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+
+  .css-15vukob > :not(style) + :not(style) {
+    margin: 0;
+    margin-top: 8px;
+  }
+
+  .css-cklv5a {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4375em;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    padding: 0;
+    position: relative;
+    display: block;
+    transform-origin: top left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    color: #000000;
+  }
+
+  .css-cklv5a.Mui-focused {
+    color: #0066EE;
+  }
+
+  .css-cklv5a.Mui-disabled {
+    color: rgba(0, 0, 0, 0.38);
+  }
+
+  .css-cklv5a.Mui-error {
+    color: #B20C02;
+  }
+
+  .css-u1qavy {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  @media (min-width: 576px) {
+    .css-u1qavy {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-u1qavy {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-u1qavy {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-u1qavy {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-u1qavy {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-u1qavy {
+      font-size: 1.25rem;
+    }
+  }
+
+  .css-1yjo05o {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+
+  .css-1yjo05o > :not(style) + :not(style) {
+    margin: 0;
+    margin-left: 8px;
+  }
+
+  .css-1fo2ctb {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4375em;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    box-sizing: border-box;
+    position: relative;
+    cursor: text;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    border-radius: 4px;
+  }
+
+  .css-1fo2ctb.Mui-disabled {
+    color: rgba(0, 0, 0, 0.38);
+    cursor: default;
+  }
+
+  .css-1fo2ctb:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.87);
+  }
+
+  @media (hover: none) {
+    .css-1fo2ctb:hover .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.23);
+    }
+  }
+
+  .css-1fo2ctb.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #0066EE;
+    border-width: 2px;
+  }
+
+  .css-1fo2ctb.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #B20C02;
+  }
+
+  .css-1fo2ctb.Mui-disabled .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.26);
+  }
+
+  .css-qiwgdb {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    padding: 4px 0 5px;
+    border: 0;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375em;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 100%;
+    -webkit-animation-name: mui-auto-fill-cancel;
+    animation-name: mui-auto-fill-cancel;
+    -webkit-animation-duration: 10ms;
+    animation-duration: 10ms;
+    padding: 16.5px 14px;
+  }
+
+  .css-qiwgdb:focus {
+    border-radius: 4px;
+  }
+
+  .css-qiwgdb::-ms-expand {
+    display: none;
+  }
+
+  .css-qiwgdb.Mui-disabled {
+    cursor: default;
+  }
+
+  .css-qiwgdb[multiple] {
+    height: auto;
+  }
+
+  .css-qiwgdb:not([multiple]) option, .css-qiwgdb:not([multiple]) optgroup {
+    background-color: #fff;
+  }
+
+  .css-qiwgdb.css-qiwgdb.css-qiwgdb {
+    padding-right: 32px;
+  }
+
+  .css-qiwgdb.MuiSelect-select {
+    height: auto;
+    min-height: 1.4375em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .css-qiwgdb::-webkit-input-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-qiwgdb::-moz-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-qiwgdb:-ms-input-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-qiwgdb::-ms-input-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-qiwgdb:focus {
+    outline: 0;
+  }
+
+  .css-qiwgdb:invalid {
+    box-shadow: none;
+  }
+
+  .css-qiwgdb::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb::-webkit-input-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb::-moz-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb:-ms-input-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb::-ms-input-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb:focus::-webkit-input-placeholder {
+    opacity: 0.42;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb:focus::-moz-placeholder {
+    opacity: 0.42;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb:focus:-ms-input-placeholder {
+    opacity: 0.42;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-qiwgdb:focus::-ms-input-placeholder {
+    opacity: 0.42;
+  }
+
+  .css-qiwgdb.Mui-disabled {
+    opacity: 1;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
+  }
+
+  .css-qiwgdb:-webkit-autofill {
+    -webkit-animation-duration: 5000s;
+    animation-duration: 5000s;
+    -webkit-animation-name: mui-auto-fill;
+    animation-name: mui-auto-fill;
+  }
+
+  .css-qiwgdb:-webkit-autofill {
+    border-radius: inherit;
+  }
+
+  .css-1k3x8v3 {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .css-1636szt {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+    position: absolute;
+    right: 7px;
+    top: calc(50% - .5em);
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  .css-1636szt.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26);
+  }
+
+  .css-igs3ac {
+    text-align: left;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: -5px;
+    left: 0;
+    margin: 0;
+    padding: 0 8px;
+    pointer-events: none;
+    border-radius: inherit;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    min-width: 0%;
+    border-color: rgba(0, 0, 0, 0.23);
+  }
+
+  .css-ihdtdm {
+    float: unset;
+    width: auto;
+    overflow: hidden;
+    padding: 0;
+    line-height: 11px;
+    -webkit-transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  }
+
+  .css-vn3pre {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: inherit;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    text-transform: uppercase;
+    min-width: 64px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    color: #fff;
+    background-color: #0066EE;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: transparent;
+    padding: 8px 20px;
+    box-shadow: none;
+    letter-spacing: 0.015625rem;
+  }
+
+  .css-vn3pre::-moz-focus-inner {
+    border-style: none;
+  }
+
+  .css-vn3pre.Mui-disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  @media print {
+    .css-vn3pre {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+    }
+  }
+
+  .css-vn3pre:hover {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    background-color: #1943CF;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (hover: none) {
+    .css-vn3pre:hover {
+      background-color: #0066EE;
+    }
+  }
+
+  .css-vn3pre:active {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .css-vn3pre.Mui-focusVisible {
+    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  }
+
+  .css-vn3pre.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26);
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+
+  .css-vn3pre:active {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .css-vn3pre:hover {
+    box-shadow: none;
+  }
+
+  .css-vn3pre.Mui-disabled {
+    background-color: #D8D8DC;
+    color: #FFFFFF;
+  }
+
+  .css-vn3pre:hover:disabled {
+    background-color: #0066EE;
+  }
+
+  .css-vn3pre label {
+    font-weight: 700;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  .css-vn3pre:hover:disabled {
+    background-color: #D8D8DC;
+  }
+
+  .css-1xaekgw {
+    margin-top: 20px;
+  }
+
+  .css-1dkxxa2 {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100%;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    margin-top: -8px;
+    width: calc(100% + 8px);
+    margin-left: -8px;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .css-1dkxxa2 > .MuiGrid-item {
+    padding-top: 8px;
+  }
+
+  .css-1dkxxa2 > .MuiGrid-item {
+    padding-left: 8px;
+  }
+
+  .css-1r5u1m4 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    vertical-align: top;
+    border-width: 2px;
+    box-sizing: borderBox;
+    opacity: 0.7;
+    height: 64px;
+    max-width: 120px;
+    min-width: 100px;
+    margin-left: 0px;
+  }
+
+  .css-undvtx {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4375em;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    box-sizing: border-box;
+    position: relative;
+    cursor: text;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    border-radius: 4px;
+    padding-right: 14px;
+  }
+
+  .css-undvtx.Mui-disabled {
+    color: rgba(0, 0, 0, 0.38);
+    cursor: default;
+  }
+
+  .css-undvtx:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.87);
+  }
+
+  @media (hover: none) {
+    .css-undvtx:hover .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.23);
+    }
+  }
+
+  .css-undvtx.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #0066EE;
+    border-width: 2px;
+  }
+
+  .css-undvtx.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #B20C02;
+  }
+
+  .css-undvtx.Mui-disabled .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.26);
+  }
+
+  .css-1uvydh2 {
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    padding: 4px 0 5px;
+    border: 0;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375em;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 100%;
+    -webkit-animation-name: mui-auto-fill-cancel;
+    animation-name: mui-auto-fill-cancel;
+    -webkit-animation-duration: 10ms;
+    animation-duration: 10ms;
+    padding: 16.5px 14px;
+    padding-right: 0;
+  }
+
+  .css-1uvydh2::-webkit-input-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-1uvydh2::-moz-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-1uvydh2:-ms-input-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-1uvydh2::-ms-input-placeholder {
+    color: currentColor;
+    opacity: 0.42;
+    -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  .css-1uvydh2:focus {
+    outline: 0;
+  }
+
+  .css-1uvydh2:invalid {
+    box-shadow: none;
+  }
+
+  .css-1uvydh2::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2::-webkit-input-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2::-moz-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2:-ms-input-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2::-ms-input-placeholder {
+    opacity: 0 !important;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2:focus::-webkit-input-placeholder {
+    opacity: 0.42;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2:focus::-moz-placeholder {
+    opacity: 0.42;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2:focus:-ms-input-placeholder {
+    opacity: 0.42;
+  }
+
+  label[data-shrink=false] + .MuiInputBase-formControl .css-1uvydh2:focus::-ms-input-placeholder {
+    opacity: 0.42;
+  }
+
+  .css-1uvydh2.Mui-disabled {
+    opacity: 1;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
+  }
+
+  .css-1uvydh2:-webkit-autofill {
+    -webkit-animation-duration: 5000s;
+    animation-duration: 5000s;
+    -webkit-animation-name: mui-auto-fill;
+    animation-name: mui-auto-fill;
+  }
+
+  .css-1uvydh2:-webkit-autofill {
+    border-radius: inherit;
+  }
+
+  .css-106dmsz {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 0.01em;
+    max-height: 2em;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    white-space: nowrap;
+    color: rgba(0, 0, 0, 0.54);
+    margin-left: 8px;
+    color: #000000;
+  }
+
+  .css-bhjfez {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .css-1lcdag7 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    color: #6C6C70;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  @media (min-width: 576px) {
+    .css-1lcdag7 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1lcdag7 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1lcdag7 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-1lcdag7 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1lcdag7 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1lcdag7 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .css-j7qwjs {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  .css-toc561 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    vertical-align: top;
+    border-width: 2px;
+    box-sizing: borderBox;
+    opacity: 0.7;
+    height: 64px;
+  }
+
+  .css-1gx856s {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4375em;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    padding: 0;
+    position: relative;
+    display: block;
+    transform-origin: top left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 24px);
+    position: absolute;
+    left: 0;
+    top: 0;
+    -webkit-transform: translate(14px, 16px) scale(1);
+    -moz-transform: translate(14px, 16px) scale(1);
+    -ms-transform: translate(14px, 16px) scale(1);
+    transform: translate(14px, 16px) scale(1);
+    -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    z-index: 1;
+    pointer-events: none;
+    color: #000000;
+  }
+
+  .css-1gx856s.Mui-focused {
+    color: #0066EE;
+  }
+
+  .css-1gx856s.Mui-disabled {
+    color: rgba(0, 0, 0, 0.38);
+  }
+
+  .css-1gx856s.Mui-error {
+    color: #B20C02;
+  }
+
+  .css-slyssw {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    -webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    font-size: 1.5rem;
+    padding: 8px;
+    border-radius: 50%;
+    overflow: visible;
+    color: rgba(0, 0, 0, 0.54);
+    -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    margin-right: -12px;
+  }
+
+  .css-slyssw::-moz-focus-inner {
+    border-style: none;
+  }
+
+  .css-slyssw.Mui-disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  @media print {
+    .css-slyssw {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+    }
+  }
+
+  .css-slyssw:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  @media (hover: none) {
+    .css-slyssw:hover {
+      background-color: transparent;
+    }
+  }
+
+  .css-slyssw.Mui-disabled {
+    background-color: transparent;
+    color: rgba(0, 0, 0, 0.26);
+  }
+
+  .css-vubbuv {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+  }
+
+  .css-yjsfm1 {
+    float: unset;
+    width: auto;
+    overflow: hidden;
+    display: block;
+    padding: 0;
+    height: 11px;
+    font-size: 0.75em;
+    visibility: hidden;
+    max-width: 0.01px;
+    -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    white-space: nowrap;
+  }
+
+  .css-yjsfm1 > span {
+    padding-left: 5px;
+    padding-right: 5px;
+    display: inline-block;
+    opacity: 0;
+    visibility: visible;
+  }
+
+  .css-d3ax0z {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    line-height: 1.66;
+    text-align: left;
+    margin-top: 3px;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    font-size: 14px;
+  }
+
+  .css-d3ax0z.Mui-disabled {
+    color: rgba(0, 0, 0, 0.38);
+  }
+
+  .css-d3ax0z.Mui-error {
+    color: #B20C02;
+  }
+
+  .css-6yv9cb {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 100%;
+    margin-top: 12px;
+  }
+
+  @media (min-width: 576px) {
+    .css-6yv9cb {
+      -webkit-flex-basis: 100%;
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-6yv9cb {
+      -webkit-flex-basis: 83.333333%;
+      -ms-flex-preferred-size: 83.333333%;
+      flex-basis: 83.333333%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 83.333333%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-6yv9cb {
+      -webkit-flex-basis: 83.333333%;
+      -ms-flex-preferred-size: 83.333333%;
+      flex-basis: 83.333333%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 83.333333%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-6yv9cb {
+      -webkit-flex-basis: 83.333333%;
+      -ms-flex-preferred-size: 83.333333%;
+      flex-basis: 83.333333%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 83.333333%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-6yv9cb {
+      -webkit-flex-basis: 83.333333%;
+      -ms-flex-preferred-size: 83.333333%;
+      flex-basis: 83.333333%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 83.333333%;
+    }
+  }
+
+  .css-1lcwblq {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 41.666667%;
+    -ms-flex-preferred-size: 41.666667%;
+    flex-basis: 41.666667%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 41.666667%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #0066EE;
+    color: #FFFFFF;
+    text-align: center;
+  }
+
+  @media (min-width: 576px) {
+    .css-1lcwblq {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-1lcwblq {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1lcwblq {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1lcwblq {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-1lcwblq {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-xfwyuh {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  .css-thmg0s {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 25%;
+    -ms-flex-preferred-size: 25%;
+    flex-basis: 25%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 25%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #0066EE;
+    color: #FFFFFF;
+    text-align: center;
+  }
+
+  @media (min-width: 576px) {
+    .css-thmg0s {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-thmg0s {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-thmg0s {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-thmg0s {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-thmg0s {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-1xw0tlx {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 16.666667%;
+    -ms-flex-preferred-size: 16.666667%;
+    flex-basis: 16.666667%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 16.666667%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #0066EE;
+    color: #FFFFFF;
+    text-align: center;
+  }
+
+  @media (min-width: 576px) {
+    .css-1xw0tlx {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-1xw0tlx {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1xw0tlx {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1xw0tlx {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-1xw0tlx {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-of5k7r {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 41.666667%;
+    -ms-flex-preferred-size: 41.666667%;
+    flex-basis: 41.666667%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 41.666667%;
+    border-left: 1px solid;
+    background-color: #F6F6F8;
+    border-bottom: 1px solid;
+    border-color: #D8D8DC;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  @media (min-width: 576px) {
+    .css-of5k7r {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-of5k7r {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-of5k7r {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-of5k7r {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-of5k7r {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-1lmzkt3 {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 25%;
+    -ms-flex-preferred-size: 25%;
+    flex-basis: 25%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 25%;
+    background-color: #F6F6F8;
+    border-bottom: 1px solid;
+    border-color: #D8D8DC;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  @media (min-width: 576px) {
+    .css-1lmzkt3 {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-1lmzkt3 {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1lmzkt3 {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1lmzkt3 {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-1lmzkt3 {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-gi16lv {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 16.666667%;
+    -ms-flex-preferred-size: 16.666667%;
+    flex-basis: 16.666667%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 16.666667%;
+    background-color: #F6F6F8;
+    border-bottom: 1px solid;
+    border-color: #D8D8DC;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  @media (min-width: 576px) {
+    .css-gi16lv {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-gi16lv {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-gi16lv {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-gi16lv {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-gi16lv {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-jbx9iz {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-basis: 16.666667%;
+    -ms-flex-preferred-size: 16.666667%;
+    flex-basis: 16.666667%;
+    -webkit-box-flex: 0;
+    -webkit-flex-grow: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    max-width: 16.666667%;
+    border-right: 1px solid;
+    background-color: #F6F6F8;
+    border-bottom: 1px solid;
+    border-color: #D8D8DC;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  @media (min-width: 576px) {
+    .css-jbx9iz {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .css-jbx9iz {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-jbx9iz {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-jbx9iz {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .css-jbx9iz {
+      -webkit-flex-basis: 25%;
+      -ms-flex-preferred-size: 25%;
+      flex-basis: 25%;
+      -webkit-box-flex: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+      flex-grow: 0;
+      max-width: 25%;
+    }
+  }
+
+  .css-1fm1kzp {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #0066EE;
+  }
+
+  .css-1fm1kzp:hover {
+    color: #FA9B31;
+    cursor: pointer;
+  }
+
+  .css-vdp4z1 {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+    color: #B20C02;
+    font-size: 14px;
+  }
+
+  @media (min-width: 576px) {
+    .css-vdp4z1 {
+      margin-left: 4px;
+    }
+  }
+
+  .css-c3a3yt {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.15;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.15;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  @media (min-width: 576px) {
+    .css-c3a3yt {
+      font-size: 1.3043rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-c3a3yt {
+      font-size: 1.5217rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-c3a3yt {
+      font-size: 1.5217rem;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-c3a3yt {
+      font-size: 1.3043rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-c3a3yt {
+      font-size: 1.5217rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-c3a3yt {
+      font-size: 1.5217rem;
+    }
+  }
+
+  .css-tuxzvu {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100%;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    margin-top: -8px;
+    width: calc(100% + 8px);
+    margin-left: -8px;
+  }
+
+  .css-tuxzvu > .MuiGrid-item {
+    padding-top: 8px;
+  }
+
+  .css-tuxzvu > .MuiGrid-item {
+    padding-left: 8px;
+  }
+
+  .css-riw271 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  .css-riw271 > :not(style) + :not(style) {
+    margin: 0;
+    margin-top: 8px;
+  }
+
+  @media (min-width: 0px) {
+    .css-riw271 {
+      max-width: unset;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-riw271 {
+      max-width: 180px;
+    }
+  }
+
+  .css-l5c1s3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+
+  .css-l5c1s3 > :not(style) + :not(style) {
+    margin: 0;
+    margin-top: 8px;
+  }
+
+  .css-1xhj18k {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+
+  .css-jw36s5 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    vertical-align: top;
+    border-width: 2px;
+    box-sizing: borderBox;
+    opacity: 0.7;
+    height: 64px;
+    max-width: 120px;
+    min-width: 100px;
+  }
+
+  .css-ivh79w {
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    margin-top: 16px;
+    -webkit-align-self: center;
+    -ms-flex-item-align: center;
+    align-self: center;
+  }
+
+  .css-o1pith {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    margin-bottom: 24px;
+    margin-top: 12px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  @media (min-width: 576px) {
+    .css-o1pith {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-o1pith {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-o1pith {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-o1pith {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-o1pith {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-o1pith {
+      font-size: 1.25rem;
+    }
+  }
+
+  .css-wqo1dr {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    line-height: 1.66;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    line-height: 1.66;
+  }
+
+  .css-1p199g4 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+  }
+
+  @media (min-width: 576px) {
+    .css-1p199g4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1p199g4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1p199g4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-1p199g4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-1p199g4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .css-1p199g4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .css-g0t3np {
+    width: 100%;
+    background-color: #F6F6F8;
+    text-align: center;
+  }
+
+  .css-pskig2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (min-width: 0px) {
+    .css-pskig2 {
+      min-height: 184px;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-pskig2 {
+      min-height: unset;
+    }
+  }
+
+  .css-r54vba {
+    line-height: 1.92;
+    list-style: none;
+    text-align: center;
+    max-width: 65%;
+    padding: 0px;
+  }
+
+  @media (min-width: 0px) {
+    .css-r54vba {
+      margin: 0 auto;
+      display: block;
+      padding-top: 24px;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-r54vba {
+      margin: 0 0 12px;
+      display: inline-block;
+      padding-top: 32px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-r54vba {
+      margin: 0 0 8px;
+    }
+  }
+
+  .css-r54vba li {
+    display: inline-block;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  .css-r54vba a {
+    font-size: 12px;
+    line-height: inherited;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: #0066EE;
+  }
+
+  .css-r54vba a:hover {
+    color: #1943CF;
+  }
+
+  .css-5cm1aq {
+    color: #000000;
+  }
+
+  .css-1b47e06 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .css-1b47e06::-moz-focus-inner {
+    border-style: none;
+  }
+
+  .css-1b47e06.Mui-disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  @media print {
+    .css-1b47e06 {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+    }
+  }
+
+  .css-1hanubv {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    color: #0066EE;
+    font-size: 12px;
+    text-transform: none;
+    height: 14.5px;
+    line-height: 12px;
+  }
+
+  .css-1hanubv:hover {
+    color: #1943CF;
+  }
+
+  @media (min-width: 0px) {
+    .css-rmorx9 {
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-rmorx9 {
+      padding-top: 32px;
+      padding-bottom: 32px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .css-rmorx9 {
+      position: absolute;
+      right: 30px;
+    }
+  }
+
+  .css-rmorx9 select {
+    font-size: 12px;
+  }
+
+  @media (min-width: 0px) {
+    .css-3suqjk {
+      height: 22px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+  }
+
+  .css-3suqjk p {
+    font-size: 11px;
+    line-height: 18px;
+  }
+
+  @media (min-width: 0px) {
+    .css-3suqjk p {
+      margin-bottom: 8px;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .css-3suqjk p {
+      margin-bottom: 0px;
+    }
+  }
+
+  .css-1y5nj7e {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: "Inter", Helvetica, Arial, -apple-system, sans-serif;
+    margin-bottom: 16px;
+  }</style>
 </head>
-
-
-<body class="layout-0" data-lang="en" class=body-header>
-
-
-
-<script type="text/javascript">current_locale = "en"; facebook_error_string ="Your Facebook account was not authorized.";</script>
-
-  
-
-
-  <!--[if lte IE 7]><div id="ie"><![endif]-->
-  <!--[if IE 6]><div id="ie6"><![endif]-->
-
-  <!-- Qualaroo for myfitnesspal.com -->
-  <script type="text/javascript">
-    var _kiq = _kiq || [];
-    (function(){
-      setTimeout(function(){
-      var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript';
-      s.async = true; s.src = '//s3.amazonaws.com/ki.js/49906/ape.js'; f.parentNode.insertBefore(s, f);
-      }, 1);
-    })();
-  </script>
-
-
-  
-
-  <div id="header">
-  <div class="header-wrap">
-    <div id="logo"><a href="http://www.myfitnesspal.com/">Calorie Counter</a></div>
-
-    <ul id="navTop" class="nav">
-
-  <li class="first">
-    Hi, <strong><a href="/profile/username" class="user-2" title="username">username</a></strong>
-  </li>
-
-  <li>
-    <a href="/messages" class="notif mail">
-        <span class="count">1</span>
-    </a>
-
-    <a href="/invitations" class="notif invites empty">
-        <span class="count">0</span>
-    </a>
-  </li>
-
-
-  <li>
-      <a href="http://myfitnesspal.desk.com/customer/authentication/multipass/callback?multipass=3iJ4PH4gw1fIrV9AYtO1fWxUMuCNz7i1ZVHnoaINKMH9SmUabnDa7mOHN7OL%0AmRsQhgtFmBZdIODdvFCZ6f892B0cLWE5HawTNiYVqrAzEezjTtgQnR%2BcgJ0y%0AOS0klwQ6gf%2FufWqeUnrdTFNcW4%2FsVI0cKRy70BOBeWS7UfidBViJLIA0Qoax%0Ai6L3hNQZmkpTda1k9cA8QcH5GEWeUnIGrAptBEzE11c6OTHwjG20fGZ%2Fjzk6%0AVeQKVX9YuTmoyUkDr3XfzzNq23JuwKnGhChU6gtbuWXFNX9YkwmJBugwPO4%3D%0A&amp;signature=jMOSCGYvV6%2B7zEKZpDEzhDr117k%3D%0A">Help</a>
-  </li>
-
-
-  <li>
-    <a href="/account/settings">Settings</a>
-  </li>
-
-  <li>
-    <a href="/account/logout">Log Out</a>
-  </li>
-
-  <li class="last">
-    <span>Follow Us:</span>
-    <a href="http://facebook.com/myfitnesspal" class="follow">
-      <span class="icon-stack" style="font-size: 12px;">
-        <i class="icon-circle icon-stack-base"></i>
-        <i class="icon-facebook icon-light"></i>
-      </span>
-    </a>
-    <a href="http://twitter.com/myfitnesspal" class="follow">
-      <span class="icon-stack" style="font-size: 12px;">
-        <i class="icon-circle icon-stack-base"></i>
-        <i class="icon-twitter icon-light"></i>
-      </span>
-    </a>
-    <a href="https://plus.google.com/115199907743865507458?prsrc=3" class="follow">
-      <span class="icon-stack" style="font-size: 12px;">
-        <i class="icon-circle icon-stack-base"></i>
-        <i class="icon-google-plus icon-light"></i>
-      </span>
-    </a>
-  </li>
-
-</ul>
-
-
-    <div class="clear"></div>
-  </div>
-
-  <div id="nav-bg">
-  <ul id="nav" class="nav">
-
-    <li>
-  <a href="/" class="nav_button active">My Home</a>
-</li>
-
-<li>
-  <a href="/food/diary/username" class="nav_button">Food</a>
-</li>
-
-<li>
-  <a href="/exercise/diary/username" class="nav_button">Exercise</a>
-</li>
-
-<li>
-  <a href="/reports" class="nav_button">Reports</a>
-</li>
-
-
-    <li>
-      <a href="/apps" class="nav_button">Apps</a>
-    </li>
-
-    <li>
-      <a href="/forums" class="nav_button">Community</a>
-    </li>
-
-    <li>
-      <a href="http://blog.myfitnesspal.com" class="nav_button">Blog</a>
-    </li>
-    <div class="clear"></div>
-  </ul>
-</div>
-
-
-  <div id="subNav-bg">
-  <ul id="subNav">
-
-    <li class="first">
-      <a href="/">Home</a>
-    </li>
-    <li>
-      <a href="/account/my_goals">Goals</a>
-    </li>
-    <li class="active">
-      <a href="/measurements/check_in">Check-In</a>
-    </li>
-    <li>
-      <a href="/messages">Mail</a>
-    </li>
-    <li>
-      <a href="/username">Profile</a>
-    </li>
-    <li>
-      <a href="/blog/username">My Blog</a>
-    </li>
-        <li>
-      <a href="/friends/list/80840319">Friends</a>
-    </li>
-    <li>
-      <a href="/account/settings">Settings</a>
-    </li>
-    <li>
-      <a href="/premium?f=premium-nav-menu" class="premium-menu">Premium</a>
-    </li>
-    <div class="clear"></div>
-  </ul>
-
-</div>
-
-
-  <div class="clear"></div>
-
-</div><!-- / #header -->
-
-<div class="clear"></div>
-
-  <script type="text/javascript">current_locale = "en";</script>
-
-
-
-  <div id="wrap">
-
-    <div id="content">
-
-      <div class="ads">
-  
-  <p class="ad"><div id="ad_other_728x90" data-network="google" class="ad-wrapper">
-</div>
-
-    <script type="text/javascript">amzn_ads_wrapper('ad_other_728x90', false, "on");</script>
-</p>
-  
-</div>
-
-<div id="main">
-  
-  <h1 class="main-title">Edit Previous Measurement Entries</h1>
-
-
-  <form accept-charset="UTF-8" action="/measurements/edit" class="form editMeasurements" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
-
-    <p class="cont-2">  
-      
-      <label>Measurement to edit:</label>
-  
-      <select class="select" id="type" name="type">
-        <option value="1">Weight</option>
-        <option value="91955886" selected="selected">Body Fat</option>
-        <option value="92738807">Butt</option>
-        <option value="92738811">Bicep</option>
-        <option value="92738815">Quad</option>
-        <option value="92738819">Mid Section</option>
-        <option value="92738861">Shoulders</option>
-      </select>
-      
-      <input type="submit" class="button" value="Change"/>
-            
-    </p>
-  
-</form>
-  <form accept-charset="UTF-8" action="/measurements/new" class="form editMeasurements" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
-
-    <input id="type" name="type" type="hidden" value="91955886" />
-    
-    <p class="cont-2">  
-    
-      <label>
-        Starting  Body Fat:
-      </label>
-
-        <span class="unit-form-field standard">
-
-
-  <span class="">
-    <input class="text short" data-unit-system="" id="first_measurement_display_value" name="first_measurement[display_value]" type="text" value="17.8" />
-</span>
-  <label class="first_measurement_label unit_label" for="first_measurement_display_value"></label>
-
-</span>
-
-
-        <span>on  1/13/2015</span>
-      
-      <input type="submit" class="button" value="Change"/>
-          
-    </p>
-  
-    <table class="table0 check-in" summary="check-in">
-
-      <colgroup>
-        <col class="col-1" />
-        <col class="col-2 col-num" />
-        <col class="col-3 col-num" />
-        <col class="col-4">
-      </colgroup>
-    
-      <thead>
-    
-        <tr>
-    
-          <td>Measurement</td>
-          <td class="col-num">Date</td>
-          <td class="col-num">Amount</td>
-          <td class="col-num">Delete?</td>
-    
-        </tr>
-    
-      </thead>
-
-      <tfoot>
-        
-        <tr>
-          
-          <td colspan="4" class="first"><div class="pagination alt"><span class="prev_page disabled">&laquo; Prev</span> <em class="current">1</em> <a rel="next" href="/measurements/edit?page=2&amp;type=91955886">2</a> <a href="/measurements/edit?page=3&amp;type=91955886">3</a> <a href="/measurements/edit?page=4&amp;type=91955886">4</a> <a href="/measurements/edit?page=5&amp;type=91955886">5</a> <a href="/measurements/edit?page=6&amp;type=91955886">6</a> <a href="/measurements/edit?page=7&amp;type=91955886">7</a> <a href="/measurements/edit?page=8&amp;type=91955886">8</a> <a href="/measurements/edit?page=9&amp;type=91955886">9</a> <a href="/measurements/edit?page=10&amp;type=91955886">10</a> <a class="next_page" rel="next" href="/measurements/edit?page=2&amp;type=91955886">Next &raquo;</a></div></td>
-          
-        </tr>
-        
-      </tfoot>
-      
-      <tbody>
-
-        
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/29/2015</td>
-          <td class="col-num">19.1</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/170628596" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/28/2015</td>
-          <td class="col-num">19.2</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/170469471" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/27/2015</td>
-          <td class="col-num">19.2</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/170302021" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/26/2015</td>
-          <td class="col-num">19</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/170180603" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/25/2015</td>
-          <td class="col-num">18.7</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/170026899" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/23/2015</td>
-          <td class="col-num">18.7</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/169746860" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/22/2015</td>
-          <td class="col-num">18.4</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/169598005" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/21/2015</td>
-          <td class="col-num">18.9</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/169442801" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/20/2015</td>
-          <td class="col-num">19.1</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/169275794" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="first">
-            Body Fat
-          </td>
-          <td class="col-num">4/19/2015</td>
-          <td class="col-num">19.1</td>
-          </td>
-          <td>
-              <a href="/measurements/delete/169153647" class="remove" data-confirm="Are you sure you want to delete this entry?">Delete?</a>
-          </td>
-        </tr>
-  
-  
-      </tbody>
-        
-    </table>
-  
-    <h1 class="main-title">Add New Entry</h1>
-    
-    <p class="cont-2">  
-    
-      <label>Date:</label>
-
-      <select class="select short" id="measurement_entry_date_2i" name="measurement[entry_date(2i)]">
-<option value="1">January</option>
-<option value="2">February</option>
-<option value="3">March</option>
-<option selected="selected" value="4">April</option>
-<option value="5">May</option>
-<option value="6">June</option>
-<option value="7">July</option>
-<option value="8">August</option>
-<option value="9">September</option>
-<option value="10">October</option>
-<option value="11">November</option>
-<option value="12">December</option>
-</select>
-<select class="select short" id="measurement_entry_date_3i" name="measurement[entry_date(3i)]">
-<option value="1">1</option>
-<option value="2">2</option>
-<option value="3">3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-<option value="7">7</option>
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
-<option value="13">13</option>
-<option value="14">14</option>
-<option value="15">15</option>
-<option value="16">16</option>
-<option value="17">17</option>
-<option value="18">18</option>
-<option value="19">19</option>
-<option value="20">20</option>
-<option value="21">21</option>
-<option value="22">22</option>
-<option value="23">23</option>
-<option value="24">24</option>
-<option value="25">25</option>
-<option value="26">26</option>
-<option value="27">27</option>
-<option value="28">28</option>
-<option selected="selected" value="29">29</option>
-<option value="30">30</option>
-<option value="31">31</option>
-</select>
-<select class="select short" id="measurement_entry_date_1i" name="measurement[entry_date(1i)]">
-<option selected="selected" value="2015">2015</option>
-<option value="2014">2014</option>
-<option value="2013">2013</option>
-<option value="2012">2012</option>
-<option value="2011">2011</option>
-<option value="2010">2010</option>
-<option value="2009">2009</option>
-<option value="2008">2008</option>
-<option value="2007">2007</option>
-<option value="2006">2006</option>
-<option value="2005">2005</option>
-<option value="2004">2004</option>
-<option value="2003">2003</option>
-<option value="2002">2002</option>
-<option value="2001">2001</option>
-<option value="2000">2000</option>
-<option value="1999">1999</option>
-<option value="1998">1998</option>
-<option value="1997">1997</option>
-<option value="1996">1996</option>
-<option value="1995">1995</option>
-<option value="1994">1994</option>
-<option value="1993">1993</option>
-<option value="1992">1992</option>
-<option value="1991">1991</option>
-<option value="1990">1990</option>
-<option value="1989">1989</option>
-<option value="1988">1988</option>
-<option value="1987">1987</option>
-<option value="1986">1986</option>
-<option value="1985">1985</option>
-<option value="1984">1984</option>
-<option value="1983">1983</option>
-<option value="1982">1982</option>
-<option value="1981">1981</option>
-<option value="1980">1980</option>
-<option value="1979">1979</option>
-<option value="1978">1978</option>
-<option value="1977">1977</option>
-<option value="1976">1976</option>
-<option value="1975">1975</option>
-<option value="1974">1974</option>
-<option value="1973">1973</option>
-<option value="1972">1972</option>
-<option value="1971">1971</option>
-<option value="1970">1970</option>
-<option value="1969">1969</option>
-<option value="1968">1968</option>
-<option value="1967">1967</option>
-<option value="1966">1966</option>
-<option value="1965">1965</option>
-<option value="1964">1964</option>
-<option value="1963">1963</option>
-<option value="1962">1962</option>
-<option value="1961">1961</option>
-<option value="1960">1960</option>
-<option value="1959">1959</option>
-<option value="1958">1958</option>
-<option value="1957">1957</option>
-<option value="1956">1956</option>
-<option value="1955">1955</option>
-<option value="1954">1954</option>
-<option value="1953">1953</option>
-<option value="1952">1952</option>
-<option value="1951">1951</option>
-<option value="1950">1950</option>
-<option value="1949">1949</option>
-<option value="1948">1948</option>
-<option value="1947">1947</option>
-<option value="1946">1946</option>
-<option value="1945">1945</option>
-<option value="1944">1944</option>
-<option value="1943">1943</option>
-<option value="1942">1942</option>
-<option value="1941">1941</option>
-<option value="1940">1940</option>
-<option value="1939">1939</option>
-<option value="1938">1938</option>
-<option value="1937">1937</option>
-<option value="1936">1936</option>
-<option value="1935">1935</option>
-<option value="1934">1934</option>
-<option value="1933">1933</option>
-<option value="1932">1932</option>
-<option value="1931">1931</option>
-<option value="1930">1930</option>
-<option value="1929">1929</option>
-<option value="1928">1928</option>
-<option value="1927">1927</option>
-<option value="1926">1926</option>
-<option value="1925">1925</option>
-<option value="1924">1924</option>
-<option value="1923">1923</option>
-<option value="1922">1922</option>
-<option value="1921">1921</option>
-<option value="1920">1920</option>
-<option value="1919">1919</option>
-<option value="1918">1918</option>
-<option value="1917">1917</option>
-<option value="1916">1916</option>
-<option value="1915">1915</option>
-</select>
-
-      
-      <label>Amount:</label>
-      
-        <input class="text short" id="measurement_display_value" name="measurement[display_value]" size="30" type="text" />
-      
-      <input type="submit" class="button  add-new-entry" value="Add New Entry"/>
-          
-    </p>
-      
-  </form><!-- / #checkIn -->
-
-</div><!-- / #main -->
-
-<div id="sidebar">
-
-  <div class="block-1">
-    
-    <h4 class="balloon"><span>Weigh Yourself</span></h4>
-    
-    <p>
-      To help track your progress, you should record your weight periodically.
-We suggest once a week because your weight fluctuates daily due to uncontrollable factors like water.
-Try to always weigh yourself at the same time of day - we suggest early in the morning before breakfast.
-
-    </p>
-    
-  </div>
-
-  <div class="block-1">
-    
-    <h4 class="balloon"><span>Take Your Measurements</span></h4>
-    
-    <p>
-      Taking your measurements can be an even better gauge of your progress because when you burn fat and build heavier muscle,
-your weight may not change or even increase even though your body is tighter and smaller.
-We suggest taking your measurements every 2-4 weeks.
-
-    </p>
-    
-  </div>
-
-</div><!-- / #sidebar -->
-
-
-    </div><!-- / #content -->
-
-  </div><!-- / #wrap -->
-
-  <section id="footer-wrapper">
-  <div class="uacf-logo-wrapper">
-      <a href="https://www.underarmour.com/?cid=MMF||MFPal|Site|||" class="uacf-logo"><img alt="Under Armour ConnectedFitness" src="http://d34yn14tavczy0.cloudfront.net/assets/uacf_logo-671e028e69854b1690cf32c59def25ef.png" /></a>
-  </div>
-  <div id="footer">
-    <div id="footerContent">
-        <div id="language_select">
-          <form accept-charset="UTF-8" action="/account/change_language" class="form settings_form" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
-            <input id="originating_path" name="originating_path" type="hidden" />
-            <select id="preference_language_setting" name="preference[language_setting]"><option value="en" selected="selected">English</option>
-<option value="de">Deutsch</option>
-<option value="es">Español</option>
-<option value="fr">Français</option>
-<option value="pt">Português (Brasil)</option>
-<option value="it">Italiano</option>
-<option value="nb">Norsk</option>
-<option value="nl">Nederlands</option>
-<option value="ru">Pусский</option>
-<option value="sv">Svensk</option>
-<option value="da">Dansk</option>
-<option value="ko">한국어</option>
-<option value="ja">日本語</option>
-<option value="zh-CN">中文(简体)</option>
-<option value="zh-TW">中文(台灣)</option></select>
-</form>
+<body>
+<div id="__next">
+  <div class="MuiBox-root css-14r34si">
+    <header class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorDefault MuiAppBar-positionStatic css-12upb36">
+      <div class="MuiContainer-root MuiContainer-maxWidthMd MuiContainer-disableGutters css-18rmlqv">
+        <div class="MuiToolbar-root MuiToolbar-regular css-1szvam0"><a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1dtb50s"
+                aria-label="Home" href="/">
+          <svg class="MuiBox-root css-387imp" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 30">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M15.5717 6.41704C14.6301 6.94914 13.8205 7.68646 13.2028 8.57427C12.9288 7.71195 12.3642 6.9713 11.6054 6.47848C10.7268 5.96677 9.71983 5.71799 8.70405 5.76168C7.8092 5.76156 6.92875 5.98695 6.14404 6.41704C5.27752 6.91074 4.54961 7.61517 4.02777 8.46505V6.26003H-0.197937V22.5963H4.16431V12.7727C4.15875 12.3152 4.24946 11.8616 4.43055 11.4415C4.58968 11.0511 4.82132 10.6944 5.11321 10.3902C5.41623 10.0702 5.78079 9.81477 6.185 9.63923C6.56805 9.49098 6.97578 9.41685 7.3865 9.42078C7.66068 9.42191 7.93281 9.46803 8.19205 9.55731C8.44191 9.64493 8.66357 9.7982 8.83375 10.001C9.03005 10.2537 9.17184 10.5442 9.25018 10.8544C9.36336 11.3235 9.41386 11.8056 9.40037 12.288V22.5963H13.7626V12.5815C13.7623 12.1715 13.8508 11.7663 14.022 11.3937C14.1927 11.0238 14.4234 10.6847 14.7047 10.3902C15.0102 10.07 15.377 9.81463 15.7833 9.63923C16.164 9.49103 16.5695 9.41688 16.978 9.42078C17.2445 9.41995 17.5095 9.46142 17.763 9.54366C18.0109 9.63145 18.2303 9.7848 18.3979 9.98739C18.5991 10.2378 18.7435 10.529 18.8212 10.8407C18.9421 11.3134 18.9995 11.8001 18.9918 12.288V22.5963H23.3609V11.6736C23.3609 9.58917 22.9399 8.08275 22.098 7.15432C21.6007 6.6692 21.0052 6.29631 20.3516 6.06079C19.6981 5.82527 19.0016 5.73259 18.3092 5.78899C17.3565 5.78758 16.4184 6.02212 15.5785 6.47166"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M36.9733 6.26001L33.4507 16.9915L29.621 6.26001H24.576L31.3345 21.8794L30.8361 23.2448C30.6738 23.8123 30.3627 24.3261 29.935 24.733C29.5281 25.0301 29.032 25.1794 28.5287 25.1562C27.9084 25.1565 27.2908 25.0738 26.6923 24.9105L25.9755 28.16C26.5179 28.3413 27.0753 28.4738 27.6412 28.5559C28.1731 28.6265 28.709 28.663 29.2455 28.6652C29.9934 28.6858 30.7387 28.5677 31.4437 28.317C32.0214 28.1004 32.5421 27.7549 32.966 27.3066C33.4412 26.7737 33.8346 26.1733 34.1334 25.5249C34.4679 24.8422 34.8161 24.0025 35.1915 23.0673L41.7383 6.26001H36.9733Z"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M48.5308 0.327655C47.8647 0.540361 47.2523 0.8943 46.7354 1.36531C46.2054 1.85944 45.7966 2.46917 45.5407 3.14707C45.2314 3.97848 45.0831 4.86118 45.1038 5.74803V6.28051H42.5507V9.69385H45.1038V22.5963H49.4661V9.67337H53.2481V6.26003H49.4661V5.63198C49.4288 5.30912 49.4716 4.98206 49.5906 4.67965C49.7097 4.37724 49.9014 4.10879 50.1487 3.89801C50.5934 3.57679 51.1294 3.40688 51.6779 3.41331C52.3181 3.41821 52.9554 3.50074 53.5757 3.65907L54.1697 0.471015C53.5965 0.287582 53.0065 0.161803 52.4084 0.0955476C51.8643 0.0344761 51.3174 0.00257262 50.77 -2.58227e-05C50.0111 -0.00733816 49.2558 0.103205 48.5308 0.327655Z"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M55.8217 4.19155H60.3068V0.252563H55.8217V4.19155Z" fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M55.8832 22.5962H60.2455V6.26001H55.8832V22.5962Z" fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M64.635 1.91144V6.26003H62.0818V9.67337H64.635V17.3056C64.635 19.3308 65.0674 20.7713 65.9321 21.6269C66.7968 22.4825 68.1212 22.9103 69.9052 22.9103C70.4509 22.9093 70.9959 22.8728 71.5368 22.8011C72.1337 22.7208 72.7229 22.5906 73.2981 22.4119L72.6768 19.1829C72.387 19.2689 72.09 19.3283 71.7894 19.3604C71.4822 19.3604 71.1886 19.4082 70.8951 19.4082C70.3996 19.426 69.9145 19.2635 69.5297 18.9508C69.3238 18.7156 69.17 18.4396 69.0782 18.1407C68.9864 17.8419 68.9589 17.5271 68.9973 17.2168V9.7075H72.7383V6.29416H68.9973V1.91144H64.635Z"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M81.4764 6.41702C80.5409 6.89933 79.7514 7.62289 79.1894 8.51281V6.26001H74.9569V22.5962H79.3192V12.7727C79.3127 12.3122 79.4132 11.8565 79.6127 11.4415C79.795 11.0523 80.042 10.6968 80.3432 10.3901C80.6798 10.0883 81.0653 9.8459 81.4832 9.67334C81.9439 9.49344 82.436 9.40755 82.9305 9.42076C83.5731 9.39126 84.2013 9.61702 84.6781 10.0488C85.1082 10.4652 85.3608 11.2503 85.3608 12.3972V22.5962H89.723V11.7964C89.723 9.71203 89.2679 8.18513 88.3577 7.21574C87.4474 6.24635 86.0821 5.76166 84.2617 5.76166C83.3109 5.77484 82.3761 6.00853 81.531 6.44433"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M97.0412 11.223C97.1935 10.8068 97.4253 10.4242 97.7239 10.0966C98.034 9.76433 98.4109 9.50144 98.8298 9.32517C99.3157 9.13069 99.8357 9.03552 100.359 9.04528C100.829 9.00596 101.302 9.06923 101.745 9.23071C102.188 9.39219 102.591 9.64804 102.926 9.98053C103.522 10.7249 103.821 11.6637 103.765 12.6156H96.7545C96.7722 12.1476 96.8692 11.6859 97.0412 11.2503V11.223ZM97.1641 6.3624C96.1898 6.73252 95.3105 7.31561 94.5904 8.06907C93.8527 8.85462 93.2856 9.78434 92.9247 10.7997C92.5107 11.9791 92.3096 13.2227 92.3308 14.4725C92.3308 17.2305 93.0135 19.3581 94.3788 20.8554C95.7441 22.3527 97.7739 23.106 100.468 23.1151C102.712 23.1151 104.421 22.6395 105.595 21.6883C106.831 20.6247 107.617 19.1313 107.793 17.5104H103.554C103.24 18.9713 102.223 19.7017 100.502 19.7017C99.981 19.7402 99.4577 19.66 98.9718 19.4673C98.4858 19.2746 98.0498 18.9743 97.6966 18.589C97.0239 17.7033 96.6724 16.6152 96.6999 15.5033H107.978V13.742C107.978 11.2981 107.349 9.35703 106.093 7.91888C104.837 6.48073 102.962 5.76165 100.468 5.76165C99.3432 5.74809 98.2253 5.9425 97.1709 6.33509"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M114.251 6.14398C113.458 6.35622 112.706 6.70005 112.026 7.16115C111.436 7.57023 110.946 8.10689 110.592 8.73129C110.244 9.38658 110.068 10.1194 110.08 10.8612C110.028 11.5118 110.13 12.1655 110.378 12.7692C110.626 13.373 111.013 13.9098 111.507 14.336C112.822 15.228 114.337 15.7815 115.917 15.9471L118.163 16.3225C118.758 16.3687 119.321 16.6085 119.767 17.0052C120.04 17.3029 120.189 17.6936 120.184 18.0975C120.2 18.3517 120.144 18.6054 120.024 18.8298C119.903 19.0542 119.722 19.2404 119.501 19.3672C118.802 19.6769 118.038 19.8105 117.275 19.7564C116.504 19.7776 115.737 19.6285 115.03 19.3195C114.694 19.13 114.412 18.8583 114.21 18.5299C114.008 18.2015 113.893 17.8272 113.876 17.4421H109.705C109.73 18.4015 109.993 19.3397 110.469 20.1728C110.897 20.8808 111.483 21.4792 112.183 21.9204C112.909 22.3701 113.712 22.6825 114.552 22.842C115.469 23.0254 116.402 23.1169 117.337 23.1151C119.767 23.1151 121.563 22.644 122.73 21.7498C123.292 21.3111 123.742 20.7463 124.044 20.101C124.347 19.4558 124.493 18.7483 124.471 18.036C124.483 17.344 124.394 16.6539 124.205 15.988C124.031 15.4098 123.708 14.8873 123.269 14.4725C122.765 13.9897 122.168 13.6136 121.515 13.3666C120.598 13.0295 119.648 12.787 118.682 12.643L116.634 12.3016C115.971 12.2249 115.33 12.0159 114.75 11.6872C114.586 11.5482 114.457 11.3725 114.374 11.1744C114.291 10.9763 114.256 10.7614 114.272 10.5472C114.275 10.3615 114.322 10.1791 114.408 10.0147C114.52 9.81122 114.682 9.63969 114.879 9.51635C115.156 9.34429 115.461 9.22185 115.78 9.15454C116.255 9.04962 116.741 9.0015 117.228 9.01118C118.013 8.9549 118.796 9.14588 119.467 9.55731C119.976 9.9802 120.324 10.5663 120.45 11.2162L124.341 10.7178C124.224 10.0479 124.019 9.3962 123.734 8.77907C123.448 8.1673 123.023 7.63162 122.491 7.21576C121.851 6.72152 121.121 6.3574 120.341 6.14398C119.286 5.86162 118.196 5.73061 117.105 5.75486C116.142 5.74347 115.182 5.86289 114.251 6.10984"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M130.478 6.144C129.685 6.35624 128.933 6.70007 128.253 7.16117C127.654 7.57538 127.159 8.122 126.806 8.75861C126.458 9.41391 126.281 10.1467 126.294 10.8885C126.247 11.5364 126.354 12.1862 126.605 12.7851C126.857 13.384 127.246 13.9153 127.741 14.336C129.056 15.2281 130.571 15.7815 132.151 15.9471L134.39 16.3226C134.985 16.3687 135.548 16.6085 135.994 17.0052C136.269 17.3022 136.42 17.6928 136.417 18.0975C136.433 18.3518 136.378 18.6054 136.257 18.8298C136.137 19.0542 135.956 19.2404 135.735 19.3673C135.034 19.677 134.267 19.8105 133.502 19.7564C132.733 19.7775 131.968 19.6284 131.263 19.3195C130.927 19.131 130.644 18.8596 130.442 18.531C130.24 18.2024 130.126 17.8275 130.11 17.4421H125.932C125.963 18.4006 126.226 19.3373 126.696 20.1728C127.126 20.8793 127.712 21.4773 128.41 21.9204C129.137 22.369 129.94 22.6813 130.779 22.842C131.698 23.0254 132.633 23.1169 133.571 23.1151C136.001 23.1151 137.796 22.6441 138.957 21.7498C139.52 21.3119 139.972 20.7473 140.275 20.102C140.579 19.4568 140.726 18.7489 140.705 18.0361C140.717 17.344 140.627 16.6539 140.438 15.9881C140.262 15.411 139.94 14.8891 139.503 14.4725C138.985 13.9971 138.377 13.6304 137.715 13.3939C136.795 13.0579 135.843 12.8155 134.875 12.6703L132.827 12.329C132.164 12.2533 131.523 12.0443 130.942 11.7146C130.778 11.5762 130.648 11.4008 130.563 11.2027C130.479 11.0045 130.443 10.7893 130.458 10.5745C130.464 10.3883 130.513 10.206 130.601 10.042C130.711 9.83937 130.871 9.66792 131.065 9.54368C131.344 9.3705 131.652 9.24801 131.973 9.18187C132.448 9.07695 132.934 9.02883 133.421 9.03851C134.211 8.97472 135.001 9.16099 135.68 9.57099C136.187 9.99457 136.532 10.5807 136.656 11.2299L140.554 10.7315C140.437 10.0616 140.233 9.40988 139.947 8.79275C139.661 8.17928 139.233 7.64319 138.698 7.22944C138.068 6.73125 137.347 6.36236 136.574 6.144C135.517 5.86127 134.426 5.73026 133.332 5.75488C132.369 5.74441 131.409 5.86381 130.478 6.10986"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M149.921 19.3877C149.449 19.244 149.017 18.9941 148.658 18.6573C148.244 18.2209 147.95 17.6846 147.804 17.1008C147.604 16.2674 147.515 15.4112 147.538 14.5544V14.0561C147.519 13.2721 147.618 12.4897 147.832 11.735C148.01 11.168 148.327 10.6542 148.753 10.24C149.097 9.94926 149.487 9.71848 149.907 9.55732C150.346 9.40765 150.808 9.33378 151.272 9.33886C151.741 9.33579 152.205 9.42631 152.638 9.6051C153.077 9.79648 153.459 10.1002 153.744 10.4857C154.086 10.9599 154.334 11.4952 154.474 12.0627C154.668 12.8509 154.757 13.6611 154.74 14.4725C154.755 15.2644 154.661 16.0546 154.46 16.8209C154.308 17.3923 154.048 17.9297 153.696 18.4047C153.397 18.7919 153.004 19.0972 152.556 19.2922C152.125 19.4801 151.66 19.5754 151.19 19.572C150.752 19.5734 150.316 19.516 149.893 19.4014L149.921 19.3877ZM147.456 8.41726V6.26003H143.224V28.672H147.586V20.9101C148.163 21.6908 148.945 22.2959 149.846 22.6577C150.616 22.947 151.432 23.0973 152.255 23.1014C153.277 23.1166 154.29 22.9019 155.218 22.4734C156.084 22.0594 156.845 21.4549 157.444 20.7053C158.08 19.8919 158.557 18.9654 158.85 17.9746C159.181 16.8255 159.342 15.6341 159.328 14.4384C159.328 11.7441 158.768 9.62558 157.648 8.08276C156.522 6.53993 154.836 5.76851 152.569 5.76851C151.562 5.7395 150.564 5.96745 149.67 6.43087C148.775 6.89429 148.013 7.5779 147.456 8.41726Z"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M166.045 19.2512C165.86 19.0945 165.713 18.8972 165.616 18.6747C165.519 18.4522 165.474 18.2103 165.485 17.9678C165.48 17.6384 165.531 17.3106 165.636 16.9984C165.757 16.6845 165.971 16.4152 166.25 16.227C166.643 15.9671 167.08 15.782 167.54 15.6808C168.266 15.5143 169.007 15.4205 169.752 15.4009L171.684 15.3054V16.1519C171.705 16.7324 171.576 17.3086 171.309 17.8244C171.071 18.2601 170.743 18.6397 170.346 18.9372C169.543 19.4823 168.585 19.7551 167.615 19.7154C167.058 19.7501 166.506 19.5856 166.059 19.2512H166.045ZM164.25 6.90173C163.629 7.3198 163.107 7.86789 162.719 8.50797C162.331 9.14806 162.087 9.86484 162.004 10.6086L165.997 10.9841C166.243 9.67336 167.233 9.01117 168.953 9.01117C169.647 8.99735 170.328 9.19499 170.906 9.57779C171.2 9.82559 171.429 10.1421 171.572 10.4993C171.715 10.8565 171.767 11.2434 171.725 11.6258V12.4382L169.643 12.5269C168.614 12.5727 167.588 12.6775 166.571 12.8409C165.624 12.9891 164.705 13.2743 163.84 13.6874C163.053 14.062 162.376 14.6334 161.874 15.3463C161.352 16.1586 161.092 17.112 161.13 18.077C161.109 18.8354 161.259 19.5888 161.567 20.282C161.825 20.8872 162.223 21.4229 162.727 21.8453C163.233 22.2522 163.816 22.5518 164.441 22.726C165.108 22.912 165.797 23.0062 166.489 23.0059C167.564 23.0517 168.632 22.8164 169.588 22.3232C170.404 21.8517 171.138 21.2498 171.759 20.5414V22.5894H175.855V12.288C175.867 11.3655 175.748 10.4461 175.5 9.55731C175.28 8.79431 174.885 8.09311 174.346 7.5093C173.761 6.91267 173.04 6.46749 172.244 6.21224C171.215 5.88872 170.141 5.7365 169.063 5.76167C167.367 5.67596 165.682 6.07117 164.202 6.90173"
+                  fill="currentColor"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M179.132 22.5963H183.494V0.252563H179.132V22.5963Z" fill="currentColor"></path>
+            <path d="M186.826 2.47127V0.682677H187.331V0.232117H185.774V0.682677H186.286V2.47127H186.826ZM188.089 2.47127V0.983051L188.73 2.47127H188.99L189.625 0.983051V2.47127H190.137V0.232117H189.495L188.86 1.73398L188.232 0.232117H187.549V2.47127H188.089Z"
+                  fill="currentColor"></path>
+          </svg>
+        </a>
+          <div class="MuiBox-root css-1ilyui9"></div>
+          <div class="MuiBox-root css-70qvj9"><span
+                  class="MuiTypography-root MuiTypography-Body/Regular/XS css-33xw1o">Hi, </span>
+            <div class="MuiBox-root css-l1q6s7">
+              <div class="MuiBox-root css-70qvj9"><a
+                      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-em1ki2"
+                      href="/en/messages" aria-label="messages">
+                <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-ces7xl" focusable="false"
+                     aria-hidden="true" viewBox="0 0 24 24" data-testid="EmailRoundedIcon">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-.4 4.25-7.07 4.42c-.32.2-.74.2-1.06 0L4.4 8.25c-.25-.16-.4-.43-.4-.72 0-.67.73-1.07 1.3-.72L12 11l6.7-4.19c.57-.35 1.3.05 1.3.72 0 .29-.15.56-.4.72z"></path>
+                </svg>
+              </a>
+                <div class="MuiBox-root css-1ojncnw">1</div>
+              </div>
+              <div class="MuiBox-root css-70qvj9"><a
+                      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-em1ki2"
+                      aria-label="Profile" href="/invitations">
+                <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-ces7xl" focusable="false"
+                     aria-hidden="true" viewBox="0 0 24 24" data-testid="PersonIcon">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                </svg>
+              </a>
+                <div class="MuiBox-root css-1tu9u55">0</div>
+              </div>
+            </div>
+            <a class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-5n5pbd"
+               href="/en/zendesk/sso_login"><span
+                    class="MuiTypography-root MuiTypography-Body/Regular/XS css-v5ffhk">Help</span></a><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-5n5pbd"
+                    href="/account/settings"><span
+                    class="MuiTypography-root MuiTypography-Body/Regular/XS css-33xw1o">Settings</span></a><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-5n5pbd"
+                    href="/account/logout"><span
+                    class="MuiTypography-root MuiTypography-Body/Regular/XS css-33xw1o">Log Out</span></a>
+            <div class="MuiBox-root css-jaojud"><span class="MuiBox-root css-15ro776"><span
+                    class="MuiTypography-root MuiTypography-Body/Regular/XS css-181v63d">Follow Us:</span></span><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                    aria-label="MyFitnessPal Facebook Page" href="https://facebook.com/myfitnesspal">
+              <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1u624ed" focusable="false"
+                   aria-hidden="true" viewBox="0 0 24 24" data-testid="FacebookIcon">
+                <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2m13 2h-2.5A3.5 3.5 0 0 0 12 8.5V11h-2v3h2v7h3v-7h3v-3h-3V9a1 1 0 0 1 1-1h2V5z"></path>
+              </svg>
+            </a><a class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                   aria-label="MyFitnessPal Twitter Page" href="https://twitter.com/myfitnesspal">
+              <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1u624ed" focusable="false"
+                   aria-hidden="true" viewBox="0 0 24 24" data-testid="TwitterIcon">
+                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"></path>
+              </svg>
+            </a></div>
+          </div>
         </div>
-
-      <ul class="bars">
-  <li>
-    <a href="http://www.myfitnesspal.com/">Calorie Counter</a>
-  </li>
-
-  <li>
-    <a href="http://blog.myfitnesspal.com">Blog</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/account/terms_and_privacy?with_layout=true">Terms</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/account/terms_and_privacy?with_layout=true#privacy">Privacy</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/welcome/contact_us">Contact Us</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/api">API</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/jobs">Jobs</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/forums/show/13-website-suggestions-feedback">Feedback</a>
-  </li>
-
-  <li>
-    <a href="http://www.myfitnesspal.com/welcome/guidelines">Community Guidelines</a>
-  </li>
-</ul>
-
-
-      <p class="copy">Copyright 2005-2015 MyFitnessPal, Inc.</p>
-
-        <a class="she-knows-it" href="http://www.sheknows.com/channels/health-and-wellness" >SheKnows Health & Beauty</a>
-
-      <div style="display:none;">
-        <!-- Begin comScore Tag --><script>var _comscore = _comscore || [];_comscore.push({ c1: "2", c2: "15476338" });(function() {var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";el.parentNode.insertBefore(s, el);})();</script><noscript><img src="http://b.scorecardresearch.com/p?c1=2&c2=15476338&cv=2.0&cj=1" /></noscript><!-- End comScore Tag -->
       </div>
-    </div><!-- / #footerContent -->
-  </div><!-- / #footer -->
-
-  <div id="loginform" style="display:none;" >
-  <form accept-charset="UTF-8" action="https://www.myfitnesspal.com/account/login" class="form login" id="fancy_login" method="post" style="margin:0;"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="IkhuvwNdzpZPe2PnlQzR2emHWhYm4VN55kX5yffERbk=" /></div>
-  <div class="member-login" >
-    <h2>Member Login</h2>
-    <ul>
-      <li>
-        <a href="#" class="facebook-login-css" id="facebook-login-css">Log in with Facebook</a>
-      </li>
-      <li class="or" >- or -</li>
-      <li>
-        <label>Username:</label>
-        <input name="username" type="text" class="text" tabIndex="5" />
-      </li>
-      <li>
-        <label>Password:</label>
-        <input name="password" type="password" class="text" tabIndex="6" />
-      </li>
-      <li>
-        <input checked="checked" class="checkbox" id="remember_me" name="remember_me" tabIndex="7" type="checkbox" value="1" /> 
-        <label for="remember_me" >Remember me next time</label>
-      </li>
-      <li class="submit">
-        <input type="submit" value="Log In" tabIndex="8" />
-      </li>
-      <li>
-      <a href="http://www.myfitnesspal.com/account/forgot_password">Forgot password or username?</a>
-      </li>
-      <li>
-        Not a member yet? <a href="http://www.myfitnesspal.com/account/create">Sign up now!</a>
-      </li>
+      <div class="MuiToolbar-root MuiToolbar-regular css-eg6my0">
+        <div class="MuiContainer-root MuiContainer-maxWidthMd MuiContainer-disableGutters css-18rmlqv">
+          <div class="MuiGrid-root MuiGrid-container css-1d3bbye">
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-10z0jsg"
+                    href="/">My Home</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="/en/food/diary">Food</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="/en/exercise/diary">Exercise</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="/en/reports">Reports</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="/en/apps/logged_in_index">Apps</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="https://community.myfitnesspal.com/en/entry/jsconnect?client_id=1122755462&amp;Target=%2Fcategories">Community</a>
+            </div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="/en/account/blog-premium-redirect?link=https://blog.myfitnesspal.com/">Blog</a>
+            </div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1i8enoe"
+                    href="/premium?source=menu_bar">Premium</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-uom0n6">
+        <div class="MuiContainer-root MuiContainer-maxWidthMd MuiContainer-disableGutters css-18rmlqv">
+          <div class="MuiGrid-root MuiGrid-container css-1d3bbye">
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1ncw7et"
+                    data-testid="" href="/">Home</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1ncw7et"
+                    data-testid="" href="/account/my-goals">Goals</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1sw7z84"
+                    data-testid="" href="/measurements/check-in">Check-In</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1ncw7et"
+                    href="/en/messages" data-testid="mail-Link">Mail</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1ncw7et"
+                    data-testid="" href="/friends">Friends</a></div>
+            <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><a
+                    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1ncw7et"
+                    data-testid="" href="/account/settings">Settings</a></div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="css-1uf8628">
+      <div class="MuiBox-root css-1l4w6pd">
+        <div class="MuiBox-root css-nv096v" title="Top Ad">
+          <div class="MuiBox-root css-0" id="MyHome/Settings_3"></div>
+        </div>
+      </div>
+      <main class="MuiContainer-root MuiContainer-maxWidthMd css-1r4x83q">
+        <div class="MuiGrid-root MuiGrid-container css-1d3bbye">
+          <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-tb-12 css-ayg8bw"><h1
+                  class="MuiTypography-root MuiTypography-Heading/Bold/LG MuiTypography-paragraph css-1ll4pru">
+            Edit Previous Measurement Entries</h1>
+            <div class="css-15vukob"><label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-cklv5a"
+                    id="type"><h2 class="MuiTypography-root MuiTypography-h3 css-u1qavy">Measurements to
+              edit:</h2></label>
+              <div class="css-1yjo05o">
+                <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary  css-1fo2ctb">
+                  <div tabindex="0" role="button" aria-expanded="false" aria-haspopup="listbox"
+                       aria-labelledby="type"
+                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-qiwgdb">
+                    Weight
+                  </div>
+                  <input aria-hidden="true" tabindex="-1" class="MuiSelect-nativeInput css-1k3x8v3"
+                         data-testid="measurement-type-input" value="Weight"/>
+                  <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-1636szt"
+                       focusable="false" aria-hidden="true" viewBox="0 0 24 24"
+                       data-testid="ArrowDropDownIcon">
+                    <path d="M7 10l5 5 5-5z"></path>
+                  </svg>
+                  <fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-igs3ac">
+                    <legend class="css-ihdtdm"><span class="notranslate">​</span></legend>
+                  </fieldset>
+                </div>
+                <button class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-vn3pre"
+                        tabindex="-1" type="button" disabled=""
+                        data-testid="change-measurement-type-button">Change
+                </button>
+              </div>
+            </div>
+            <div class="MuiBox-root css-1xaekgw"><label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-cklv5a"
+                    for="startingAmount"><h2 class="MuiTypography-root MuiTypography-h3 css-u1qavy">Starting
+              Weight:</h2></label>
+              <form class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1dkxxa2">
+                <div class="MuiGrid-root MuiGrid-item css-1wxaqej">
+                  <div class="MuiFormControl-root MuiTextField-root css-1r5u1m4">
+                    <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-undvtx">
+                      <input aria-invalid="false" id="startingAmount" type="text"
+                             data-testid="starting-amount"
+                             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2"
+                             value=""/>
+                      <div class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-106dmsz">
+                        <p class="MuiTypography-root MuiTypography-body1 css-bhjfez">lbs</p>
+                      </div>
+                      <fieldset aria-hidden="true"
+                                class="MuiOutlinedInput-notchedOutline css-igs3ac">
+                        <legend class="css-ihdtdm"><span class="notranslate">​</span></legend>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+                <div class="MuiGrid-root MuiGrid-item css-1wxaqej"><label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-cklv5a"
+                        for="startingWeightDate"><span
+                        class="MuiTypography-root MuiTypography-h3 css-1lcdag7">on</span></label></div>
+                <div class="MuiGrid-root MuiGrid-item css-1wxaqej">
+                  <div class="css-j7qwjs">
+                    <div class="MuiFormControl-root MuiTextField-root css-toc561"><label
+                            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-1gx856s"
+                            data-shrink="false" for="startingWeightDate"
+                            id="startingWeightDate-label">mm/dd/yyyy</label>
+                      <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-formControl MuiInputBase-adornedEnd css-undvtx">
+                        <input aria-invalid="true" id="startingWeightDate" placeholder=""
+                               type="tel"
+                               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2"
+                               value=""/>
+                        <div class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-106dmsz">
+                          <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-slyssw"
+                                  tabindex="0" type="button" aria-label="Choose date">
+                            <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-vubbuv"
+                                 focusable="false" aria-hidden="true" viewBox="0 0 24 24"
+                                 data-testid="CalendarIcon">
+                              <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path>
+                            </svg>
+                          </button>
+                        </div>
+                        <fieldset aria-hidden="true"
+                                  class="MuiOutlinedInput-notchedOutline css-igs3ac">
+                          <legend class="css-yjsfm1"><span>mm/dd/yyyy</span></legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="MuiGrid-root MuiGrid-item css-1wxaqej">
+                  <button class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-vn3pre"
+                          tabindex="-1" type="submit" disabled=""
+                          data-testid="change-starting-entry-button">Change
+                  </button>
+                </div>
+              </form>
+            </div>
+            <p class="MuiFormHelperText-root Mui-error css-d3ax0z"><span class="notranslate">​</span></p>
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-tb-10 css-6yv9cb">
+              <div class="MuiGrid-root MuiGrid-container css-1d3bbye">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 MuiGrid-grid-sm-3 css-1lcwblq">
+                  <p class="MuiTypography-root MuiTypography-h4 css-xfwyuh">Measurement</p></div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3 MuiGrid-grid-sm-3 css-thmg0s"><p
+                        class="MuiTypography-root MuiTypography-h4 css-xfwyuh">Date</p></div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 MuiGrid-grid-sm-3 css-1xw0tlx">
+                  <p class="MuiTypography-root MuiTypography-h4 css-xfwyuh">Amount</p></div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 MuiGrid-grid-sm-3 css-1xw0tlx">
+                  <p class="MuiTypography-root MuiTypography-h4 css-xfwyuh">Delete?</p></div>
+                <div class="MuiGrid-root MuiGrid-container css-1d3bbye">
+                  <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 MuiGrid-grid-sm-3 css-of5k7r">
+                    <p class="MuiTypography-root MuiTypography-h4 css-xfwyuh">Weight</p></div>
+                  <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3 MuiGrid-grid-sm-3 css-1lmzkt3">
+                    <p class="MuiTypography-root MuiTypography-h4 css-xfwyuh">2022-01-10</p></div>
+                  <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 MuiGrid-grid-sm-3 css-gi16lv">
+                    <p class="MuiTypography-root MuiTypography-h4 css-xfwyuh">155 lbs</p></div>
+                  <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 MuiGrid-grid-sm-3 css-jbx9iz">
+                    <div class="MuiBox-root css-1fm1kzp" data-testid="delete-entry"><p
+                            class="MuiTypography-root MuiTypography-h4 css-xfwyuh">Delete?</p>
+                      <svg class="MuiSvgIcon-root MuiSvgIcon-colorError MuiSvgIcon-fontSizeMedium css-vdp4z1"
+                           focusable="false" aria-hidden="true" viewBox="0 0 24 24"
+                           data-testid="RemoveCircleIcon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h2 class="MuiTypography-root MuiTypography-h2 css-c3a3yt">Add New Entry</h2>
+            <form class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-tuxzvu">
+              <div class="MuiGrid-root MuiGrid-item css-1wxaqej">
+                <div class="css-riw271"><label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-cklv5a"
+                        for="newEntryDate"><span class="MuiTypography-root MuiTypography-h3 css-u1qavy">Date:</span></label>
+                  <div class="MuiFormControl-root MuiTextField-root css-toc561"><label
+                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-1gx856s"
+                          data-shrink="false" for="newEntryDate"
+                          id="newEntryDate-label">mm/dd/yyyy</label>
+                    <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-formControl MuiInputBase-adornedEnd css-undvtx">
+                      <input aria-invalid="true" id="newEntryDate" placeholder="" type="tel"
+                             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2"
+                             value=""/>
+                      <div class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-106dmsz">
+                        <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-slyssw"
+                                tabindex="0" type="button" aria-label="Choose date">
+                          <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-vubbuv"
+                               focusable="false" aria-hidden="true" viewBox="0 0 24 24"
+                               data-testid="CalendarIcon">
+                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path>
+                          </svg>
+                        </button>
+                      </div>
+                      <fieldset aria-hidden="true"
+                                class="MuiOutlinedInput-notchedOutline css-igs3ac">
+                        <legend class="css-yjsfm1"><span>mm/dd/yyyy</span></legend>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="MuiGrid-root MuiGrid-item css-1wxaqej">
+                <div class="css-l5c1s3"><label
+                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-cklv5a"
+                        for="newEntryAmount"><span
+                        class="MuiTypography-root MuiTypography-h3 css-u1qavy">Amount:</span></label>
+                  <div class="css-1xhj18k">
+                    <div class="MuiFormControl-root MuiTextField-root css-jw36s5">
+                      <div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-undvtx">
+                        <input aria-invalid="false" id="newEntryAmount" type="text"
+                               data-testid="new-entry-amount"
+                               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2"
+                               value=""/>
+                        <div class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-106dmsz">
+                          <p class="MuiTypography-root MuiTypography-body1 css-bhjfez">lbs</p>
+                        </div>
+                        <fieldset aria-hidden="true"
+                                  class="MuiOutlinedInput-notchedOutline css-igs3ac">
+                          <legend class="css-ihdtdm"><span class="notranslate">​</span>
+                          </legend>
+                        </fieldset>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="MuiGrid-root MuiGrid-item css-ivh79w">
+                <button class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-vn3pre"
+                        tabindex="-1" type="submit" disabled="" data-testid="add-new-entry-button">Add
+                  New Entry
+                </button>
+              </div>
+              <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ayg8bw"><p
+                      class="MuiFormHelperText-root Mui-error css-d3ax0z"><span
+                      class="notranslate">​</span></p></div>
+            </form>
+            <h3 class="MuiTypography-root MuiTypography-h3 css-o1pith">Weigh Yourself</h3>
+            <p class="MuiTypography-root MuiTypography-caption css-wqo1dr">To help track your progress, you
+              should record your weight periodically. We suggest once a week because your weight
+              fluctuates daily due to uncontrollable factors like water. Try to always weigh yourself at
+              the same time of day - we suggest early in the morning before breakfast.</p>
+            <h3 class="MuiTypography-root MuiTypography-h3 css-1p199g4">Take Your Measurements</h3>
+            <p class="MuiTypography-root MuiTypography-caption css-wqo1dr">Taking your measurements can be
+              an even better gauge of your progress because when you burn fat and build heavier muscle,
+              your weight may not change or even increase even though your body is tighter and smaller. We
+              suggest taking your measurements every 2-4 weeks.</p></div>
+        </div>
+      </main>
+    </div>
+    <footer class="MuiBox-root css-g0t3np">
+      <div class="MuiBox-root css-pskig2">
+        <ul class="MuiBox-root css-r54vba">
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/">Calorie Counter</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/account/blog-premium-redirect">Blog</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/terms-of-service">Terms</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/privacy-policy">Privacy</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/contact-us">Contact Us</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/api">API</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/jobs">Jobs</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="https://community.myfitnesspal.com/en/entry/jsconnect?client_id=1122755462&amp;Target=%2Fcategories%2Ffeature-suggestions-and-ideas">Feedback</a>
+          </li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/community-guidelines">Community Guidelines</a></li>
+          <li class="MuiBox-root css-5cm1aq">
+            <button class="MuiButtonBase-root css-1b47e06" tabindex="0" type="button" variant="text"><p
+                    class="MuiTypography-root MuiTypography-body1 css-1hanubv">Cookie Preferences</p>
+            </button>
+          </li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  target="_blank" href="/privacy-policy#interest-based-advertising">Ad Choices</a></li>
+          <li class="MuiBox-root css-5cm1aq"><a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1k8z5lp"
+                  href="/data-usage">Do Not Sell My Personal Information</a></li>
+        </ul>
+        <div class="MuiBox-root css-rmorx9"><select aria-label="language-selector">
+          <option value="en" selected="">English</option>
+          <option value="de">Deutsch</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português (Brasil)</option>
+          <option value="it">Italiano</option>
+          <option value="nb">Norsk</option>
+          <option value="nl">Nederlands</option>
+          <option value="ru">Pусский</option>
+          <option value="sv">Svensk</option>
+          <option value="da">Dansk</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh-CN">中文(简体)</option>
+          <option value="zh-TW">中文(台灣)</option>
+        </select></div>
+        <div class="MuiBox-root css-3suqjk"><p
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-paragraph css-1y5nj7e">© 2023
+          MyFitnessPal, Inc.</p></div>
+      </div>
+    </footer>
   </div>
-</form></div>
-
-</section>
-
-
-  
-
-
-  <!--[if lte IE 7]></div><![endif]-->
-  <!--[if IE 6]></div><![endif]-->
-
-
-
-  
-
-
-  
+</div>
+<script id="__NEXT_DATA__" type="application/json">{
+  "props": {
+    "pageProps": {
+      "dehydratedState": {
+        "mutations": [],
+        "queries": [
+          {
+            "state": {
+              "data": [
+                {
+                  "id": "278869604978685",
+                  "description": "Neck"
+                },
+                {
+                  "id": "278319840808829",
+                  "description": "Waist"
+                },
+                {
+                  "id": "278869596622717",
+                  "description": "Hips"
+                }
+              ],
+              "dataUpdateCount": 1,
+              "dataUpdatedAt": 1685231678961,
+              "error": null,
+              "errorUpdateCount": 0,
+              "errorUpdatedAt": 0,
+              "fetchFailureCount": 0,
+              "fetchMeta": null,
+              "isInvalidated": false,
+              "status": "success",
+              "fetchStatus": "idle"
+            },
+            "queryKey": [
+              "measurementTypes"
+            ],
+            "queryHash": "[\"measurementTypes\"]"
+          },
+          {
+            "state": {
+              "data": {
+                "new_invitation_count": 0,
+                "unread_message_count": 1
+              },
+              "dataUpdateCount": 1,
+              "dataUpdatedAt": 1685231679000,
+              "error": null,
+              "errorUpdateCount": 0,
+              "errorUpdatedAt": 0,
+              "fetchFailureCount": 0,
+              "fetchMeta": null,
+              "isInvalidated": false,
+              "status": "success",
+              "fetchStatus": "idle"
+            },
+            "queryKey": [
+              "notifications"
+            ],
+            "queryHash": "[\"notifications\"]"
+          },
+          {
+            "state": {
+              "data": {
+                "items": [
+                  {
+                    "id": "159574999903909",
+                    "date": "2022-01-10",
+                    "unit": "pounds",
+                    "type": "Weight",
+                    "updated_at": "2022-01-10T23:35:30Z",
+                    "value": 155
+                  },
+                  {
+                    "id": "17901079539685",
+                    "date": "2022-01-09",
+                    "unit": "pounds",
+                    "type": "Weight",
+                    "updated_at": "2023-05-28T00:17:00Z",
+                    "value": 156
+                  }
+                ],
+                "has_more": false,
+                "total_entries": 1
+              },
+              "dataUpdateCount": 1,
+              "dataUpdatedAt": 1685231679242,
+              "error": null,
+              "errorUpdateCount": 0,
+              "errorUpdatedAt": 0,
+              "fetchFailureCount": 0,
+              "fetchMeta": null,
+              "isInvalidated": false,
+              "status": "success",
+              "fetchStatus": "idle"
+            },
+            "queryKey": [
+              "measurements",
+              "Weight",
+              1
+            ],
+            "queryHash": "[\"measurements\",\"Weight\",1]"
+          },
+          {
+            "state": {
+              "data": {
+                "items": [
+                  {
+                    "id": "159574999903909",
+                    "date": "2022-01-10",
+                    "unit": "pounds",
+                    "type": "Weight",
+                    "updated_at": "2022-01-10T23:35:30Z",
+                    "value": 155
+                  }
+                ],
+                "has_more": false,
+                "total_entries": 1
+              },
+              "dataUpdateCount": 1,
+              "dataUpdatedAt": 1685231679311,
+              "error": null,
+              "errorUpdateCount": 0,
+              "errorUpdatedAt": 0,
+              "fetchFailureCount": 0,
+              "fetchMeta": null,
+              "isInvalidated": false,
+              "status": "success",
+              "fetchStatus": "idle"
+            },
+            "queryKey": [
+              "startingMeasurement",
+              "Weight"
+            ],
+            "queryHash": "[\"startingMeasurement\",\"Weight\"]"
+          }
+        ]
+      }
+    },
+    "globalData": {
+      "userCountry": "US",
+      "client": "Web",
+      "isWebView": false
+    },
+    "anonymousDeviceId": "6d6ac271-9fa1-4b66-97ae-4a70692bb55e",
+    "loggedInHomepageBanner": {
+      "treatment": "off",
+      "config": "{\n  \"show_banner\":false,\n    \"languageConfigs\":[]\n}"
+    },
+    "__N_SSP": true
+  },
+  "page": "/measurements/edit",
+  "query": {
+    "page": "1",
+    "type": ""
+  },
+  "buildId": "-8KTogw5joIltT8V_riTv",
+  "assetPrefix": "https://web-main-assets.myfitnesspal.com",
+  "runtimeConfig": {
+    "adPrebidding": {
+      "adConfig": {
+        "AD_SLOTS_DEFINITIONS": {
+          "mfp-desktop-med-rec-1": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              [
+                300,
+                250
+              ],
+              [
+                300,
+                600
+              ]
+            ]
+          },
+          "mfp-desktop-halfpage-1": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              300,
+              600
+            ]
+          },
+          "mfp-tablet-med-rec-1": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              [
+                300,
+                250
+              ],
+              [
+                300,
+                600
+              ]
+            ]
+          },
+          "mfp-tablet-med-rec-2": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              [
+                300,
+                250
+              ],
+              [
+                300,
+                600
+              ]
+            ]
+          },
+          "mfp-mobile-leaderboard-1": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              [
+                320,
+                50
+              ],
+              [
+                320,
+                100
+              ],
+              [
+                300,
+                50
+              ],
+              [
+                300,
+                100
+              ]
+            ]
+          },
+          "mfp-mobile-med-rec-1": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              300,
+              250
+            ]
+          },
+          "mfp-mobile-med-rec-2": {
+            "adPath": "/17729925/UACF_W/MFP/Food/Database",
+            "adSize": [
+              300,
+              250
+            ]
+          }
+        },
+        "PBJS": {
+          "CONFIG": {
+            "enableSendAllBids": true,
+            "priceGranularity": {
+              "buckets": [
+                {
+                  "precision": 2,
+                  "min": 0,
+                  "max": 20,
+                  "increment": 0.01
+                },
+                {
+                  "precision": 2,
+                  "min": 20,
+                  "max": 100,
+                  "increment": 0.1
+                }
+              ]
+            }
+          },
+          "AD_MAPPING": {
+            "mfp-desktop-med-rec-1": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362935"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a96985001777781761c88fe2b30025f",
+                  "position": "8a96985001777781761c89064dd6026c"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225890",
+                  "zoneId": "1109600"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451193",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ],
+            "mfp-desktop-halfpage-1": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362936"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a96985001777781761c88fe2b30025f",
+                  "position": "8a9695240177778171a989064cd70280"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225890",
+                  "zoneId": "1109598"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451192",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ],
+            "mfp-tablet-med-rec-1": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362937"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a96985001777781761c88fe2779025d",
+                  "position": "8a969078017777816d8b890640dc0273"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225892",
+                  "zoneId": "1109602"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451201",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ],
+            "mfp-tablet-med-rec-2": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362938"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a96985001777781761c88fe2779025d",
+                  "position": "8a96985001777781761c89063fd80269"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225892",
+                  "zoneId": "1109604"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451202",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ],
+            "mfp-mobile-leaderboard-1": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362939"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a9695240177778171a988fe2870026f",
+                  "position": "8a9695240177778171a989064380027e"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225894",
+                  "zoneId": "1109606"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451198",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ],
+            "mfp-mobile-med-rec-1": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362940"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a9695240177778171a988fe2870026f",
+                  "position": "8a96985001777781761c89064647026a"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225894",
+                  "zoneId": "1109608"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451199",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ],
+            "mfp-mobile-med-rec-2": [
+              {
+                "bidder": "appnexus",
+                "params": {
+                  "placementId": "14362941"
+                }
+              },
+              {
+                "bidder": "conversant",
+                "params": {
+                  "site_id": "120176"
+                }
+              },
+              {
+                "bidder": "onemobile",
+                "params": {
+                  "dcn": "8a9695240177778171a988fe2870026f",
+                  "position": "8a9695240177778171a98906480d027f"
+                }
+              },
+              {
+                "bidder": "rubicon",
+                "params": {
+                  "accountId": "11600",
+                  "siteId": "225894",
+                  "zoneId": "1109610"
+                }
+              },
+              {
+                "bidder": "openx",
+                "params": {
+                  "unit": "540451200",
+                  "delDomain": "underarmour-d.openx.net"
+                }
+              }
+            ]
+          }
+        },
+        "A9": {
+          "CONFIG": {
+            "pubID": "3257",
+            "adServer": "googletag",
+            "params": {
+              "og_prebid": "yes"
+            }
+          }
+        }
+      },
+      "ogConfig": {
+        "APP_NAME": "OGHB",
+        "LOGGER": {
+          "OG_PREFIX": "[OG]"
+        },
+        "AD_TIMEOUT": 1500,
+        "AD_REQUEST_THRESHOLD": 50,
+        "AD_TARGETING": "og_hb",
+        "AD_TARGETING_PREBID": "og_prebid",
+        "PBJS": {
+          "MODULES": [
+            "appnexusBidAdapter",
+            "rubiconBidAdapter",
+            "openxBidAdapter",
+            "aolBidAdapter",
+            "conversantBidAdapter"
+          ]
+        },
+        "AD_REFRESH_RATE": 30
+      }
+    },
+    "baseUrl": "https://www.myfitnesspal.com",
+    "blogHost": "https://blog.myfitnesspal.com",
+    "branch": {
+      "key": "key_live_kjeUvfVtyKVDa8NstTC9VfndDqmaPWeo",
+      "enabled": true
+    },
+    "community": {
+      "host": "https://community.myfitnesspal.com",
+      "clientId": "1122755462"
+    },
+    "datadog": {
+      "enabled": true
+    },
+    "datadogLogs": {
+      "clientToken": "pub955b81ca94fa5d46b806064b78c7abf0",
+      "forwardErrorsToLogs": true,
+      "sampleRate": 100,
+      "env": "nutrition-prod",
+      "service": "web-main",
+      "version": "v4.29.10"
+    },
+    "datadogRum": {
+      "allowedTracingOrigins": [
+        {}
+      ],
+      "applicationId": "d890f2b4-002c-43ba-b456-7f6517ecf309",
+      "clientToken": "pub6bacd8a3d2ff4a25d741e639b3320206",
+      "site": "datadoghq.com",
+      "env": "nutrition-prod",
+      "service": "web-main",
+      "sampleRate": 40,
+      "replaySampleRate": 10,
+      "trackInteractions": true,
+      "version": "v4.29.10"
+    },
+    "facebook": {
+      "clientId": "186796388009496"
+    },
+    "googleAdKey": {
+      "apiKey": "/17729925/UACF_W/MFP/"
+    },
+    "mockApi": {
+      "enabled": false
+    },
+    "noIndexMetaTag": false,
+    "segment": {
+      "segmentSnippet": "!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console\u0026\u0026console.error\u0026\u0026console.error(\"Segment snippet included twice.\");else{analytics.invoked=!0;analytics.methods=[\"trackSubmit\",\"trackClick\",\"trackLink\",\"trackForm\",\"pageview\",\"identify\",\"reset\",\"group\",\"track\",\"ready\",\"alias\",\"debug\",\"page\",\"once\",\"off\",\"on\",\"addSourceMiddleware\",\"addIntegrationMiddleware\",\"setAnonymousId\",\"addDestinationMiddleware\"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e\u003canalytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement(\"script\");t.type=\"text/javascript\";t.async=!0;t.src=\"https://cdn.segment.com/analytics.js/v1/\" + key + \"/analytics.min.js\";var n=document.getElementsByTagName(\"script\")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey=\"1hDdCg7yihTX9OcKN0iLj9SvFSGADNyC\";analytics.SNIPPET_VERSION=\"4.15.2\";\n      analytics.load(\"1hDdCg7yihTX9OcKN0iLj9SvFSGADNyC\");\n      analytics.page();\n    }}();",
+      "enabled": true
+    },
+    "sessionProvider": {
+      "refetchInterval": 120,
+      "refetchOnWindowFocus": true
+    },
+    "queryClient": {
+      "defaultOptions": {
+        "queries": {
+          "refetchOnWindowFocus": false,
+          "refetchOnMount": false,
+          "staleTime": 60000,
+          "useErrorBoundary": true
+        }
+      }
+    },
+    "recaptcha": {
+      "siteKeyV3": "6Ldo3qAhAAAAAIAZyTxwoKEZiewIZXsEdm1evMmZ",
+      "enabled": true
+    },
+    "releaseVersion": "v4.29.10",
+    "sourcepoint": {
+      "propertyHref": "",
+      "joinHref": "false",
+      "propertyId": "28598"
+    },
+    "stripe": {
+      "publishableKey": "pk_live_feE27wU6f0bvDJBvFoK2iyOB",
+      "apiVersion": "2020-08-27"
+    }
+  },
+  "isFallback": false,
+  "gssp": true,
+  "customServer": true,
+  "appGip": true,
+  "locale": "en",
+  "locales": [
+    "en",
+    "es",
+    "da",
+    "de",
+    "fr",
+    "it",
+    "ja",
+    "ko",
+    "nb",
+    "nl",
+    "pt",
+    "sv",
+    "pl",
+    "id",
+    "tl",
+    "ru",
+    "ms",
+    "tr",
+    "zh-CN",
+    "zh-TW"
+  ],
+  "defaultLocale": "en",
+  "scriptLoader": []
+}</script>
 </body>
 </html>

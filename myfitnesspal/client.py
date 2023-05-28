@@ -186,11 +186,13 @@ class Client(MFPBase):
             + f"?date={date_str}"
         )
 
-    def _get_url_for_measurements(self, page: int = 1, measurement_name: str = "") -> str:
+    def _get_url_for_measurements(
+        self, page: int = 1, measurement_name: str = ""
+    ) -> str:
         return (
             parse.urljoin(self.BASE_URL_SECURE, "measurements/edit")
             + "?"
-            + parse.urlencode({'page': page, "type": measurement_name})
+            + parse.urlencode({"page": page, "type": measurement_name})
         )
 
     def _get_request_for_url(
@@ -635,17 +637,18 @@ class Client(MFPBase):
         measurements = []
 
         for next_data in document.xpath("//script[@id='__NEXT_DATA__']"):
-            for q in json.loads(next_data.text)['props']['pageProps']['dehydratedState']['queries']:
-                if 'measurements' in q['queryKey']:
-                    if 'items' in q['state']['data']:
-                        measurements += q['state']['data']['items']
+            next_data_json = json.loads(next_data.text)
+            for q in next_data_json["props"]["pageProps"]["dehydratedState"]["queries"]:
+                if "measurements" in q["queryKey"]:
+                    if "items" in q["state"]["data"]:
+                        measurements += q["state"]["data"]["items"]
 
         measurements_dict = OrderedDict()
 
         # converts the date to a datetime object and the value to a float
         for entry in measurements:
-            date = datetime.datetime.strptime(entry['date'], "%Y-%m-%d").date()
-            if 'unit' in entry:
+            date = datetime.datetime.strptime(entry["date"], "%Y-%m-%d").date()
+            if "unit" in entry:
                 value = f"{entry['value']} {entry['unit']}"
             else:
                 value = f"{entry['value']}"
@@ -656,13 +659,14 @@ class Client(MFPBase):
     def _get_measurement_ids(self, document) -> Dict[str, int]:
         ids = {}
         for next_data in document.xpath("//script[@id='__NEXT_DATA__']"):
-            for q in json.loads(next_data.text)['props']['pageProps']['dehydratedState']['queries']:
-                if 'measurementTypes' in q['queryKey']:
-                    for m in q['state']['data']:
-                        ids[m['description']] = m['id']
-                if 'measurements' in q['queryKey']:
-                    if q['queryKey'][1] not in ids:
-                        ids[q['queryKey'][1]] = ''
+            next_data_json = json.loads(next_data.text)
+            for q in next_data_json["props"]["pageProps"]["dehydratedState"]["queries"]:
+                if "measurementTypes" in q["queryKey"]:
+                    for m in q["state"]["data"]:
+                        ids[m["description"]] = m["id"]
+                if "measurements" in q["queryKey"]:
+                    if q["queryKey"][1] not in ids:
+                        ids[q["queryKey"][1]] = ""
 
         return ids
 
