@@ -533,10 +533,7 @@ class Client(MFPBase):
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
 
-        # select the measurement ID based on the input
-        if measurement in measurement_ids.keys():
-            measurement_id = measurement_ids[measurement]
-        else:
+        if measurement not in measurement_ids.keys():
             raise ValueError(f"Measurement '{measurement}' does not exist.")
 
         page = 1

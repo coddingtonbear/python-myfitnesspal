@@ -32,10 +32,10 @@ class TestClient(MFPTestCase):
         actual_ids = self.client._get_measurement_ids(document)
 
         expected_ids = {
-            'Hips': '278869596622717',
-            'Neck': '278869604978685',
-            'Waist': '278319840808829',
-            'Weight': ''
+            "Hips": "278869596622717",
+            "Neck": "278869604978685",
+            "Waist": "278319840808829",
+            "Weight": "",
         }
 
         self.assertEqual(
@@ -62,10 +62,9 @@ class TestClient(MFPTestCase):
                 self.arbitrary_date2,
             )
 
-        expected_measurements = OrderedDict([
-            (datetime.date(2022, 1, 10), 155.0),
-            (datetime.date(2022, 1, 9), 156.0)
-        ])
+        expected_measurements = OrderedDict(
+            [(datetime.date(2022, 1, 10), 155.0), (datetime.date(2022, 1, 9), 156.0)]
+        )
 
         self.assertEqual(
             expected_measurements,
