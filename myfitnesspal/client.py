@@ -183,16 +183,18 @@ class Client(MFPBase):
             return name
         return self.ABBREVIATIONS[name]
 
-    def _get_url_for_date(self, date: datetime.date, username: str, friend_username=None) -> str:
+    def _get_url_for_date(
+        self, date: datetime.date, username: str, friend_username=None
+    ) -> str:
         if friend_username is not None:
             name = friend_username
         else:
             name = username
         date_str = date.strftime("%Y-%m-%d")
         return (
-                parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + name)
-                + f"?date={date_str}"
-            )
+            parse.urljoin(self.BASE_URL_SECURE, "food/diary/" + name)
+            + f"?date={date_str}"
+        )
 
     def _get_url_for_measurements(self, page: int = 1, measurement_id: int = 1) -> str:
         return (
@@ -442,9 +444,7 @@ class Client(MFPBase):
         else:
             name = self.effective_username
         # get the exercise URL
-        document = self._get_document_for_url(
-            self._get_url_for_exercise(date, name)
-        )
+        document = self._get_document_for_url(self._get_url_for_exercise(date, name))
         # gather the exercise goals
         exercise = self._get_exercise(document)
         return exercise
@@ -483,15 +483,23 @@ class Client(MFPBase):
                 "or three integers representing year, month, and day "
                 "respectively."
             )
+        friend_username = kwargs.get("friend_username")
         document = self._get_document_for_url(
             self._get_url_for_date(
-                date, kwargs.get("username", self.effective_username), kwargs.get("friend_username")
+                date,
+                kwargs.get("username", self.effective_username),
+                friend_username,
             )
         )
         if "diary is locked with a key" in document.text_content():
             raise Exception("Error: diary is locked with a key")
-        if kwargs.get("friend_username") is not None and "user maintains a private diary" in document.text_content():
-            raise Exception(f"Error: Friend {kwargs.get('friend_username')}'s diary is private.")
+        if (
+            friend_username is not None
+            and "user maintains a private diary" in document.text_content()
+        ):
+            raise Exception(
+                f"Error: Friend {kwargs.get('friend_username')}'s diary is private."
+            )
 
         meals = self._get_meals(document)
         goals = self._get_goals(document)
@@ -501,9 +509,9 @@ class Client(MFPBase):
         # allow the day object to run the request if necessary.
         notes = lambda: self._get_notes(date)  # noqa: E731
         water = lambda: self._get_water(date)  # noqa: E731
-        exercises = lambda: self._get_exercises(date, kwargs.get("friend_username"))  # noqa: E731
+        exercises = lambda: self._get_exercises(date, friend_username)  # noqa: E731
 
-        if 'friend_username' not in kwargs:
+        if "friend_username" not in kwargs:
             day = Day(
                 date=date,
                 meals=meals,
@@ -833,15 +841,14 @@ class Client(MFPBase):
                 if item_div.xpath(".//div[@class='verified verified-list-icon']")
                 else False
             )
-            nutr_info = (
-                item_div.xpath(".//p[@class='search-nutritional-info']")[0]
-                .text.strip()
-                .split(",")
-            )
+            calories = None
             brand = ""
-            if len(nutr_info) >= 3:
-                brand = " ".join(nutr_info[0:-2]).strip()
-            calories = float(nutr_info[-1].replace("calories", "").strip())
+            nutr_info_xpath = item_div.xpath(".//p[@class='search-nutritional-info']")
+            if nutr_info_xpath:
+                nutr_info = nutr_info_xpath[0].text.strip().split(",")
+                if len(nutr_info) >= 3:
+                    brand = " ".join(nutr_info[0:-2]).strip()
+                calories = float(nutr_info[-1].replace("calories", "").strip())
             items.append(
                 FoodItem(mfp_id, mfp_name, brand, verif, calories, client=self)
             )
