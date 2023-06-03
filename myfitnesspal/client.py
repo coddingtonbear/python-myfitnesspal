@@ -799,12 +799,10 @@ class Client(MFPBase):
         authenticity_token = document.xpath(
             "(//input[@name='authenticity_token']/@value)[1]"
         )[0]
-        utf8_field = document.xpath("(//input[@name='utf8']/@value)[1]")[0]
 
         result = self.session.post(
             search_url,
             data={
-                "utf8": utf8_field,
                 "authenticity_token": authenticity_token,
                 "search": query,
                 "date": datetime.datetime.today().strftime("%Y-%m-%d"),
