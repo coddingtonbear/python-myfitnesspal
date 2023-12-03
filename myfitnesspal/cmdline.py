@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+from pathlib import Path
 
 from rich.console import Console
 from rich.logging import RichHandler
@@ -20,6 +21,7 @@ def main(args=None):
     parser.add_argument("command", type=str, nargs=1, choices=COMMANDS.keys())
     parser.add_argument("--loglevel", type=str, default="INFO")
     parser.add_argument("--traceback-locals", action="store_true")
+    parser.add_argument("--log-requests-to", type=Path, default=None)
     parser.add_argument("--debugger", action="store_true")
     args, extra = parser.parse_known_args()
 

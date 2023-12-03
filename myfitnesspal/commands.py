@@ -53,7 +53,7 @@ def command(desc, name=None, aliases=None):
 @command(
     "Display MyFitnessPal data for a given date.",
 )
-def day(args, *extra, **kwargs):
+def day(super_args, *extra, **kwargs):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "date",
@@ -64,7 +64,7 @@ def day(args, *extra, **kwargs):
     )
     args = parser.parse_args(extra)
 
-    client = Client()
+    client = Client(log_requests_to=super_args.log_requests_to)
     day = client.get_date(args.date)
 
     date_str = args.date.strftime("%Y-%m-%d")

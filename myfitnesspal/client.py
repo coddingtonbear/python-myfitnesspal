@@ -4,8 +4,10 @@ import datetime
 import json
 import logging
 import re
+import uuid
 from collections import OrderedDict
 from http.cookiejar import CookieJar
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Union, cast, overload
 
 import browser_cookie3
@@ -63,7 +65,16 @@ class Client(MFPBase):
         self,
         cookiejar: CookieJar = None,
         unit_aware: bool = False,
+        log_requests_to: Path | None = None,
     ):
+        self._client_instance_id = uuid.uuid4()
+        self._request_counter = 0
+        if log_requests_to:
+            self._log_requests_to = log_requests_to / Path(
+                str(self._client_instance_id)
+            )
+            self._log_requests_to.mkdir(parents=True, exist_ok=True)
+
         self.unit_aware = unit_aware
 
         self.session = requests.Session()
@@ -199,6 +210,14 @@ class Client(MFPBase):
         headers: Optional[Dict[str, str]] = None,
         **kwargs,
     ) -> requests.Response:
+        request_id = uuid.uuid4()
+        self._request_counter += 1
+        logger.debug(
+            "Sending request %s (#%s for client) to url %s",
+            self._request_counter,
+            request_id,
+            url,
+        )
         if headers is None:
             headers = {}
 
@@ -212,7 +231,38 @@ class Client(MFPBase):
             if self.user_id:
                 headers["mfp-user-id"] = self.user_id
 
-        return self.session.get(url, headers=headers, **kwargs)
+        result = self.session.get(url, headers=headers, **kwargs)
+        if self._log_requests_to:
+            with open(
+                self._log_requests_to
+                / Path(
+                    str(self._request_counter).zfill(3) + "__" + str(request_id)
+                ).with_suffix(".json"),
+                "w",
+                encoding="utf-8",
+            ) as outf:
+                outf.write(
+                    json.dumps(
+                        {
+                            "request": {
+                                "url": url,
+                                "send_token": send_token,
+                                "user_id": self.user_id if send_token else None,
+                                "headers": headers,
+                                "kwargs": kwargs,
+                            },
+                            "response": {
+                                "headers": dict(result.headers),
+                                "status_code": result.status_code,
+                                "content": result.content.decode("utf-8"),
+                            },
+                        },
+                        indent=4,
+                        sort_keys=True,
+                    )
+                )
+
+        return result
 
     def _get_content_for_url(self, *args, **kwargs) -> str:
         return self._get_request_for_url(*args, **kwargs).content.decode("utf8")
@@ -389,7 +439,6 @@ class Client(MFPBase):
 
                 # If name is empty string:
                 if columns[0].find("a") is None or not name:
-
                     # check for `td > div > a`
                     if columns[0].find("div").find("a") is None:
                         # then check for just `td > div`
@@ -638,7 +687,6 @@ class Client(MFPBase):
 
         # create a dictionary out of the date and value of each entry
         for entry in trs:
-
             # ensure there are measurement entries on the page
             if len(entry) == 1:
                 return measurements
@@ -658,7 +706,6 @@ class Client(MFPBase):
         return measurements
 
     def _get_measurement_ids(self, document) -> Dict[str, int]:
-
         # find the option element for all of the measurement choices
         options = document.xpath("//select[@id='type']/option")
 
