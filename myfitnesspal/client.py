@@ -9,6 +9,7 @@ from http.cookiejar import CookieJar
 from typing import Any, Dict, List, Optional, Union, cast, overload
 
 import browser_cookie3
+import cloudscraper
 import lxml.html
 import requests
 from measurement.base import MeasureBase
@@ -67,6 +68,7 @@ class Client(MFPBase):
         self.unit_aware = unit_aware
 
         self.session = requests.Session()
+        self.session = cloudscraper.create_scraper(sess=self.session)
         self.session.headers.update(
             {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
