@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 from html import unescape
-from typing import Dict, Optional
+from typing import Optional
 
 from .types import NoteDataDict
 
@@ -10,7 +10,7 @@ from .types import NoteDataDict
 class Note(str):
     """Stores information about a note"""
 
-    _note_data: Dict[str, str]
+    _note_data: NoteDataDict
 
     def __new__(cls, note_data: NoteDataDict) -> Note:
         # I'm not sure I understand why this is double-encoded, but it is?

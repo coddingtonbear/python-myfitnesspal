@@ -16,10 +16,10 @@ class Day(MFPBase):
         self,
         date: datetime.date,
         meals: Optional[List[Meal]] = None,
-        goals: Dict[str, float] = None,
-        notes: Callable[[], str] = None,
-        water: Callable[[], float] = None,
-        exercises: Callable[[], List[Exercise]] = None,
+        goals: Optional[Dict[str, float]] = None,
+        notes: Optional[Callable[[], str]] = None,
+        water: Optional[Callable[[], float]] = None,
+        exercises: Optional[Callable[[], List[Exercise]]] = None,
         complete: bool = False,
     ):
         self._date = date
