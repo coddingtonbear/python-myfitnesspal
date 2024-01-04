@@ -69,6 +69,7 @@ class Client(MFPBase):
     ):
         self._client_instance_id = uuid.uuid4()
         self._request_counter = 0
+        self._log_requests_to: Path | None = None
         if log_requests_to:
             self._log_requests_to = log_requests_to / Path(
                 str(self._client_instance_id)
