@@ -9,6 +9,7 @@ from collections import OrderedDict
 from http.cookiejar import CookieJar
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union, cast, overload
+from urllib import parse
 
 import browser_cookie3
 import cloudscraper
@@ -16,7 +17,6 @@ import lxml.html
 import requests
 from measurement.base import MeasureBase
 from measurement.measures import Energy, Mass, Volume
-from six.moves.urllib import parse
 
 from . import types
 from .base import MFPBase
@@ -64,7 +64,7 @@ class Client(MFPBase):
 
     def __init__(
         self,
-        cookiejar: CookieJar = None,
+        cookiejar: Optional[CookieJar] = None,
         unit_aware: bool = False,
         log_requests_to: Path | None = None,
     ):
@@ -654,7 +654,7 @@ class Client(MFPBase):
     def set_measurements(
         self,
         measurement="Weight",
-        value: float = None,
+        value: Optional[float] = None,
         date: Optional[datetime.date] = None,
     ) -> None:
         """Sets measurement for today's date."""

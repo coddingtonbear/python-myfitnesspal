@@ -30,4 +30,5 @@ repos:
           - --show-error-context
           - --ignore-missing-imports
         additional_dependencies:
+          - types-requests
           - types-python-dateutil
