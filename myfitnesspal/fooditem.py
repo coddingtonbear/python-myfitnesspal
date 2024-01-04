@@ -21,7 +21,7 @@ class FoodItem(MFPBase):
         name: str,
         brand: Optional[str],
         verified: bool,
-        calories: float,
+        calories: Optional[float],
         details: Optional[FoodItemNutritionDict] = None,
         confirmations: Optional[int] = None,
         serving_sizes: Optional[List[types.ServingSizeDict]] = None,
@@ -92,7 +92,7 @@ class FoodItem(MFPBase):
         return None
 
     @property
-    def calories(self) -> float:
+    def calories(self) -> Optional[float]:
         """Calories"""
         return self._calories
 
