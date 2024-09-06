@@ -1259,31 +1259,38 @@ class Client(MFPBase):
                 "status code: {status}".format(status=result.status_code)
             )
 
+    def _get_recipes_from_page(
+        self, page_count: int, recipes_dict: Dict[int, str]
+    ) -> Any:
+        """Updates the passed in recipes_dict with recipes found on page specified by page_count.
+
+
+        Returns a document corresponding to the recipes page visited.
+        """
+        RECIPES_PATH = f"recipe_parser?page={page_count}&sort_order=recent"
+        recipes_url = parse.urljoin(self.BASE_URL_SECURE, RECIPES_PATH)
+        document = self._get_document_for_url(recipes_url)
+        recipes = document.xpath(
+            "//*[@id='main']/ul[1]/li"
+        )  # get all items in the recipe list
+        for recipe_info in recipes:
+            recipe_path = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib["href"]
+            recipe_id = recipe_path.split("/")[-1]
+            recipe_title = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib["title"]
+            recipes_dict[recipe_id] = recipe_title
+        return document
+
     def get_recipes(self) -> Dict[int, str]:
         """Returns a dictionary with all saved recipes.
 
         Recipe ID will be used as dictionary key, recipe title as dictionary value.
         """
-        recipes_dict = {}
+        recipes_dict: Dict[int, str] = {}
 
         page_count = 1
         has_next_page = True
         while has_next_page:
-            RECIPES_PATH = f"recipe_parser?page={page_count}&sort_order=recent"
-            recipes_url = parse.urljoin(self.BASE_URL_SECURE, RECIPES_PATH)
-            document = self._get_document_for_url(recipes_url)
-            recipes = document.xpath(
-                "//*[@id='main']/ul[1]/li"
-            )  # get all items in the recipe list
-            for recipe_info in recipes:
-                recipe_path = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib[
-                    "href"
-                ]
-                recipe_id = recipe_path.split("/")[-1]
-                recipe_title = recipe_info.xpath("./div[2]/h2/span[1]/a")[0].attrib[
-                    "title"
-                ]
-                recipes_dict[recipe_id] = recipe_title
+            document = self._get_recipes_from_page(page_count, recipes_dict)
 
             # Check for Pagination
             pagination_links = document.xpath('//*[@id="main"]/ul[2]/a')
@@ -1299,9 +1306,15 @@ class Client(MFPBase):
                     # Only one link means it is the last page
                     has_next_page = False
             else:
-                # Indicator for no recipes if len(recipes_dict) is 0 here
-                has_next_page = False
-
+                tmp_dict: Dict[int, str] = {}
+                # Check and see if there's another page, if we can't determine if pagination exists
+                document = self._get_recipes_from_page(page_count + 1, tmp_dict)
+                if tmp_dict:
+                    # Increment page_count in order to get the next page
+                    page_count += 1
+                else:
+                    # Indicator for no recipes if len(recipes_dict) is 0 here
+                    has_next_page = False
         return recipes_dict
 
     def get_recipe(self, recipeid: int) -> types.Recipe:
