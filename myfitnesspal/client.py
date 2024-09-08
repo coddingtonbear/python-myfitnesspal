@@ -1288,33 +1288,20 @@ class Client(MFPBase):
         recipes_dict: Dict[int, str] = {}
 
         page_count = 1
-        has_next_page = True
-        while has_next_page:
-            document = self._get_recipes_from_page(page_count, recipes_dict)
-
-            # Check for Pagination
-            pagination_links = document.xpath('//*[@id="main"]/ul[2]/a')
-            if pagination_links:
-                if page_count == 1:
-                    # If Pagination exists and it is page 1 there have to be a second,
-                    # but only one href to the next (obviously none to the previous)
-                    page_count += 1
-                elif len(pagination_links) > 1:
-                    # If there are two links, ont to the previous and one to the next
-                    page_count += 1
-                else:
-                    # Only one link means it is the last page
-                    has_next_page = False
+        # Get recipes found on page=1
+        self._get_recipes_from_page(page_count, recipes_dict)
+        next_page: Dict[int, str] = recipes_dict.copy()
+        while next_page:
+            # If 0 recipes found, an empty dict will be returned, else, we try getting recipes on the next page
+            next_page = {}
+            page_count += 1
+            self._get_recipes_from_page(page_count, next_page)
+            if next_page:
+                # We update our return dict with the values we saw on page+1
+                recipes_dict.update(next_page)
             else:
-                tmp_dict: Dict[int, str] = {}
-                # Check and see if there's another page, if we can't determine if pagination exists
-                document = self._get_recipes_from_page(page_count + 1, tmp_dict)
-                if tmp_dict:
-                    # Increment page_count in order to get the next page
-                    page_count += 1
-                else:
-                    # Indicator for no recipes if len(recipes_dict) is 0 here
-                    has_next_page = False
+                # Since no recipes were found on page+1, we stop paginating and continue to return recipes_dict
+                break
         return recipes_dict
 
     def get_recipe(self, recipeid: int) -> types.Recipe:
