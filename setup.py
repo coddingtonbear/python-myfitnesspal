@@ -1,6 +1,6 @@
 import multiprocessing  # noqa
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 requirements = []
 with open("requirements.txt") as in_:
@@ -20,7 +20,7 @@ setup(
         "Programming Language :: Python",
         "Topic :: Utilities",
     ],
-    packages=find_packages(),
+    packages=["myfitnesspal"],
     install_requires=requirements,
     test_suite="nose.collector",
     tests_require=[
