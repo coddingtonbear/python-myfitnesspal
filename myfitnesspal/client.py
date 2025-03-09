@@ -818,7 +818,7 @@ class Client(MFPBase):
         return (
             parse.urljoin(
                 self.BASE_URL_SECURE,
-                "reports/results/" + report_category.lower() + "/" + report_name,
+                "api/services/reports/results/" + report_category.lower() + "/" + report_name,
             )
             + f"/{str(delta.days)}.json"
         )
@@ -826,7 +826,7 @@ class Client(MFPBase):
     def _get_report_data(self, json_data: dict) -> Dict[datetime.date, float]:
         report_data: Dict[datetime.date, float] = {}
 
-        data = json_data.get("data")
+        data = json_data.get("outcome").get("results")
 
         if not data:
             return report_data
