@@ -18,7 +18,7 @@ jobs:
         run: pip install black==22.6.0 flake8==5.0.4
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v1.5.3
+        uses: wearerequired/lint-action
         with:
           github_token: ${{ secrets.github_token }}
           # Enable linters

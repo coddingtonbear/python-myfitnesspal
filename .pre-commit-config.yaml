@@ -4,24 +4,24 @@ repos:
   # Sort imports prior to black reformatting, to
   # ensure black always takes prescedence
   - repo: https://github.com/timothycrosley/isort
-    rev: 4.3.21
+    rev: 6.0.1
     hooks:
       - id: isort
   - repo: https://github.com/ambv/black
-    rev: 22.6.0
+    rev: 25.1.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
-    rev: 5.0.4
+    rev: 7.1.2
     hooks:
       - id: flake8
   - repo: https://github.com/asottile/pyupgrade
-    rev: v1.25.1
+    rev: v3.19.1
     hooks:
       - id: pyupgrade
-        args: ["--py37-plus"]
+        args: ["--py39-plus"]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.1
+    rev: v1.15.0
     hooks:
       - id: mypy
         args:
