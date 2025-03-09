@@ -12,7 +12,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.13
 
       - name: Install Python dependencies
         run: pip install black==22.6.0 flake8==5.0.4
