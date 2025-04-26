@@ -16,7 +16,7 @@ import cloudscraper
 import lxml.html
 import requests
 from measurement.base import MeasureBase
-from measurement.measures import Energy, Mass, Volume
+from measurement.measures import Energy, Mass, Volume, Time
 
 from . import types
 from .base import MFPBase
@@ -51,6 +51,7 @@ class Client(MFPBase):
         "carbs": "carbohydrates",
     }
     DEFAULT_MEASURE_AND_UNIT = {
+        # Food nutrients
         "calories": (Energy, "Calorie"),
         "carbohydrates": (Mass, "g"),
         "fat": (Mass, "g"),
@@ -60,6 +61,13 @@ class Client(MFPBase):
         "fiber": (Mass, "g"),
         "potass.": (Mass, "mg"),
         "kilojoules": (Energy, "kJ"),
+        # Exercise fields with units
+        "calories burned": (Energy, "Calorie"),
+        "weight/set": (Mass, "kg"),  # Change to 'lb' if needed for your locale
+        "minutes": (Time, "min"),
+        # Strength training fields (unitless)
+        "sets": (int, None),
+        "reps/set": (int, None),
     }
 
     def __init__(
@@ -294,6 +302,11 @@ class Client(MFPBase):
 
     def _get_measurement(self, name: str, value: float | None) -> MeasureBase:
         if not self.unit_aware:
+            return value
+        # If value is None, return None (prevents measurement class errors)
+        if value is None:
+            return None
+        if name not in self.DEFAULT_MEASURE_AND_UNIT:
             return value
         measure, kwarg = self.DEFAULT_MEASURE_AND_UNIT[name]
         return measure(**{kwarg: value})
