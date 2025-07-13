@@ -651,6 +651,7 @@ class Client(MFPBase):
     def set_measurements(
         self,
         measurement="Weight",
+        unit="pounds",
         value: float | None = None,
         date: datetime.date | None = None,
     ) -> None:
@@ -667,39 +668,26 @@ class Client(MFPBase):
         # the 'measurement' name to set the value.
         document = self._get_document_for_url(self._get_url_for_measurements())
 
-        # get authenticity token for this particular form.
-        authenticity_token = document.xpath(
-            "//form[@action='/measurements/new']/input[@name='authenticity_token']/@value"
-        )[0]
-
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
-
-        # get the authenticity token for this edit
-        authenticity_token = document.xpath(
-            "(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)",
-            smart_strings=False,
-        )[0]
 
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
             raise ValueError(f"Measurement '{measurement}' does not exist.")
 
         # build the update url.
-        update_url = parse.urljoin(self.BASE_URL_SECURE, "measurements/new")
+        update_url = parse.urljoin(self.BASE_URL_SECURE, "/api/services/incubator/measurements/upsert")
 
-        # setup a dict for the post
-        data = {
-            "authenticity_token": authenticity_token,
-            "measurement[display_value]": value,
+        # setup JSON data for the put
+        json = {
+            "value": value,
             "type": measurement_ids.get(measurement),
-            "measurement[entry_date(2i)]": date.month,
-            "measurement[entry_date(3i)]": date.day,
-            "measurement[entry_date(1i)]": date.year,
+            "unit": unit,
+            "entry_date": date.strftime("%Y-%m-%d"),
         }
 
-        # now post it.
-        result = self.session.post(update_url, data=data)
+        # now put it.
+        result = self.session.put(update_url, json=json)
 
         # throw an error if it failed.
         if not result.ok:
