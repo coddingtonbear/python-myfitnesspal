@@ -675,16 +675,30 @@ class Client(MFPBase):
         if measurement not in measurement_ids.keys():
             raise ValueError(f"Measurement '{measurement}' does not exist.")
 
-        # build the update url.
-        update_url = parse.urljoin(self.BASE_URL_SECURE, "/api/services/incubator/measurements/upsert")
+        # Measurement update requests isn't the same depending on measurement type
+        if measurement == "Weight":
+            # build the update url.
+            update_url = parse.urljoin(self.BASE_URL_SECURE, "/api/services/incubator/measurements/upsert")
 
-        # setup JSON data for the put
-        json = {
-            "value": value,
-            "type": measurement_ids.get(measurement),
-            "unit": unit,
-            "entry_date": date.strftime("%Y-%m-%d"),
-        }
+            # setup JSON data for the put
+            json = { "item": {
+                "value": value,
+                "type": measurement.lower(),
+                "unit": unit,
+                "entry_date": date.strftime("%Y-%m-%d"),
+            }}
+        else:
+            # build the update url.
+            update_url = parse.urljoin(
+                self.BASE_URL_SECURE, "/api/user-measurements/measurements"
+            )
+
+            # for non-weight type, measurement should be sent in an array
+            json = { "items": [{
+                "value": value,
+                "type": measurement,  # first char uppercased for non-weight type
+                "date": date.strftime("%Y-%m-%d"),  # field renamed
+            }]}
 
         # now put it.
         result = self.session.put(update_url, json=json)
