@@ -1381,23 +1381,14 @@ class Client(MFPBase):
         Value: Meal Name
         """
         meals_dict = {}
-        meals_path = "meal/mine"
+        meals_path = "api/services/users/meals/mine?limit=100&search="
         meals_url = parse.urljoin(self.BASE_URL_SECURE, meals_path)
-        document = self._get_document_for_url(meals_url)
+        json = self._get_json_for_url(meals_url)
 
-        meals = document.xpath(
-            "//*[@id='matching']/li"
-        )  # get all items in the recipe list
-        _idx: int | None = None
-        try:
-            for _idx, meal in enumerate(meals):
-                meal_path = meal.xpath("./a")[0].attrib["href"]
-                meal_id = meal_path.split("/")[-1].split("?")[0]
-                meal_title = meal.xpath("./a")[0].text
-                meals_dict[meal_id] = meal_title
-        except Exception:
-            # no meals available?
-            logger.warning(f"Could not extract meal at index {_idx}")
+        for meal in json:
+            meal_id = meal["meal_id"]
+            meal_title = meal["description"]
+            meals_dict[meal_id] = meal_title
 
         return meals_dict
 
