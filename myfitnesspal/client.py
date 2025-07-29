@@ -42,6 +42,7 @@ class Client(MFPBase):
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
+    MEALS_PATH = "api/services/users/meals/mine?limit=100&search="
     LOGIN_FORM_PATH = "account/login"
     LOGIN_JSON_PATH = "api/auth/callback/credentials"
     CSRF_PATH = "api/auth/csrf"
@@ -290,6 +291,12 @@ class Client(MFPBase):
         content = self._get_content_for_url(url)
 
         return json.loads(content)
+
+    def _get_meals_json(self) -> json:
+        meals_url = parse.urljoin(self.BASE_URL_SECURE, self.MEALS_PATH)
+        json = self._get_json_for_url(meals_url)
+
+        return json
 
     def _get_measurement(self, name: str, value: float | None) -> MeasureBase:
         if not self.unit_aware:
@@ -1381,9 +1388,7 @@ class Client(MFPBase):
         Value: Meal Name
         """
         meals_dict = {}
-        meals_path = "api/services/users/meals/mine?limit=100&search="
-        meals_url = parse.urljoin(self.BASE_URL_SECURE, meals_path)
-        json = self._get_json_for_url(meals_url)
+        json = self._get_meals_json()
 
         for meal in json:
             meal_id = meal["meal_id"]
@@ -1398,41 +1403,56 @@ class Client(MFPBase):
         See https://schema.org/Recipe for details regarding this schema.
         """
 
-        meal_path = f"/meal/update_meal_ingredients/{meal_id}"
-        meal_url = parse.urljoin(self.BASE_URL_SECURE, meal_path)
-        document = self._get_document_for_url(meal_url)
+        json = self._get_meals_json()
 
+        # Find the meal with the matching meal_id
+        meal = next((item for item in json if item["meal_id"] == meal_id), None)
+        if not meal:
+            raise ValueError(f"Meal with ID {meal_id} not found.")
+
+        # Start building the recipe dict
         recipe_dict: dict[str, Any] = {
             "@context": "https://schema.org",
             "@type": "Recipe",
             "author": self.effective_username,
+            "url": parse.urljoin(self.BASE_URL_SECURE, self.MEALS_PATH),
+            "name": meal["description"],
+            "recipeYield": 1,
+            "recipeIngredient": [],
+            "recipeInstructions": "",
+            "tags": ["MyFitnessPal"],
         }
-        recipe_dict["org_url"] = meal_url
-        recipe_dict["name"] = meal_title
-        recipe_dict["recipeYield"] = 1
-        recipe_dict["recipeIngredient"] = []
-        ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
-        # No ingredients?
-        if len(ingredients) == 1 and ingredients[0].xpath("./td[1]")[0].text == "\xa0":
-            raise Exception("No ingredients found when fetching meal.")
-        else:
-            for ingredient in ingredients:
-                recipe_dict["recipeIngredient"].append(
-                    ingredient.xpath("./td[1]")[0].text
-                )
 
-            total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
-            recipe_dict["nutrition"] = {"@type": "NutritionInformation"}
-            recipe_dict["nutrition"]["calories"] = total.xpath("./td[2]")[0].text
-            recipe_dict["nutrition"]["carbohydrateContent"] = total.xpath("./td[3]")[
-                0
-            ].text
-            recipe_dict["nutrition"]["proteinContent"] = total.xpath("./td[5]")[0].text
-            recipe_dict["nutrition"]["fatContent"] = total.xpath("./td[4]")[0].text
-            recipe_dict["nutrition"]["sugarContent"] = total.xpath("./td[7]")[0].text
-            recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[0].text
+        # Extract ingredients
+        for food in meal.get("foods", []):
+            recipe_dict["recipeIngredient"].append(food["description"])
 
-        # add some required tags to match schema
-        recipe_dict["recipeInstructions"] = ""
-        recipe_dict["tags"] = ["MyFitnessPal"]
+        # Nutrition info (assumes totals per meal = sum of foods)
+        total_nutrition = {
+            "calories": 0,
+            "carbs": 0,
+            "fat": 0,
+            "protein": 0,
+            "sodium": 0,
+            "sugar": 0,
+        }
+
+        for food in meal.get("foods", []):
+            total_nutrition["calories"] += food.get("calories", 0)
+            total_nutrition["carbs"] += food.get("carbs", 0)
+            total_nutrition["fat"] += food.get("fat", 0)
+            total_nutrition["protein"] += food.get("protein", 0)
+            total_nutrition["sodium"] += food.get("sodium", 0)
+            total_nutrition["sugar"] += food.get("sugar", 0)
+
+        recipe_dict["nutrition"] = {
+            "@type": "NutritionInformation",
+            "calories": str(total_nutrition["calories"]),
+            "carbohydrateContent": str(total_nutrition["carbs"]),
+            "fatContent": str(total_nutrition["fat"]),
+            "proteinContent": str(total_nutrition["protein"]),
+            "sodiumContent": str(total_nutrition["sodium"]),
+            "sugarContent": str(total_nutrition["sugar"]),
+        }
+
         return cast(types.Recipe, recipe_dict)
