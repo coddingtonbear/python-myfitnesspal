@@ -42,6 +42,7 @@ class Client(MFPBase):
     BASE_URL = "http://www.myfitnesspal.com/"
     BASE_URL_SECURE = "https://www.myfitnesspal.com/"
     BASE_API_URL = "https://api.myfitnesspal.com/"
+    MEALS_PATH = "api/services/users/meals/mine?limit=100&search="
     LOGIN_FORM_PATH = "account/login"
     LOGIN_JSON_PATH = "api/auth/callback/credentials"
     CSRF_PATH = "api/auth/csrf"
@@ -290,6 +291,12 @@ class Client(MFPBase):
         content = self._get_content_for_url(url)
 
         return json.loads(content)
+
+    def _get_meals_json(self) -> json:
+        meals_url = parse.urljoin(self.BASE_URL_SECURE, self.MEALS_PATH)
+        json = self._get_json_for_url(meals_url)
+
+        return json
 
     def _get_measurement(self, name: str, value: float | None) -> MeasureBase:
         if not self.unit_aware:
@@ -651,6 +658,7 @@ class Client(MFPBase):
     def set_measurements(
         self,
         measurement="Weight",
+        unit="pounds",
         value: float | None = None,
         date: datetime.date | None = None,
     ) -> None:
@@ -667,39 +675,40 @@ class Client(MFPBase):
         # the 'measurement' name to set the value.
         document = self._get_document_for_url(self._get_url_for_measurements())
 
-        # get authenticity token for this particular form.
-        authenticity_token = document.xpath(
-            "//form[@action='/measurements/new']/input[@name='authenticity_token']/@value"
-        )[0]
-
         # gather the IDs for all measurement types
         measurement_ids = self._get_measurement_ids(document)
-
-        # get the authenticity token for this edit
-        authenticity_token = document.xpath(
-            "(//form[@action='/measurements/new']/input[@name='authenticity_token']/@value)",
-            smart_strings=False,
-        )[0]
 
         # check if the measurement exists before going too far
         if measurement not in measurement_ids.keys():
             raise ValueError(f"Measurement '{measurement}' does not exist.")
 
-        # build the update url.
-        update_url = parse.urljoin(self.BASE_URL_SECURE, "measurements/new")
+        # Measurement update requests isn't the same depending on measurement type
+        if measurement == "Weight":
+            # build the update url.
+            update_url = parse.urljoin(self.BASE_URL_SECURE, "/api/services/incubator/measurements/upsert")
 
-        # setup a dict for the post
-        data = {
-            "authenticity_token": authenticity_token,
-            "measurement[display_value]": value,
-            "type": measurement_ids.get(measurement),
-            "measurement[entry_date(2i)]": date.month,
-            "measurement[entry_date(3i)]": date.day,
-            "measurement[entry_date(1i)]": date.year,
-        }
+            # setup JSON data for the put
+            json = { "item": {
+                "value": value,
+                "type": measurement.lower(),
+                "unit": unit,
+                "entry_date": date.strftime("%Y-%m-%d"),
+            }}
+        else:
+            # build the update url.
+            update_url = parse.urljoin(
+                self.BASE_URL_SECURE, "/api/user-measurements/measurements"
+            )
 
-        # now post it.
-        result = self.session.post(update_url, data=data)
+            # for non-weight type, measurement should be sent in an array
+            json = { "items": [{
+                "value": value,
+                "type": measurement,  # first char uppercased for non-weight type
+                "date": date.strftime("%Y-%m-%d"),  # field renamed
+            }]}
+
+        # now put it.
+        result = self.session.put(update_url, json=json)
 
         # throw an error if it failed.
         if not result.ok:
@@ -1379,23 +1388,12 @@ class Client(MFPBase):
         Value: Meal Name
         """
         meals_dict = {}
-        meals_path = "meal/mine"
-        meals_url = parse.urljoin(self.BASE_URL_SECURE, meals_path)
-        document = self._get_document_for_url(meals_url)
+        json = self._get_meals_json()
 
-        meals = document.xpath(
-            "//*[@id='matching']/li"
-        )  # get all items in the recipe list
-        _idx: int | None = None
-        try:
-            for _idx, meal in enumerate(meals):
-                meal_path = meal.xpath("./a")[0].attrib["href"]
-                meal_id = meal_path.split("/")[-1].split("?")[0]
-                meal_title = meal.xpath("./a")[0].text
-                meals_dict[meal_id] = meal_title
-        except Exception:
-            # no meals available?
-            logger.warning(f"Could not extract meal at index {_idx}")
+        for meal in json:
+            meal_id = meal["meal_id"]
+            meal_title = meal["description"]
+            meals_dict[meal_id] = meal_title
 
         return meals_dict
 
@@ -1405,41 +1403,56 @@ class Client(MFPBase):
         See https://schema.org/Recipe for details regarding this schema.
         """
 
-        meal_path = f"/meal/update_meal_ingredients/{meal_id}"
-        meal_url = parse.urljoin(self.BASE_URL_SECURE, meal_path)
-        document = self._get_document_for_url(meal_url)
+        json = self._get_meals_json()
 
+        # Find the meal with the matching meal_id
+        meal = next((item for item in json if item["meal_id"] == meal_id), None)
+        if not meal:
+            raise ValueError(f"Meal with ID {meal_id} not found.")
+
+        # Start building the recipe dict
         recipe_dict: dict[str, Any] = {
             "@context": "https://schema.org",
             "@type": "Recipe",
             "author": self.effective_username,
+            "url": parse.urljoin(self.BASE_URL_SECURE, self.MEALS_PATH),
+            "name": meal["description"],
+            "recipeYield": 1,
+            "recipeIngredient": [],
+            "recipeInstructions": "",
+            "tags": ["MyFitnessPal"],
         }
-        recipe_dict["org_url"] = meal_url
-        recipe_dict["name"] = meal_title
-        recipe_dict["recipeYield"] = 1
-        recipe_dict["recipeIngredient"] = []
-        ingredients = document.xpath('//*[@id="meal-table"]/tbody/tr')
-        # No ingredients?
-        if len(ingredients) == 1 and ingredients[0].xpath("./td[1]")[0].text == "\xa0":
-            raise Exception("No ingredients found when fetching meal.")
-        else:
-            for ingredient in ingredients:
-                recipe_dict["recipeIngredient"].append(
-                    ingredient.xpath("./td[1]")[0].text
-                )
 
-            total = document.xpath('//*[@id="mealTableTotal"]/tbody/tr')[0]
-            recipe_dict["nutrition"] = {"@type": "NutritionInformation"}
-            recipe_dict["nutrition"]["calories"] = total.xpath("./td[2]")[0].text
-            recipe_dict["nutrition"]["carbohydrateContent"] = total.xpath("./td[3]")[
-                0
-            ].text
-            recipe_dict["nutrition"]["proteinContent"] = total.xpath("./td[5]")[0].text
-            recipe_dict["nutrition"]["fatContent"] = total.xpath("./td[4]")[0].text
-            recipe_dict["nutrition"]["sugarContent"] = total.xpath("./td[7]")[0].text
-            recipe_dict["nutrition"]["sodiumContent"] = total.xpath("./td[6]")[0].text
+        # Extract ingredients
+        for food in meal.get("foods", []):
+            recipe_dict["recipeIngredient"].append(food["description"])
 
-        # add some required tags to match schema
-        recipe_dict["recipeInstructions"] = ""
-        recipe_dict["tags"] = ["MyFitnessPal"]
+        # Nutrition info (assumes totals per meal = sum of foods)
+        total_nutrition = {
+            "calories": 0,
+            "carbs": 0,
+            "fat": 0,
+            "protein": 0,
+            "sodium": 0,
+            "sugar": 0,
+        }
+
+        for food in meal.get("foods", []):
+            total_nutrition["calories"] += food.get("calories", 0)
+            total_nutrition["carbs"] += food.get("carbs", 0)
+            total_nutrition["fat"] += food.get("fat", 0)
+            total_nutrition["protein"] += food.get("protein", 0)
+            total_nutrition["sodium"] += food.get("sodium", 0)
+            total_nutrition["sugar"] += food.get("sugar", 0)
+
+        recipe_dict["nutrition"] = {
+            "@type": "NutritionInformation",
+            "calories": str(total_nutrition["calories"]),
+            "carbohydrateContent": str(total_nutrition["carbs"]),
+            "fatContent": str(total_nutrition["fat"]),
+            "proteinContent": str(total_nutrition["protein"]),
+            "sodiumContent": str(total_nutrition["sodium"]),
+            "sugarContent": str(total_nutrition["sugar"]),
+        }
+
         return cast(types.Recipe, recipe_dict)
