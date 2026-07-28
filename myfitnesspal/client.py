@@ -850,12 +850,20 @@ class Client(MFPBase):
 
     def get_food_search_results(self, query: str) -> list[FoodItem]:
         """Search for foods matching a specified query."""
-        search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
-        document = self._get_document_for_url(search_url)
-        authenticity_token = document.xpath(
-            "(//input[@name='authenticity_token']/@value)[1]"
-        )[0]
+        # Fetch the CSRF token from the "add food" page rather than /food/search.
+        # MFP now returns an empty results page unless the search POST originates
+        # from the add-food flow: loading that page also primes the `known_user`
+        # cookie the search endpoint expects, and the POST must carry a matching
+        # Referer/Origin. A token scraped from /food/search alone yields zero
+        # results (a 200 with "Matching Foods:" but no items).
+        add_food_url = parse.urljoin(self.BASE_URL_SECURE, "food/add_to_diary?meal=0")
+        document = self._get_document_for_url(add_food_url)
+        tokens = document.xpath("(//meta[@name='csrf-token']/@content)[1]")
+        if not tokens:
+            tokens = document.xpath("(//input[@name='authenticity_token']/@value)[1]")
+        authenticity_token = tokens[0]
 
+        search_url = parse.urljoin(self.BASE_URL_SECURE, self.SEARCH_PATH)
         result = self.session.post(
             search_url,
             data={
@@ -863,6 +871,10 @@ class Client(MFPBase):
                 "search": query,
                 "date": datetime.datetime.today().strftime("%Y-%m-%d"),
                 "meal": "0",
+            },
+            headers={
+                "Referer": add_food_url,
+                "Origin": self.BASE_URL_SECURE.rstrip("/"),
             },
         )
 
