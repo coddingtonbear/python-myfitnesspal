@@ -455,3 +455,21 @@ class TestClient(MFPTestCase):
         )
 
         self.assertEqual(expected_measurements, actual_measurements)
+
+    def test_get_food_search_results(self):
+        document = self.get_html_document("search_results.html")
+        results = self.client._get_food_search_results(document)
+
+        actual = [(r.mfp_id, r.name, r.brand, r.verified) for r in results]
+        expected = [
+            (101, "Tortilla Chips", "Juanita's", True),
+            (102, "Chocolate Fudge Ripple Ice Cream", "Bulla", False),
+            (103, "Quick Oats", "Quaker  Quick Oats", False),
+            (104, "Banana", "", False),
+        ]
+        self.assertEqual(expected, actual)
+
+        self.assertEqual(140, results[0].calories)
+        self.assertAlmostEqual(649 / 4.184, results[1].calories)
+        self.assertAlmostEqual(1074 / 4.184, results[2].calories)
+        self.assertEqual(105, results[3].calories)

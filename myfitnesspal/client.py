@@ -875,6 +875,31 @@ class Client(MFPBase):
 
         return self._get_food_search_results(document)
 
+    @staticmethod
+    def _parse_search_energy(nutr_text: str) -> tuple[float | None, str]:
+        """Split the energy value off a search result's nutritional info.
+
+        Search results render energy in the account's preferred unit, e.g.
+        ``"Brand, 100 g, 155 calories"`` or ``"Brand, 100 g, 649 kilojoules"``.
+        Kilojoule values are converted to calories so that ``FoodItem.calories``
+        has the same meaning for every account.
+
+        Returns the energy in calories (``None`` if it cannot be parsed) and
+        the remaining text with the energy segment removed.
+        """
+        match = re.search(
+            r",?\s*(\d[\d,]*(?:\.\d+)?)\s*(calories?|kilojoules?)\s*$", nutr_text
+        )
+        if not match:
+            # Unknown format: drop the last segment so brand parsing is
+            # unaffected, rather than raising.
+            return None, nutr_text.rsplit(",", 1)[0]
+
+        value = float(match.group(1).replace(",", ""))
+        if match.group(2).startswith("kilojoule"):
+            value /= 4.184
+        return value, nutr_text[: match.start()]
+
     def _get_food_search_results(self, document) -> list[FoodItem]:
         item_divs = document.xpath("//li[@class='matched-food']")
 
@@ -893,10 +918,12 @@ class Client(MFPBase):
             brand = ""
             nutr_info_xpath = item_div.xpath(".//p[@class='search-nutritional-info']")
             if nutr_info_xpath:
-                nutr_info = nutr_info_xpath[0].text.strip().split(",")
-                if len(nutr_info) >= 3:
-                    brand = " ".join(nutr_info[0:-2]).strip()
-                calories = float(nutr_info[-1].replace("calories", "").strip())
+                calories, nutr_text = self._parse_search_energy(
+                    nutr_info_xpath[0].text.strip()
+                )
+                nutr_info = nutr_text.split(",")
+                if len(nutr_info) >= 2:
+                    brand = " ".join(nutr_info[0:-1]).strip()
             items.append(
                 FoodItem(mfp_id, mfp_name, brand, verif, calories, client=self)
             )
